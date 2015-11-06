@@ -2,7 +2,6 @@
 import cv2
 import numpy as np
 
-from com.image.constant.constant import Constant
 from color_feature import ColorFeature
 
 __author__ = 'zql'
@@ -10,22 +9,15 @@ __date__ = '2015/11/3'
 
 
 class ColorHist(ColorFeature):
-    """颜色直方图"""
-    def __init__(self):
-        pass
+    """
+    颜色直方图
+    """
+    def __init__(self, image):
+        super(ColorHist, self).__init__(image)
 
-    def cal_feature(self, image):
+    def cal_feature(self):
         """颜色直方图特征"""
-        # 输出的顺序为BGR
-        src_img = cv2.imread(image)
-        # img_array_to_file(Constant.BASE_URL + "RGB.txt", src_img)
-
-        # 将RGB转换成HSV
-        # H : COLOR_BGR2HSV [0, 179]; COLOR_BGR2HSV_FULL [0, 255]
-        # S : [0, 255]
-        # V : [0, 255]
-        src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2HSV_FULL)
-        # img_array_to_file(Constant.BASE_URL + "HSV.txt", src_img)
+        src_img = super(ColorHist, self).bgr2hsv()
 
         h, s, v = cv2.split(src_img)
 
@@ -54,37 +46,7 @@ class ColorHist(ColorFeature):
 
         return hist_img
 
-    def print_img_array(self, array):
-        """打印图像数组"""
-        shape = array.shape
-        last_dim_size = shape[len(shape) - 1]
-
-        for index, value in np.ndenumerate(array):
-            # print 函数默认是换行的，想不换行输出，在 print 后加 ，
-            # 也可以使用sys.stdout.write
-            print value,
-
-            if index[len(index) - 1] == last_dim_size - 1:
-                print("\n"),
-            else:
-                print "",
-
-    def img_array_to_file(self, filename, array):
-        """将图像数组输出到文件"""
-        shape = array.shape
-        last_dim_size = shape[len(shape) - 1]
-
-        fp = open(filename, "w")
-
-        for index, value in np.ndenumerate(array):
-            fp.write(str(value))
-            if index[len(index) - 1] == last_dim_size - 1:
-                fp.write("\n")
-            else:
-                fp.write(" ")
-
-        fp.close()
 
 if __name__ == "__main__":
     imgname = "f:\\3.jpg"
-    ColorHist().cal_feature(imgname)
+    ColorHist(imgname).cal_feature()
