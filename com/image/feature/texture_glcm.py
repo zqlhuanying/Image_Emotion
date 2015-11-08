@@ -1,4 +1,5 @@
 # encoding: utf-8
+import math
 import numpy as np
 
 from com.image.constant.constant import Constant
@@ -18,6 +19,11 @@ class TextureGLCM(TextureFeature):
     GLCM_ANGLE_90 = 2               # 90度方向
     GLCM_ANGLE_135 = 3              # 135度方向
 
+    GLCM_PROPERTY_ENERGY = 0        # 角二阶矩
+    GLCM_PROPERTY_ENTROPY = 1       # 熵
+    GLCM_PROPERTY_CONTRAST = 2      # 对比度
+    GLCM_PROPERTY_MEAN = 3          # 均匀度
+
     def __init__(self, image):
         super(TextureGLCM, self).__init__(image)
 
@@ -32,15 +38,20 @@ class TextureGLCM(TextureFeature):
         for index, value in np.ndenumerate(src_img):
             src_img[index] = value % 16
 
-        glcm0 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_0)
-        glcm45 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_45)
-        glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90)
-        glcm135 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_135)
+        glcm0 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_0, True)
+        glcm45 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_45, True)
+        glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90, True)
+        glcm135 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_135, True)
 
         for index, obj in enumerate((glcm0, glcm45, glcm90, glcm135)):
-            CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
+            # CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
+            # CommonUtil.print_img_array(obj)
+            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY)
+            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY)
+            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST)
+            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN)
 
-    def cal_glcm(self, src_img, angle_direction):
+    def cal_glcm(self, src_img, angle_direction, normalization=False):
 
         def myreduce(arg1, arg2):
             glcm[(arg1, arg2)] += 1
@@ -114,6 +125,14 @@ class TextureGLCM(TextureFeature):
                         i += 1
                     yield result
 
+        def norm(array):
+            # 归一化
+            array_max = max(array.flat)
+            array_min = min(array.flat)
+            for index, value in np.ndenumerate(array):
+                array[index] = (value - array_min) / [(array_max - array_min) * 1.0]
+            return array
+
         # 平坦化数组，方便求取最大值和最小值
         # glcm_max - glcm_min + 1 灰度共生矩阵的阶数
         glcm_max = max(src_img.flat)
@@ -121,13 +140,65 @@ class TextureGLCM(TextureFeature):
         glcm_n = glcm_max - glcm_min + 1
 
         # 创建空的 glcm_n * glcm_n 的共生矩阵
-        glcm = np.zeros((glcm_n, glcm_n), dtype="int32")
+        glcm = np.zeros((glcm_n, glcm_n), dtype="float32")
 
         datas = get_direction_seq(src_img, angle_direction)
         for data in datas:
             reduce(myreduce, data)
 
+        if normalization is True:
+            return norm(glcm)
+
         return glcm
+
+    def cal_property(self, glcm, prop):
+        """
+        计算共生矩阵的几个参数
+        :param glcm: 共生矩阵
+        :param prop: 参数
+        :return:
+        """
+        def cal_energy():
+            # 角二阶矩（能量）
+            s = 0
+            for index, value in np.ndenumerate(glcm):
+                s += math.pow(value, 2)
+            return s
+
+        def cal_entropy():
+            # 熵
+            s = 0
+            for index, value in np.ndenumerate(glcm):
+                if value == 0:
+                    continue
+                s += math.log(value, 2) * value
+            return s * (-1.0)
+
+        def cal_contrast():
+            # 对比度
+            s = 0
+            for index, value in np.ndenumerate(glcm):
+                s += value * math.pow((index[0] - index[1]), 2)
+            return s
+
+        def cal_mean():
+            # 均匀度
+            s = 0
+            for index, value in np.ndenumerate(glcm):
+                s += value / (math.fabs(index[0] - index[1]) + 1)
+            return s
+
+        if prop == TextureGLCM.GLCM_PROPERTY_ENERGY:
+            return cal_energy()
+
+        if prop == TextureGLCM.GLCM_PROPERTY_ENTROPY:
+            return cal_entropy()
+
+        if prop == TextureGLCM.GLCM_PROPERTY_CONTRAST:
+            return cal_contrast()
+
+        if prop == TextureGLCM.GLCM_PROPERTY_MEAN:
+            return cal_mean()
 
 if __name__ == "__main__":
     """imgname = np.array([
