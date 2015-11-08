@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 
 from color_feature import ColorFeature
+from com.image.constant.constant import Constant
 
 __author__ = 'zql'
 __date__ = '2015/11/3'
@@ -48,5 +49,5 @@ class ColorHist(ColorFeature):
 
 
 if __name__ == "__main__":
-    imgname = "f:\\3.jpg"
+    imgname = Constant.BASE_URL + "test3.jpg"
     ColorHist(imgname).cal_feature()

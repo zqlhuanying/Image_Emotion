@@ -1,5 +1,9 @@
 # encoding: utf-8
 import cv2
+import numpy as np
+
+from com.image.constant.constant import Constant
+from com.image.utils.common_util import CommonUtil
 
 __author__ = 'zql'
 __date__ = '2015/11/4'
@@ -27,3 +31,17 @@ class Feature(object):
         src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2HSV_FULL)
         # CommonUtil.img_array_to_file(Constant.BASE_URL + "HSV.txt", src_img)
         return src_img
+
+    def bgr2gray(self):
+        # 输出的顺序为BGR
+        src_img = cv2.imread(self.image)
+        # CommonUtil.img_array_to_file(Constant.BASE_URL + "RGB.txt", src_img)
+
+        # 将RGB转换成Gray
+        src_img = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY)
+        # CommonUtil.img_array_to_file(Constant.BASE_URL + "GRAY.txt", src_img)
+        return src_img
+
+if __name__ == "__main__":
+    imgname = Constant.BASE_URL + "test3.jpg"
+    Feature(imgname).bgr2gray()

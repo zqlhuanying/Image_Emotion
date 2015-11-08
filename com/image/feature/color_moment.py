@@ -2,6 +2,8 @@
 import cv2
 import math
 import numpy as np
+
+from com.image.constant.constant import Constant
 from com.image.feature.color_feature import ColorFeature
 
 __author__ = 'zql'
@@ -71,5 +73,5 @@ class ColorMoment(ColorFeature):
         return s
 
 if __name__ == "__main__":
-    imgname = "f:\\3.jpg"
+    imgname = Constant.BASE_URL + "test3.jpg"
     ColorMoment(imgname).cal_feature()
