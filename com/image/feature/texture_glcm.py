@@ -1,5 +1,6 @@
 # encoding: utf-8
 import math
+import cv2
 import numpy as np
 
 from com.image.constant.constant import Constant
@@ -32,12 +33,13 @@ class TextureGLCM(TextureFeature):
         灰度共生矩阵，只计算 d = 1 的情况
         :return:
         """
-        src_img = super(TextureGLCM, self).bgr2gray()
-
+        # src_img = super(TextureGLCM, self).bgr2gray()
+        src_img = self.image
         # 为减少计算量，将灰度图量化成16级
-        for index, value in np.ndenumerate(src_img):
-            src_img[index] = value % 16
-
+        # opencv将16位即256个灰度等级的图像变换成4位即16个灰度等级的图像
+        # 直接将每个像素的灰度值除于16，再取整就是你要得到的4位灰度级。
+        """for index, value in np.ndenumerate(src_img):
+            src_img[index] = value / 16"""
         glcm0 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_0, True)
         glcm45 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_45, True)
         glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90, True)
@@ -46,15 +48,16 @@ class TextureGLCM(TextureFeature):
         for index, obj in enumerate((glcm0, glcm45, glcm90, glcm135)):
             # CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
             # CommonUtil.print_img_array(obj)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN)
+            # print obj
+            print ("Energy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY))
+            print ("Entropy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY))
+            print ("Contrast: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST))
+            print ("Mean: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN))
 
     def cal_glcm(self, src_img, angle_direction, normalization=False):
 
         def myreduce(arg1, arg2):
-            glcm[(arg1, arg2)] += 1
+            glcm[(arg1 - glcm_min, arg2 - glcm_min)] += 1
             return arg2
 
         def is_outofarray(array, index):
@@ -90,7 +93,7 @@ class TextureGLCM(TextureFeature):
                         i += 1
                     yield result
 
-                for i in range(1, array.shape[1]):
+                for i in range(1, array.shape[0]):
                     result = list()
                     j = 0
                     while not is_outofarray(array, (i, j)):
@@ -127,10 +130,16 @@ class TextureGLCM(TextureFeature):
 
         def norm(array):
             # 归一化
-            array_max = max(array.flat)
+            """array_max = max(array.flat)
             array_min = min(array.flat)
             for index, value in np.ndenumerate(array):
                 array[index] = (value - array_min) / [(array_max - array_min) * 1.0]
+            return array"""
+            """cv2.normalize(array, array, 0, 1, cv2.NORM_MINMAX)
+            return array"""
+            array_sum = np.sum(array)
+            for index, value in np.ndenumerate(array):
+                array[index] = value / array_sum * 1.0
             return array
 
         # 平坦化数组，方便求取最大值和最小值
@@ -208,6 +217,21 @@ if __name__ == "__main__":
         [1, 1, 2, 2, 1],
         [1, 2, 2, 1, 0]
     ], dtype="int32")"""
-    imgname = Constant.BASE_URL + "test3.jpg"
+    imgname = np.array([
+        [1, 1, 5, 6, 8],
+        [2, 3, 5, 7, 1],
+        [4, 5, 7, 1, 2],
+        [8, 5, 1, 2, 5]
+    ], dtype="int32")
+    """imgname = np.array([
+        [0,1,2,3,0,1,2],
+        [1,2,3,0,1,2,3],
+        [2,3,0,1,2,3,0],
+        [3,0,1,2,3,0,1],
+        [0,1,2,3,0,1,2],
+        [1,2,3,0,1,2,3],
+        [2,3,0,1,2,3,0]
+    ], dtype="int32")"""
+    # imgname = Constant.BASE_URL + "test.jpg"
     TextureGLCM(imgname).cal_feature()
 
