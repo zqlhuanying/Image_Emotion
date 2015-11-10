@@ -41,7 +41,6 @@ class TextureGLCM(TextureFeature):
         """for index, value in np.ndenumerate(src_img):
             src_img[index] = value / 16"""
         glcm0 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_0, True)
-        print glcm0
         glcm45 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_45, True)
         glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90, True)
         glcm135 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_135, True)
@@ -50,15 +49,15 @@ class TextureGLCM(TextureFeature):
             # CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
             # CommonUtil.print_img_array(obj)
             # print obj
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST)
-            print self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN)
+            print ("Energy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY))
+            print ("Entropy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY))
+            print ("Contrast: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST))
+            print ("Mean: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN))
 
     def cal_glcm(self, src_img, angle_direction, normalization=False):
 
         def myreduce(arg1, arg2):
-            glcm[(arg1, arg2)] += 1
+            glcm[(arg1 - glcm_min, arg2 - glcm_min)] += 1
             return arg2
 
         def is_outofarray(array, index):
@@ -139,7 +138,6 @@ class TextureGLCM(TextureFeature):
             """cv2.normalize(array, array, 0, 1, cv2.NORM_MINMAX)
             return array"""
             array_sum = np.sum(array)
-            print array_sum
             for index, value in np.ndenumerate(array):
                 array[index] = value / array_sum * 1.0
             return array
@@ -148,7 +146,7 @@ class TextureGLCM(TextureFeature):
         # glcm_max - glcm_min + 1 灰度共生矩阵的阶数
         glcm_max = max(src_img.flat)
         glcm_min = min(src_img.flat)
-        glcm_n = glcm_max + 1
+        glcm_n = glcm_max - glcm_min + 1
 
         # 创建空的 glcm_n * glcm_n 的共生矩阵
         glcm = np.zeros((glcm_n, glcm_n), dtype="float32")
