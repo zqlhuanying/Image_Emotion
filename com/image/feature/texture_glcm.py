@@ -33,13 +33,14 @@ class TextureGLCM(TextureFeature):
         灰度共生矩阵，只计算 d = 1 的情况
         :return:
         """
-        # src_img = super(TextureGLCM, self).bgr2gray()
-        src_img = self.image
+        src_img = super(TextureGLCM, self).bgr2gray()
+
         # 为减少计算量，将灰度图量化成16级
         # opencv将16位即256个灰度等级的图像变换成4位即16个灰度等级的图像
         # 直接将每个像素的灰度值除于16，再取整就是你要得到的4位灰度级。
-        """for index, value in np.ndenumerate(src_img):
-            src_img[index] = value / 16"""
+        for index, value in np.ndenumerate(src_img):
+            src_img[index] = value / 16
+
         glcm0 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_0, True)
         glcm45 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_45, True)
         glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90, True)
@@ -49,10 +50,11 @@ class TextureGLCM(TextureFeature):
             # CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
             # CommonUtil.print_img_array(obj)
             # print obj
-            print ("Energy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY))
-            print ("Entropy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY))
             print ("Contrast: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST))
-            print ("Mean: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN))
+            print ("Entropy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY))
+            print ("Energy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY))
+            print ("Homogeneity: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN))
+            print
 
     def cal_glcm(self, src_img, angle_direction, normalization=False):
 
@@ -130,13 +132,6 @@ class TextureGLCM(TextureFeature):
 
         def norm(array):
             # 归一化
-            """array_max = max(array.flat)
-            array_min = min(array.flat)
-            for index, value in np.ndenumerate(array):
-                array[index] = (value - array_min) / [(array_max - array_min) * 1.0]
-            return array"""
-            """cv2.normalize(array, array, 0, 1, cv2.NORM_MINMAX)
-            return array"""
             array_sum = np.sum(array)
             for index, value in np.ndenumerate(array):
                 array[index] = value / array_sum * 1.0
@@ -190,7 +185,7 @@ class TextureGLCM(TextureFeature):
                 s += value * math.pow((index[0] - index[1]), 2)
             return s
 
-        def cal_mean():
+        def cal_homogeneity():
             # 均匀度
             s = 0
             for index, value in np.ndenumerate(glcm):
@@ -207,7 +202,7 @@ class TextureGLCM(TextureFeature):
             return cal_contrast()
 
         if prop == TextureGLCM.GLCM_PROPERTY_MEAN:
-            return cal_mean()
+            return cal_homogeneity()
 
 if __name__ == "__main__":
     """imgname = np.array([
@@ -217,12 +212,12 @@ if __name__ == "__main__":
         [1, 1, 2, 2, 1],
         [1, 2, 2, 1, 0]
     ], dtype="int32")"""
-    imgname = np.array([
+    """imgname = np.array([
         [1, 1, 5, 6, 8],
         [2, 3, 5, 7, 1],
         [4, 5, 7, 1, 2],
         [8, 5, 1, 2, 5]
-    ], dtype="int32")
+    ], dtype="int32")"""
     """imgname = np.array([
         [0,1,2,3,0,1,2],
         [1,2,3,0,1,2,3],
@@ -232,6 +227,6 @@ if __name__ == "__main__":
         [1,2,3,0,1,2,3],
         [2,3,0,1,2,3,0]
     ], dtype="int32")"""
-    # imgname = Constant.BASE_URL + "test.jpg"
+    imgname = Constant.BASE_URL + "test3.jpg"
     TextureGLCM(imgname).cal_feature()
 
