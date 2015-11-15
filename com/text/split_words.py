@@ -13,13 +13,15 @@ class SplitWords:
     """
     中文分词
     """
-    def __init__(self):
+    @staticmethod
+    def __init__():
         # 初始化nlpir资源
         if not nlpir.Init(nlpir.PACKAGE_DIR, nlpir.UTF8_CODE, None):
             print "Initialize NLPIR failed"
             exit(-1)
 
-    def split_words(self, s):
+    @staticmethod
+    def split_words(s):
         # 去除标签
 
         # 去除标点符号
@@ -29,7 +31,7 @@ class SplitWords:
         s = SplitWords.__del_digit(s)
 
         # 分词
-        words = nlpir.ParagraphProcess(s, True)
+        words = nlpir.ParagraphProcess(s, False)
 
         # 去掉左右两边多余的空格，并分割
         words = words.strip().split(" ")
@@ -45,13 +47,16 @@ class SplitWords:
 
         encoding = SplitWords.__get_encoding()
 
-        for word in words:
-            if isinstance(word, unicode):
-                print word.encode(encoding)
-            else:
-                print word.decode("utf_8").encode(encoding)
+#        for index, word in enumerate(words):
+#            if isinstance(word, unicode):
+#                words[index] = word.encode(encoding)
+#            else:
+#                words[index] = word.decode("utf_8").encode(encoding)
 
-    def close(self):
+        return words
+
+    @staticmethod
+    def close():
         nlpir.Exit()
 
     @staticmethod
@@ -134,7 +139,16 @@ class SplitWords:
         return stoplist
 
 if __name__ == "__main__":
-    string1 = 'NLPIR分词系a统前身《为？2000年&@发布的<><><><>ICTCLAS词法分1885析系统,从2009年开始,为了和以前工作进行大的区隔，并推广NLPIR自然语言处理与信息检索共享'
-    split_words = SplitWords()
-    split_words.split_words(string1)
-    split_words.close()
+    string1 = 'NLPIR分词系a统前身《为？2000年&@发布的<><><><>ICTCLAS词法分1885析系统,从2009年开始,' \
+              '为了和以前工作进行大的区隔，并推广NLPIR自然语言处理与信息检索共享'
+    SplitWords.__init__()
+    splited_words = SplitWords.split_words(string1)
+    SplitWords.close()
+
+    print len(splited_words)
+    for splited_word in splited_words:
+        print splited_word == "系统"
+        if isinstance(splited_word, unicode):
+            print splited_word.encode("utf_8")
+        else:
+            print splited_word.decode("utf_8").encode("utf_8")

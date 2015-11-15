@@ -1,8 +1,8 @@
 # encoding: utf-8
+from __future__ import division
 import math
-import pynlpir as nlpir
-from textblob import TextBlob
 from com.text.feature.Feature import Feature
+from com.text.split_words import SplitWords
 
 __author__ = 'zql'
 __date__ = '2015/11/12'
@@ -15,20 +15,60 @@ class TFIDFFeature(Feature):
     def __init__(self):
         super(TFIDFFeature, self).__init__()
 
-    def get_key_words(self, s):
-        nlpir.open()
-        words = nlpir.segment(s)
-        print len(words)
-        for word in words:
-            print ("%s" % word[0])
-        for word in nlpir.get_key_words(s, weighted=True):
-            print ("(%s, %f)" % (word[0], word[1]))
-        nlpir.close()
+    def get_key_words(self, sentences):
+        """
+        以 sentences 为基础， 计算每个 sentence 的关键词
+        """
+        splited_words_list = list()
+        SplitWords.__init__()
+        if isinstance(sentences, list):
+            for index, sentence in enumerate(sentences):
+                splited_words_list.append(SplitWords.split_words(sentence))
+        else:
+            splited_words_list.append(SplitWords.split_words(sentences))
+        SplitWords.close()
+
+        for splited_words in splited_words_list:
+            print
+            scores = {splited_word: self.tfidf(splited_word, splited_words, splited_words_list) for splited_word in set(splited_words)}
+            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+            for word, score in sorted_words[:min(10, len(sorted_words))]:
+                print("\tWord: {}, TF-IDF: {}".format(word, score))
+
+    def tf(self, word, words):
+        return words.count(word) / len(words)
+
+    def idf(self, word, wordslist):
+        return math.log(len(wordslist) / (1 + self.__n_contains(word, wordslist)))
+
+    def tfidf(self, word, words, wordslist):
+        return self.tf(word, words) * self.idf(word, wordslist)
+
+    def __n_contains(self, word, wordslist):
+        return sum(1 for words in wordslist if word in words)
 
 if __name__ == "__main__":
-    s = "NLPIR分词系统前身为2000年发布的ICTCLAS词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
-        "并推广NLPIR自然语言处理与信息检索共享平台，调整命名为NLPIR分词系统。"
-    TFIDFFeature().get_key_words(s)
+    s1 = "NLPIR分词系统前身为2000年发布的ICTCLAS词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
+        "并NLPIR自然语言处理与信息检索共享平台，调整命名为NLPIR分词系统。"
+    s2 = "NLPIR分词系统前身为2000年发布的NLPIR词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
+         "并NLPIR自然语言处理与信息检索共享平台，调整命名为NLPIR分词。"
+    s3 = "NLPIR分词系统前身为2000年发布的词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
+         "并推广NLPIR，调整命名为NLPIR分词系统。"
+    TFIDFFeature().get_key_words([s1, s2, s3])
+
+#    def count(word, words):
+#        c = 0
+#        for w in words:
+#            if w == word:
+#                c += 1
+#        return c
+#
+#    nlpir.open()
+#    words = nlpir.segment(s, False)
+#    for word in words:
+#        p = count(word, words) * 1.0 / len(words)
+#        print word, (p * math.log(1/p, 2) + (1 - p) * math.log(1/(1 - p), 2))
+
 
     """
     test TextBlob
