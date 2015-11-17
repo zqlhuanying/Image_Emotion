@@ -1,7 +1,5 @@
 # encoding: utf-8
-import platform
 import regex
-import string
 import pynlpir.nlpir as nlpir
 from com.text.constant import RESOURCE_BASE_URL
 
@@ -45,36 +43,11 @@ class SplitWords:
         # 去掉英文停用词
         words = SplitWords.__del_stop(words, SplitWords.__read_english_stoplist())
 
-        encoding = SplitWords.__get_encoding()
-
-#        for index, word in enumerate(words):
-#            if isinstance(word, unicode):
-#                words[index] = word.encode(encoding)
-#            else:
-#                words[index] = word.decode("utf_8").encode(encoding)
-
         return words
 
     @staticmethod
     def close():
         nlpir.Exit()
-
-    @staticmethod
-    def __get_system_platform():
-        return platform.system()
-
-    @staticmethod
-    def __get_encoding():
-        """
-        Linux 下中文需要utf_8; Windows 下中文需要gbk 或 gb2312
-        :return:
-        """
-        system_platform = SplitWords.__get_system_platform()
-
-        if system_platform == "Linux":
-            return "utf_8"
-        else:
-            return "gb2312"
 
     @staticmethod
     def __del_punctuation(s):
@@ -85,16 +58,6 @@ class SplitWords:
         :return:
         """
         """
-        去除英文标点和空格
-        翻译表
-        string.translate 将字符串先过滤，后使用翻译表，将相应的字符翻译成对应的字符
-        """
-        translate_table = string.maketrans(",", ",")
-        del_english_punctuation = string.punctuation + " "
-        s = string.translate(s, translate_table, del_english_punctuation)
-
-        """
-        去除中文标点
         Python 自带的 re 模块貌似不支持 unicode 属性，因此需要安装 regex 模块
         这样就可以使用 \p{} 这样的 unicode 属性
         使用时，正则表达式和字符串都必须经过 unicode 编码
@@ -140,15 +103,13 @@ class SplitWords:
 
 if __name__ == "__main__":
     string1 = 'NLPIR分词系a统前身《为？2000年&@发布的<><><><>ICTCLAS词法分1885析系统,从2009年开始,' \
-              '为了和以前工作进行大的区隔，并推广NLPIR自然语言处理与信息检索共享'
+              '为了和以前工作进行大的区隔，并推广哈哈哈哈哈[NLPIR]自然语言处理与信息检索共享'
     SplitWords.__init__()
     splited_words = SplitWords.split_words(string1)
     SplitWords.close()
 
-    print len(splited_words)
     for splited_word in splited_words:
-        print splited_word == "系统"
         if isinstance(splited_word, unicode):
-            print splited_word.encode("utf_8")
+            print splited_word
         else:
-            print splited_word.decode("utf_8").encode("utf_8")
+            print splited_word.decode("utf_8")
