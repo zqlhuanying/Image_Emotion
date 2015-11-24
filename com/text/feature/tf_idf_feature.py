@@ -2,7 +2,7 @@
 from __future__ import division
 from compiler.ast import flatten
 import math
-from com.text.constant import RESOURCE_BASE_URL
+from com import RESOURCE_BASE_URL
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
@@ -19,6 +19,8 @@ class TFIDFFeature(Feature):
         super(TFIDFFeature, self).__init__()
 
     def get_key_words(self, sentences, based=True):
+        # todo
+        # 不应该包含sentences中的句子，只能以训练集为基础
         """
         以 sentences 为基础， 计算每个 sentence 的关键词
         若 based 为 True 则以训练集中的数据为基础来计算 TFIDF

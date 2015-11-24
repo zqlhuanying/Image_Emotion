@@ -1,7 +1,7 @@
 # encoding: utf-8
 import regex
 import pynlpir.nlpir as nlpir
-from com.text.constant import RESOURCE_BASE_URL
+from com import RESOURCE_BASE_URL
 
 __author__ = 'zql'
 __date__ = '2015/11/10'

@@ -1,6 +1,7 @@
 # encoding: utf-8
 from compiler.ast import flatten
-from com.text.constant import RESOURCE_BASE_URL
+from com import RESOURCE_BASE_URL
+
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
@@ -42,6 +43,7 @@ class Load:
 
             sentences = [child.findall("sentence") for child in direct_childs[:max_training]]
 
+            # 返回训练集中属于主观句的部分
             return [{"sentence": sentence.text,
                      "emotion-tag": sentence.get("emotion_tag"),
                      "emotion-1-type": sentence.get("emotion-1-type"),
@@ -51,4 +53,5 @@ class Load:
 
 if __name__ == "__main__":
     url = RESOURCE_BASE_URL + "weibo_samples.xml"
-    Load.load_training(url)
+    s = Load.load_training(url)
+    print len(s)
