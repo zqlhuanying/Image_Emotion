@@ -11,7 +11,7 @@ class Feature(object):
     def __init__(self):
         pass
 
-    def get_key_words(self, s):
+    def get_key_words(self, sentences):
         """
         获取关键词
         :return:

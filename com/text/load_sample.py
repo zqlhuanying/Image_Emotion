@@ -13,7 +13,8 @@ __date__ = '2015/11/16'
 
 class Load:
     """
-    加载微博数据
+    加载微博数据，加载的数据是 unicode 编码的（但是在XML中已经指示是 UTF-8 ）
+    但是分词后的数据是 UTF-8 编码的，所以为了保持一致，均采用 UTF-8 编码
     """
     def __init__(self):
         pass
@@ -44,7 +45,7 @@ class Load:
             sentences = [child.findall("sentence") for child in direct_childs[:max_training]]
 
             # 返回训练集中属于主观句的部分
-            return [{"sentence": sentence.text,
+            return [{"sentence": sentence.text.encode("utf_8"),
                      "emotion-tag": sentence.get("emotion_tag"),
                      "emotion-1-type": sentence.get("emotion-1-type"),
                      "emotion-2-type": sentence.get("emotion-2-type")}

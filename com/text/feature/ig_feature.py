@@ -55,8 +55,8 @@ class IGFeature(Feature):
     def hct(all_datas, all_class_datas, t):
         # 计算 H（C|T）的条件熵
         # todo
-        # 特征词在整个训练集或在某个类别中不出现的情况，会导致某些概率为0，怎么解决
-        # 编码有点小问题
+        # 特征词在整个训练集或在某个类别中不出现的情况，会导致某些概率为0，怎么解决？
+        # 暂定：不像 TFIDF 那样做平滑处理，而是直接排除 0 的情况
         def pt():
             # 特征T出现的概率，只要用出现过T的文档数除以总文档数
             return IGFeature.__n_contains(t, all_datas) / len(all_datas)
@@ -69,6 +69,7 @@ class IGFeature(Feature):
             # not in pct()
             npt_num = 1 - pt_num
             return 0 if npt_num == 0 else (len(each_class_datas) - IGFeature.__n_contains(t, each_class_datas)) / npt_num
+
         s = 0
         pt_num = pt()
         for c in EMOTION_CLASS.keys():
@@ -100,15 +101,14 @@ class IGFeature(Feature):
     def __each_class_text(datas, c):
         # 获取 datas 下，类别 c 的文本
         if c not in EMOTION_CLASS.keys():
-            raise AttributeError("have no emotion class")
+            raise ValueError("have no emotion class")
         return [data.get("sentence") for data in datas if data.get("emotion-1-type") == c]
 
     @staticmethod
     def __n_contains(word, wordslist):
-        return sum(1 for words in wordslist if word.decode("utf_8") in words)
+        return sum(1 for words in wordslist if word in words)
 
 if __name__ == "__main__":
     s1 = ur"源海都学愤怒鸟的声音，好像好厉害…"
-    print ur"源海" in s1
     IGFeature().get_key_words(s1)
 
