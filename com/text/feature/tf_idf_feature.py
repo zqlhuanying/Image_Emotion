@@ -41,20 +41,12 @@ class TFIDFFeature(Feature):
                 print("\tWord: %s, TF-IDF: %f" % (word.decode("utf_8"), score))
 
     @staticmethod
-    def tf(word, words):
-        return words.count(word) / len(words)
-
-    @staticmethod
     def idf(word, wordslist):
-        return math.log(len(wordslist) / (1 + TFIDFFeature.__n_contains(word, wordslist)))
+        return math.log(len(wordslist) / (1 + TFIDFFeature.n_contains(word, wordslist)))
 
     @staticmethod
     def tfidf(word, words, wordslist):
         return TFIDFFeature.tf(word, words) * TFIDFFeature.idf(word, wordslist)
-
-    @staticmethod
-    def __n_contains(word, wordslist):
-        return sum(1 for words in wordslist if word in words)
 
 if __name__ == "__main__":
     s1 = r"NLPIR分词系统前身为2000年发布的ICTCLAS词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
