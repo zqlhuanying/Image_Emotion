@@ -18,27 +18,30 @@ class TFIDFFeature(Feature):
     def __init__(self):
         super(TFIDFFeature, self).__init__()
 
-    def get_key_words(self, sentences):
-        sentence_list = list()
-        sentence_list.append(sentences)
-        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
-        training_datas = Load.load_training(sample_url)
-        pure_training_datas = [data.get("sentence") for data in training_datas]
-        sentence_list.append(pure_training_datas)
+#    def get_key_words(self, sentences):
+#        sentence_list = list()
+#        sentence_list.append(sentences)
+#        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
+#        training_datas = Load.load_training(sample_url)
+#        pure_training_datas = [data.get("sentence") for data in training_datas]
+#        sentence_list.append(pure_training_datas)
+#
+#        splited_words_list = list()
+#        SplitWords.__init__()
+#        for sentence in flatten(sentence_list):
+#            splited_words_list.append(SplitWords.split_words(sentence))
+#        SplitWords.close()
+#
+#        for splited_words in splited_words_list:
+#            print
+#            scores = {splited_word: TFIDFFeature.tfidf(splited_word, splited_words, pure_training_datas)
+#                      for splited_word in set(splited_words)}
+#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+#            for word, score in sorted_words[:min(10, len(sorted_words))]:
+#                print("\tWord: %s, TF-IDF: %f" % (word.decode("utf_8"), score))
 
-        splited_words_list = list()
-        SplitWords.__init__()
-        for sentence in flatten(sentence_list):
-            splited_words_list.append(SplitWords.split_words(sentence))
-        SplitWords.close()
-
-        for splited_words in splited_words_list:
-            print
-            scores = {splited_word: TFIDFFeature.tfidf(splited_word, splited_words, pure_training_datas)
-                      for splited_word in set(splited_words)}
-            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-            for word, score in sorted_words[:min(10, len(sorted_words))]:
-                print("\tWord: %s, TF-IDF: %f" % (word.decode("utf_8"), score))
+    def cal_weight(self, t, sentence, class_sentences, sentences):
+        return TFIDFFeature.tfidf(t, sentence, sentences)
 
     @staticmethod
     def idf(word, wordslist):
