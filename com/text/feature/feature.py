@@ -17,38 +17,46 @@ class Feature(object):
     def __init__(self):
         pass
 
-    def get_key_words(self, sentences):
+    def get_key_words(self, sentences=None):
         """
         获取关键词
+        如果 sentences 为 None，则获取训练集中的关键词
+        否则获取 sentences 中的关键词
         :return:
         """
         # 加载训练集
         sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
         # 每个句子还包含类别信息
         training_datas = Load.load_training(sample_url)
-        # 去除无用信息，只留下文本信息
-        pure_training_datas = [data.get("sentence") for data in training_datas]
 
-        # 获取所有类别下的文本
-        all_class_datas = Feature.all_class_text(training_datas)
+        sentence_list = training_datas
+        sentence_size = len(training_datas)
+        if sentences is not None:
+            l = Feature.__pre_process(sentences)
+            sentence_list = l + training_datas
+            sentence_size = len(l)
 
         # 分词
         print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        sentence_list = list()
-        sentence_list.append(sentences)
-        sentence_list.append(pure_training_datas)
         SplitWords.__init__()
-        splited_words_list = [SplitWords.split_words(sentence) for sentence in flatten(sentence_list)]
+        splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+                               "sentence": SplitWords.split_words(sentence.get("sentence"))}
+                              for sentence in flatten(sentence_list)]
         SplitWords.close()
         print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
-        for splited_words in splited_words_list:
+        # 获取所有类别下的文本
+        all_class_datas = Feature.all_class_text(splited_words_list)
+
+        for splited_words in splited_words_list[0: sentence_size]:
             print
-            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas, pure_training_datas)
+            splited_words = splited_words.get("sentence")
+            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
+                                                    [d.get("sentence") for d in splited_words_list])
                       for splited_word in set(splited_words)}
             sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
             for word, score in sorted_words[:min(10, len(sorted_words))]:
-                print("\tWord: %s, TF-IDF: %f" % (word.decode("utf_8"), score))
+                print("\tWord: %s, Weight: %f" % (word.decode("utf_8"), score))
 
     def cal_weight(self, t, sentence, class_sentences, sentences):
         """
@@ -90,7 +98,24 @@ class Feature(object):
 
     @staticmethod
     def __pre_process(sentences):
-        pass
+        def process_str(s):
+            return {"emotion-1-type": "Unknow", "sentence": s}
+
+        def process_dict(s):
+            if not s.has_key("emotion-1-type") or not s.has_key("sentence"):
+                raise AttributeError("dict has no emotion-1-type or sentence key")
+            return s
+
+        res = list()
+        l = list()
+        l.append(sentences)
+        sentence_list = flatten(l)
+        for sentence in sentence_list:
+            if isinstance(sentence, basestring):
+                res.append(process_str(sentence))
+            if isinstance(sentence, dict):
+                res.append(process_dict(sentence))
+        return res
 
 
 if __name__ == "__main__":

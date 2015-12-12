@@ -45,11 +45,11 @@ class IGFeature(Feature):
 #        print("hc is: %f" % hc)
 #        for splited_words in splited_words_list:
 #            print
-#            scores = {word: hc - IGFeature.hct(pure_training_datas, all_class_datas, word)
+#            scores = {word: hc - IGFeature.hct(word, all_class_datas, pure_training_datas)
 #                      for word in set(splited_words)}
 #            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 #            for word, score in sorted_words[:min(10, len(sorted_words))]:
-#                print("\tWord: %s, IG: %f" % (word.decode("utf_8"), score))
+#               print("\tWord: %s, IG: %f" % (word.decode("utf_8"), score))
 
     def cal_weight(self, t, sentence, class_sentences, sentences):
         hc = IGFeature.hc(class_sentences, len(sentences))
