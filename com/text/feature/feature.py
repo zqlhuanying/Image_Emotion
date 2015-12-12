@@ -48,15 +48,28 @@ class Feature(object):
         # 获取所有类别下的文本
         all_class_datas = Feature.all_class_text(splited_words_list)
 
-        for splited_words in splited_words_list[0: sentence_size]:
-            print
-            splited_words = splited_words.get("sentence")
+        # return
+        res = []
+        for splited_words_dict in splited_words_list[0: sentence_size]:
+            splited_words = splited_words_dict.get("sentence")
             scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
                                                     [d.get("sentence") for d in splited_words_list])
                       for splited_word in set(splited_words)}
             sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-            for word, score in sorted_words[:min(10, len(sorted_words))]:
-                print("\tWord: %s, Weight: %f" % (word.decode("utf_8"), score))
+            res.append({"sentence": dict(sorted_words[:min(10, len(sorted_words))]),
+                        "emotion-1-type": splited_words_dict.get("emotion-1-type")})
+        return res
+
+        # print
+#        for splited_words_dict in splited_words_list[0: sentence_size]:
+#            print
+#            splited_words = splited_words_dict.get("sentence")
+#            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
+#                                                    [d.get("sentence") for d in splited_words_list])
+#                      for splited_word in set(splited_words)}
+#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+#            for word, score in sorted_words[:min(10, len(sorted_words))]:
+#                print("\tWord: %s, Weight: %f" % (word.decode("utf_8"), score))
 
     def cal_weight(self, t, sentence, class_sentences, sentences):
         """

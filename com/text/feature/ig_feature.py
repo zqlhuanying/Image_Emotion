@@ -100,5 +100,6 @@ class IGFeature(Feature):
 
 if __name__ == "__main__":
     s1 = ur"源海都学愤怒鸟的声音，好像好厉害…"
-    IGFeature().get_key_words(s1)
+    IGFeature().get_key_words()
+#    IGFeature().get_key_words(s1)
 

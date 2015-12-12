@@ -60,7 +60,8 @@ if __name__ == "__main__":
          r"并NLPIR自然语言处理与信息检索共享平台，调整命名为NLPIR分词。"
     s4 = r"NLPIR分词系统前身为2000年发布的词法分析系统，从2009年开始，为了和以前工作进行大的区隔，" \
          r"并推广NLPIR，调整命名为NLPIR分词系统。"
-    TFIDFFeature().get_key_words([s1, s2, s3, s4])
+    TFIDFFeature().get_key_words()
+#    TFIDFFeature().get_key_words([s1, s2, s3, s4])
 
 #    def count(word, words):
 #        c = 0
