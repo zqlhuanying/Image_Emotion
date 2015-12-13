@@ -49,6 +49,7 @@ class Feature(object):
         all_class_datas = Feature.all_class_text(splited_words_list)
 
         # return
+        print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
         res = []
         for splited_words_dict in splited_words_list[0: sentence_size]:
             splited_words = splited_words_dict.get("sentence")
@@ -58,6 +59,7 @@ class Feature(object):
             sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
             res.append({"sentence": dict(sorted_words[:min(10, len(sorted_words))]),
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
+        print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
         return res
 
         # print

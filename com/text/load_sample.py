@@ -1,4 +1,5 @@
 # encoding: utf-8
+from __future__ import division
 from compiler.ast import flatten
 from com import RESOURCE_BASE_URL
 
@@ -21,9 +22,20 @@ class Load:
 
     @staticmethod
     def load_training(url):
+        ratio = 2 / 3
+        return Load.__load(url, ratio)
+
+    @staticmethod
+    def load_test(url):
+        ratio = 1 / 3
+        return Load.__load(url, ratio, False)
+
+    @staticmethod
+    def __load(url, ratio, direction=True):
         """
         Loading Training Data Except Objective Sentence
         :param url:
+        :param direction: 默认从上往下取
         :return:
         """
         tree = None
@@ -39,10 +51,11 @@ class Load:
             # get the direct child
             direct_childs = root.findall("weibo")
 
-            # 训练集数目 占总数的 2/3
-            max_training = len(direct_childs) * 2 / 3
-
-            sentences = [child.findall("sentence") for child in direct_childs[:max_training]]
+            # range
+            _range = slice(int(len(direct_childs) * ratio))
+            if not direction:
+                _range = slice(int(len(direct_childs) * (1 - ratio)), len(direct_childs), None)
+            sentences = [child.findall("sentence") for child in direct_childs[_range]]
 
             # 返回训练集中属于主观句的部分
             return [{"sentence": sentence.text.encode("utf_8"),
