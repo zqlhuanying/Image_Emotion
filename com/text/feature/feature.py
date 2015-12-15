@@ -3,6 +3,7 @@ from __future__ import division
 from compiler.ast import flatten
 import time
 from com import EMOTION_CLASS, RESOURCE_BASE_URL
+from com.text.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
 
@@ -15,7 +16,9 @@ class Feature(object):
     文本特征词抽取
     """
     def __init__(self):
-        pass
+        # f 开关，将分词后的结果写入到文本中
+        #   若资源有更新，可以打开开关，强制写入新的分词后的结果
+        self.f = False
 
     def get_key_words(self, sentences=None):
         """
@@ -24,48 +27,47 @@ class Feature(object):
         否则获取 sentences 中的关键词
         :return:
         """
-        # 加载训练集
-        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
-        # 每个句子还包含类别信息
-        training_datas = Load.load_training(sample_url)
-
-        sentence_list = training_datas
-        sentence_size = len(training_datas)
-        if sentences is not None:
-            l = Feature.__pre_process(sentences)
-            sentence_list = l + training_datas
-            sentence_size = len(l)
-
-        # 分词
+        # 加载分词后的训练集
         print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        SplitWords.__init__()
-        splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
-                               "sentence": SplitWords.split_words(sentence.get("sentence"))}
-                              for sentence in flatten(sentence_list)]
-        SplitWords.close()
-        print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        splited_words_list = self._get_splited_train()
+        sentence_size = len(splited_words_list)
 
         # 获取所有类别下的文本
         all_class_datas = Feature.all_class_text(splited_words_list)
 
-        # return
-#        print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
-#        res = []
-#        for splited_words_dict in splited_words_list[0: sentence_size]:
-#            splited_words = splited_words_dict.get("sentence")
-#            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
-#                                                    [d.get("sentence") for d in splited_words_list])
-#                      for splited_word in set(splited_words)}
-#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-#            sorted_words = dict(sorted_words[: min(10, len(sorted_words))])
-#            for k in sorted_words.keys():
-#                sorted_words[k] = splited_words.count(k)
-#            res.append({"sentence": sorted_words,
-#                        "emotion-1-type": splited_words_dict.get("emotion-1-type")})
-#        print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
-#        return res
+        if sentences is not None:
+            l = Feature.__pre_process(sentences)
 
-        # return
+            SplitWords.__init__()
+            splited_sentence_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+                                      "sentence": SplitWords.split_words(sentence.get("sentence"))}
+                                     for sentence in flatten(l)]
+            SplitWords.close()
+
+            splited_words_list = splited_sentence_list + splited_words_list
+            sentence_size = len(splited_sentence_list)
+
+        print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+
+#        # 加载训练集
+#        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
+#        # 每个句子还包含类别信息
+#        training_datas = Load.load_training(sample_url)
+#
+#        sentence_list = training_datas
+#        sentence_size = len(training_datas)
+#        if sentences is not None:
+#            l = Feature.__pre_process(sentences)
+#            sentence_list = l + training_datas
+#            sentence_size = len(l)
+#
+#        # 分词
+#        print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#        split_txt = RESOURCE_BASE_URL + "split/" + self.__class__.__name__ + ".txt"
+#        splited_words_list = self._split(split_txt, sentence_list)
+#        print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+
+        # return term/frequency
         print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
         res = []
         for splited_words_dict in splited_words_list[0: sentence_size]:
@@ -74,10 +76,27 @@ class Feature(object):
                                                     [d.get("sentence") for d in splited_words_list])
                       for splited_word in set(splited_words)}
             sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-            res.append({"sentence": dict(sorted_words[:min(10, len(sorted_words))]),
+            sorted_words = dict(sorted_words[: min(10, len(sorted_words))])
+            for k in sorted_words.keys():
+                sorted_words[k] = splited_words.count(k)
+            res.append({"sentence": sorted_words,
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
         return res
+
+        # return term/weight
+#        print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#        res = []
+#        for splited_words_dict in splited_words_list[0: sentence_size]:
+#            splited_words = splited_words_dict.get("sentence")
+#            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
+#                                                    [d.get("sentence") for d in splited_words_list])
+#                      for splited_word in set(splited_words)}
+#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+#            res.append({"sentence": dict(sorted_words[:min(10, len(sorted_words))]),
+#                        "emotion-1-type": splited_words_dict.get("emotion-1-type")})
+#        print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#        return res
 
         # print
 #        for splited_words_dict in splited_words_list[0: sentence_size]:
@@ -100,6 +119,31 @@ class Feature(object):
         :return:
         """
         pass
+
+    def _get_splited_train(self):
+        """
+        优先从文件中读取训练集分词后的结果
+        :param sentence_list:
+        :return:
+        """
+        split_txt = RESOURCE_BASE_URL + "split/" + self.__class__.__name__ + ".txt"
+        if self.f or not FileUtil.isexist(split_txt) or FileUtil.isempty(split_txt):
+            # 加载训练集
+            sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
+            # 每个句子还包含类别信息
+            training_datas = Load.load_training(sample_url)
+
+            SplitWords.__init__()
+            splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+                                   "sentence": SplitWords.split_words(sentence.get("sentence"))}
+                                  for sentence in flatten(training_datas)]
+            SplitWords.close()
+
+            FileUtil.write(split_txt, splited_words_list)
+        else:
+            splited_words_list = FileUtil.read(split_txt)
+
+        return splited_words_list
 
     @staticmethod
     def tf(word, words):
