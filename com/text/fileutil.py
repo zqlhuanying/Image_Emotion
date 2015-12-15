@@ -19,7 +19,10 @@ class FileUtil:
 
     @staticmethod
     def write(path, data):
-        os.makedirs(os.path.dirname(path))
+        parent_dir = os.path.dirname(path)
+        if not FileUtil.isexist(parent_dir):
+            os.makedirs(parent_dir)
+
         s = len(data)
         fp = open(path, "w")
         for i, d in enumerate(data):

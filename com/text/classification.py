@@ -7,6 +7,7 @@ from com import RESOURCE_BASE_URL
 from com.image.utils.common_util import CommonUtil
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
+from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
 from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
 
@@ -23,17 +24,14 @@ class Classification:
         # 特征词 Hash 散列器
         self.feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
 
-    def get_classificator(self, train_datas):
+    def get_classificator(self, train_datas, class_label):
         """
         获取分类器
         :return:
         """
         fit_train_datas = train_datas
         if not sp.issparse(train_datas):
-            # 构建适合 bayes 分类的数据集
-            datas = [data.get("sentence") for data in train_datas]
-            class_label = [data.get("emotion-1-type") for data in train_datas]
-            fit_train_datas = self.feature_hasher.transform(datas).toarray()
+            fit_train_datas = self.feature_hasher.transform(train_datas).toarray()
 
         # 训练模型
         self.bayes.fit(fit_train_datas, class_label)
@@ -47,9 +45,7 @@ class Classification:
         """
         fit_test_datas = test_datas
         if not sp.issparse(test_datas):
-            # 构建适合 bayes 分类的数据集
-            datas = [data.get("sentence") for data in test_datas]
-            fit_test_datas = self.feature_hasher.transform(datas).toarray()
+            fit_test_datas = self.feature_hasher.transform(test_datas).toarray()
 
         # 预测
         return self.bayes.predict(fit_test_datas)
@@ -67,15 +63,20 @@ if __name__ == "__main__":
     # 加载数据集
     sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
     test = Load.load_test(sample_url)
-    train_datas = TFIDFFeature().get_key_words()
-    test_datas = TFIDFFeature().get_key_words(test)
-    c_true = [data.get("emotion-1-type") for data in test_datas]
+    train_datas, class_label = FastTFIDFFeature().get_key_words()
+    test_datas, c_true = FastTFIDFFeature().get_key_words(test)
+#    c_true = [data.get("emotion-1-type") for data in test_datas]
+
+    train = train_datas
+    test = test_datas
+    # 构建适合 bayes 分类的数据集
+    if not sp.issparse(train_datas):
+        train = [data.get("sentence") for data in train_datas]
+        test = [data.get("sentence") for data in test_datas]
 
     clf = Classification()
-    clf.get_classificator(train_datas)
-    c_pred = clf.predict(test_datas)
-    CommonUtil.img_array_to_file("F://1.txt", np.array(c_true).reshape(-1, 1))
-    CommonUtil.img_array_to_file("F://2.txt", np.array(c_pred).reshape(-1, 1))
+    clf.get_classificator(train, class_label)
+    c_pred = clf.predict(test)
     print c_pred
     print "precision:", clf.metrics_precision(c_true, c_pred)
     print "recall:", clf.metrics_recall(c_true, c_pred)
