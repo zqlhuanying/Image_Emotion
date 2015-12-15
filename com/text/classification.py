@@ -1,7 +1,10 @@
 # encoding: utf-8
+import numpy as np
+import scipy.sparse as sp
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score
 from com import RESOURCE_BASE_URL
+from com.image.utils.common_util import CommonUtil
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
 from com.text.feature.tf_idf_feature import TFIDFFeature
@@ -18,25 +21,37 @@ class Classification:
     def __init__(self, bayes=Bayes()):
         self.bayes = bayes
         # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=30000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
 
     def get_classificator(self, train_datas):
         """
         获取分类器
         :return:
         """
-        # 构建适合 bayes 分类的数据集
-        datas = [data.get("sentence") for data in train_datas]
-        class_label = [data.get("emotion-1-type") for data in train_datas]
-        fit_train_datas = self.feature_hasher.transform(datas).toarray()
+        fit_train_datas = train_datas
+        if not sp.issparse(train_datas):
+            # 构建适合 bayes 分类的数据集
+            datas = [data.get("sentence") for data in train_datas]
+            class_label = [data.get("emotion-1-type") for data in train_datas]
+            fit_train_datas = self.feature_hasher.transform(datas).toarray()
 
         # 训练模型
         self.bayes.fit(fit_train_datas, class_label)
         return self
 
     def predict(self, test_datas):
-        datas = [data.get("sentence") for data in test_datas]
-        fit_test_datas = self.feature_hasher.transform(datas).toarray()
+        """
+        预测
+        :param test_datas:
+        :return:
+        """
+        fit_test_datas = test_datas
+        if not sp.issparse(test_datas):
+            # 构建适合 bayes 分类的数据集
+            datas = [data.get("sentence") for data in test_datas]
+            fit_test_datas = self.feature_hasher.transform(datas).toarray()
+
+        # 预测
         return self.bayes.predict(fit_test_datas)
 
     def metrics_precision(self, c_true, c_pred):
@@ -59,6 +74,8 @@ if __name__ == "__main__":
     clf = Classification()
     clf.get_classificator(train_datas)
     c_pred = clf.predict(test_datas)
+    CommonUtil.img_array_to_file("F://1.txt", np.array(c_true).reshape(-1, 1))
+    CommonUtil.img_array_to_file("F://2.txt", np.array(c_pred).reshape(-1, 1))
     print c_pred
     print "precision:", clf.metrics_precision(c_true, c_pred)
     print "recall:", clf.metrics_recall(c_true, c_pred)
