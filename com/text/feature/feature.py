@@ -80,11 +80,13 @@ class Feature(object):
         if sentences is not None:
             l = Feature.__pre_process(sentences)
 
-            SplitWords.__init__()
-            splited_sentence_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
-                                      "sentence": SplitWords.split_words(sentence.get("sentence"))}
-                                     for sentence in flatten(l)]
-            SplitWords.close()
+            splited_sentence_list = Feature.__split(flatten(l))
+#            SplitWords.__init__()
+#            splited_sentence_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+#                                      "sentence": SplitWords.split_words(sentence.get("sentence"))}
+#                                     for sentence in flatten(l)
+#                                     if SplitWords.split_words(sentence.get("sentence"))]
+#            SplitWords.close()
 
             splited_words_list = splited_sentence_list + splited_words_list
             sentence_size = len(splited_sentence_list)
@@ -115,6 +117,7 @@ class Feature(object):
             res.append({"sentence": sorted_words,
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        FileUtil.write("F://11.txt", res)
         return res, class_label
 
 #        # return term/weight
@@ -144,11 +147,13 @@ class Feature(object):
             # 每个句子还包含类别信息
             training_datas = Load.load_training(sample_url)
 
-            SplitWords.__init__()
-            splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
-                                   "sentence": SplitWords.split_words(sentence.get("sentence"))}
-                                  for sentence in flatten(training_datas)]
-            SplitWords.close()
+            splited_words_list = Feature.__split(flatten(training_datas))
+#            SplitWords.__init__()
+#            splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+#                                   "sentence": SplitWords.split_words(sentence.get("sentence"))}
+#                                  for sentence in flatten(training_datas)
+#                                  if SplitWords.split_words(sentence.get("sentence"))]
+#            SplitWords.close()
 
             FileUtil.write(split_txt, splited_words_list)
         else:
@@ -203,6 +208,22 @@ class Feature(object):
             if isinstance(sentence, dict):
                 res.append(process_dict(sentence))
         return res
+
+    @staticmethod
+    def __split(sentence_list):
+        SplitWords.__init__()
+
+        l = []
+        for sentence in sentence_list:
+            splited_words = SplitWords.split_words(sentence.get("sentence"))
+            if splited_words:
+                d = {}
+                d["emotion-1-type"] = sentence.get("emotion-1-type")
+                d["sentence"] = splited_words
+                l.append(d)
+
+        SplitWords.close()
+        return l
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 # encoding: utf-8
 import regex
 import pynlpir.nlpir as nlpir
+import time
 from com import RESOURCE_BASE_URL
 
 __author__ = 'zql'
@@ -17,6 +18,11 @@ class SplitWords:
         if not nlpir.Init(nlpir.PACKAGE_DIR, nlpir.UTF8_CODE, None):
             print "Initialize NLPIR failed"
             exit(-1)
+
+        # 添加用户词典
+        SplitWords.add_user_word("netword.txt")
+        SplitWords.add_user_word("ntusd.txt")
+        SplitWords.add_user_word("hownet.txt")
 
     @staticmethod
     def split_words(s):
@@ -52,6 +58,20 @@ class SplitWords:
     @staticmethod
     def close():
         nlpir.Exit()
+
+    @staticmethod
+    def add_user_word(path):
+        # 添加用户词典
+        [nlpir.AddUserWord(line.strip("\n"))
+         for line in open(RESOURCE_BASE_URL + path)]
+
+    @staticmethod
+    def import_user_dict(path):
+        print "Before Import User Dict: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        n = nlpir.ImportUserDict(RESOURCE_BASE_URL + path)
+        nlpir.SaveTheUsrDic()
+        print "Success Import: ", n
+        print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
     def __del_non_tag(s):

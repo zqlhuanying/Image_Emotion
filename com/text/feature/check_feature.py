@@ -13,6 +13,7 @@ __author__ = 'zql'
 __date__ = '2015/12/15'
 
 feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
+sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
 
 
 def get_dict(l):
@@ -23,12 +24,8 @@ def get_dict(l):
 
 
 def check_train_feature():
-    sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
-    train_datas = Load.load_training(sample_url)
-
     # train_feature
-    sentence_list = train_datas
-    key_words = TFIDFFeature().get_key_words(sentence_list)
+    key_words, _ = TFIDFFeature().get_key_words()
     fit_train_datas = [d.get("sentence") for d in key_words]
     # 分词
 #    print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -43,15 +40,13 @@ def check_train_feature():
     train_feature = feature_hasher.transform(fit_train_datas).toarray()
 
     feature_count = np.sum(train_feature, axis=0)
-    CommonUtil.img_array_to_file("F://3.txt", feature_count.reshape(-1, 1))
+    CommonUtil.img_array_to_file("F://train_feature.txt", feature_count.reshape(-1, 1))
 
 
 def check_test_feature():
-    sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
     test_datas = Load.load_test(sample_url)
     # test feature
-    sentence_list = test_datas
-    key_words = TFIDFFeature().get_key_words(sentence_list)
+    key_words, _ = TFIDFFeature().get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]
     # 分词
 #    print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -66,7 +61,7 @@ def check_test_feature():
     test_feature = feature_hasher.transform(fit_test_datas).toarray()
 
     feature_count = np.sum(test_feature, axis=0)
-    CommonUtil.img_array_to_file("F://4.txt", feature_count.reshape(-1, 1))
+    CommonUtil.img_array_to_file("F://test_feature.txt", feature_count.reshape(-1, 1))
     print
 
 check_train_feature()

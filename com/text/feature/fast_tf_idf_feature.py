@@ -42,4 +42,7 @@ class FastTFIDFFeature(Feature):
             d[l1] = l.count(l1)
         return d
 
+if __name__ == "__main__":
+    FastTFIDFFeature().get_key_words()
+
 
