@@ -3,7 +3,7 @@ from compiler.ast import flatten
 import time
 import numpy as np
 from sklearn.feature_extraction import FeatureHasher
-from com import RESOURCE_BASE_URL
+from com import RESOURCE_BASE_URL, TEST_BASE_URL
 from com.image.utils.common_util import CommonUtil
 from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
@@ -40,7 +40,7 @@ def check_train_feature():
     train_feature = feature_hasher.transform(fit_train_datas).toarray()
 
     feature_count = np.sum(train_feature, axis=0)
-    CommonUtil.img_array_to_file("F://train_feature.txt", feature_count.reshape(-1, 1))
+    CommonUtil.img_array_to_file(TEST_BASE_URL + "train_feature.txt", feature_count.reshape(-1, 1))
 
 
 def check_test_feature():
@@ -61,7 +61,7 @@ def check_test_feature():
     test_feature = feature_hasher.transform(fit_test_datas).toarray()
 
     feature_count = np.sum(test_feature, axis=0)
-    CommonUtil.img_array_to_file("F://test_feature.txt", feature_count.reshape(-1, 1))
+    CommonUtil.img_array_to_file(TEST_BASE_URL + "test_feature.txt", feature_count.reshape(-1, 1))
     print
 
 check_train_feature()

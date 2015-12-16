@@ -3,6 +3,7 @@ import regex
 import pynlpir.nlpir as nlpir
 import time
 from com import RESOURCE_BASE_URL
+from com.text.third_part.langconv import Converter
 
 __author__ = 'zql'
 __date__ = '2015/11/10'
@@ -26,6 +27,9 @@ class SplitWords:
 
     @staticmethod
     def split_words(s):
+        # 繁体转简体
+        s = SplitWords.__convert(s)
+
         # 去除标签
         s = SplitWords.__del_non_tag(s)
 
@@ -72,6 +76,11 @@ class SplitWords:
         nlpir.SaveTheUsrDic()
         print "Success Import: ", n
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+
+    @staticmethod
+    def __convert(s):
+        # 将繁体转化成简体
+        return Converter("zh-hans").convert(s.decode("utf_8"))
 
     @staticmethod
     def __del_non_tag(s):
@@ -170,8 +179,9 @@ class SplitWords:
 if __name__ == "__main__":
     string1 = r'//@王久辛:@王久辛 @王久辛 留大量[愤怒] 预习与@王久辛:作业,让家长@hj 给孩子报铺导#辅导班#班,他们再#《》赚一把钱~~美特伺邦威周成健: 做 ME AND CITY是非常有价值的。' \
               r'群众的呼声VERY very importantly！！！[大笑] [大笑] *^_^*'
+    string2 = "给孩子辅导班我媽話你們宿捨怎麼這麼失敗的?"
     SplitWords.__init__()
-    splited_words = SplitWords.split_words(string1)
+    splited_words = SplitWords.split_words(string2)
     SplitWords.close()
     print len(splited_words)
     for splited_word in splited_words:

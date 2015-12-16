@@ -2,7 +2,7 @@
 from __future__ import division
 from compiler.ast import flatten
 import time
-from com import EMOTION_CLASS, RESOURCE_BASE_URL
+from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL
 from com.text.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
@@ -117,7 +117,7 @@ class Feature(object):
             res.append({"sentence": sorted_words,
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        FileUtil.write("F://11.txt", res)
+        FileUtil.write(TEST_BASE_URL + "11.txt", res)
         return res, class_label
 
 #        # return term/weight

@@ -6,6 +6,7 @@ __date__ = '2015/11/4'
 
 
 RESOURCE_BASE_URL = os.path.dirname(__file__) + "/resource" + "/"
+TEST_BASE_URL = os.path.dirname(os.path.dirname(__file__)) + "/test" + "/"
 
 # 情感类别
 EMOTION_CLASS = {
