@@ -2,7 +2,6 @@
 from __future__ import division
 from compiler.ast import flatten
 import math
-from com import RESOURCE_BASE_URL
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
@@ -21,8 +20,7 @@ class TFIDFFeature(Feature):
 #    def get_key_words(self, sentences):
 #        sentence_list = list()
 #        sentence_list.append(sentences)
-#        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
-#        training_datas = Load.load_training(sample_url)
+#        training_datas = Load.load_training()
 #        pure_training_datas = [data.get("sentence") for data in training_datas]
 #        sentence_list.append(pure_training_datas)
 #

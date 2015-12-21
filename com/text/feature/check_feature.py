@@ -3,7 +3,7 @@ from compiler.ast import flatten
 import time
 import numpy as np
 from sklearn.feature_extraction import FeatureHasher
-from com import RESOURCE_BASE_URL, TEST_BASE_URL
+from com import TEST_BASE_URL
 from com.image.utils.common_util import CommonUtil
 from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
@@ -13,7 +13,6 @@ __author__ = 'zql'
 __date__ = '2015/12/15'
 
 feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
-sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
 
 
 def get_dict(l):
@@ -44,7 +43,7 @@ def check_train_feature():
 
 
 def check_test_feature():
-    test_datas = Load.load_test(sample_url)
+    test_datas = Load.load_test()
     # test feature
     key_words, _ = TFIDFFeature().get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]

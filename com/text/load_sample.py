@@ -21,12 +21,14 @@ class Load:
         pass
 
     @staticmethod
-    def load_training(url):
+    def load_training():
+        url = RESOURCE_BASE_URL + "weibo_samples.xml"
         ratio = 2 / 3
         return Load.__load(url, ratio)
 
     @staticmethod
-    def load_test(url):
+    def load_test():
+        url = RESOURCE_BASE_URL + "weibo_samples.xml"
         ratio = 1 / 3
         return Load.__load(url, ratio, False)
 
@@ -66,6 +68,5 @@ class Load:
                     if sentence.get("emotion_tag") == "Y"]
 
 if __name__ == "__main__":
-    url = RESOURCE_BASE_URL + "weibo_samples.xml"
-    s = Load.load_training(url)
+    s = Load.load_training()
     print len(s)

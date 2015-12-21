@@ -3,7 +3,7 @@ from __future__ import division
 from compiler.ast import flatten
 import math
 import time
-from com import RESOURCE_BASE_URL, EMOTION_CLASS
+from com import EMOTION_CLASS
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
@@ -22,9 +22,8 @@ class IGFeature(Feature):
 
 #    def get_key_words(self, sentences):
 #        # 加载训练集
-#        sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
 #        # 每个句子还包含类别信息
-#        training_datas = Load.load_training(sample_url)
+#        training_datas = Load.load_training()
 #        # 去除无用信息，只留下文本信息
 #        pure_training_datas = [data.get("sentence") for data in training_datas]
 #

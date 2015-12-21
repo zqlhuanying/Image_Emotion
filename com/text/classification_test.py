@@ -1,6 +1,5 @@
 # encoding: utf-8
 import scipy.sparse as sp
-from com import RESOURCE_BASE_URL
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
 from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
@@ -14,8 +13,7 @@ __date__ = '2015/12/14'
 
 def test_classification(feature):
     # 加载数据集
-    sample_url = RESOURCE_BASE_URL + "weibo_samples.xml"
-    test = Load.load_test(sample_url)
+    test = Load.load_test()
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
 
