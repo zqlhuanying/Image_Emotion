@@ -61,8 +61,8 @@ class Classification:
 if __name__ == "__main__":
     # 加载数据集
     test = Load.load_test()
-    train_datas, class_label = FastTFIDFFeature().get_key_words()
-    test_datas, c_true = FastTFIDFFeature().get_key_words(test)
+    train_datas, class_label = TFIDFFeature().get_key_words()
+    test_datas, c_true = TFIDFFeature().get_key_words(test)
 #    c_true = [data.get("emotion-1-type") for data in test_datas]
 
     train = train_datas

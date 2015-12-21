@@ -94,6 +94,37 @@ class Feature(object):
         return splited_words_list, sentence_size
 
     def _collect(self, splited_words_list, sentence_size):
+        def norm(word_scores):
+            """
+            归一化
+            :param word_scores: a dict {word: score}
+            """
+            _max = max(word_scores.values())
+            _min = min(word_scores.values())
+            _size = len(word_scores.items())
+            for k, v in word_scores.items():
+                if _max == _min:
+                    word_scores[k] = 1.0 / _size
+                else:
+                    word_scores[k] = (v - _min) / (_max - _min)
+
+        def reduce_dim(word_scores):
+            """
+            降维：选取累加权重信息超过 0.9 的特征词（从非 1.0 的特征词开始）
+            因归一化时保证了每个句子中必有 1.0 的权重词，所以最后应选取 1.0 + 0.9
+            """
+            res = {}
+            # 降序排序
+            sort = sorted(word_scores.items(), key=lambda x: x[1], reverse=True)
+            _sum = 0.0
+            for k, v in sort:
+                if(_sum > 0.9):
+                    break
+                res[k] = v
+                if v != 1.0:
+                    _sum += v
+            return res
+
         # 获取所有类别下的文本
         all_class_datas = Feature.all_class_text(splited_words_list)
 
@@ -105,31 +136,45 @@ class Feature(object):
         res = []
         for splited_words_dict in splited_words_list[0: sentence_size]:
             splited_words = splited_words_dict.get("sentence")
+            # 计算每个单词的权重
             scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
                                                     [d.get("sentence") for d in splited_words_list])
                       for splited_word in set(splited_words)}
-            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-            sorted_words = dict(sorted_words[: min(10, len(sorted_words))])
+            # 归一化
+            norm(scores)
+            # 降维处理
+            sorted_words = scores
+            if len(splited_words_list) != sentence_size:
+                sorted_words = reduce_dim(scores)
+            # Collection
             for k in sorted_words.keys():
                 sorted_words[k] = splited_words.count(k)
             res.append({"sentence": sorted_words,
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        # 写入文件
         FileUtil.write(TEST_BASE_URL + "11.txt", res)
         return res, class_label
 
-#        # return term/weight
+        # return term/weight
 #        print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
 #        res = []
 #        for splited_words_dict in splited_words_list[0: sentence_size]:
 #            splited_words = splited_words_dict.get("sentence")
+#            # 计算每个单词的权重
 #            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
 #                                                    [d.get("sentence") for d in splited_words_list])
 #                      for splited_word in set(splited_words)}
-#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-#            res.append({"sentence": dict(sorted_words[:min(10, len(sorted_words))]),
+#            # 归一化
+#            norm(scores)
+#            # 降维处理
+#            sorted_words = reduce_dim(scores)
+#            # Collection
+#            res.append({"sentence": sorted_words,
 #                        "emotion-1-type": splited_words_dict.get("emotion-1-type")})
 #        print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#        # 写入文件
+#        FileUtil.write(TEST_BASE_URL + "11.txt", res)
 #        return res, class_label
 
     def _get_splited_train(self):

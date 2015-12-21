@@ -32,6 +32,30 @@ def test_classification(feature):
     print "recall:", clf.metrics_recall(c_true, c_pred)
     print "f1:", clf.metrics_f1(c_true, c_pred)
 
+
+def classifict(feature, sentences):
+    train_datas, class_label = feature.get_key_words()
+    test_datas, c_true = feature.get_key_words(sentences)
+
+    train = train_datas
+    test = test_datas
+    # 构建适合 bayes 分类的数据集
+    if not sp.issparse(train_datas):
+        train = [data.get("sentence") for data in train_datas]
+        test = [data.get("sentence") for data in test_datas]
+
+    clf = Classification()
+    clf.get_classificator(train, class_label)
+    c_pred = clf.predict(test)
+    print c_pred
+
+s1 = "寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、" \
+     "它说它很想念你，原来我和我的影子，都在想你。"
+classifict(CHIFeature(), s1)
+print
+print
+
+
 # test fasttfidf
 test_classification(FastTFIDFFeature())
 print

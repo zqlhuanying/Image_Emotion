@@ -26,16 +26,6 @@ def check_train_feature():
     # train_feature
     key_words, _ = TFIDFFeature().get_key_words()
     fit_train_datas = [d.get("sentence") for d in key_words]
-    # 分词
-#    print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-#    SplitWords.__init__()
-#    splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
-#                           "sentence": SplitWords.split_words(sentence.get("sentence"))}
-#                          for sentence in flatten(sentence_list)]
-#    SplitWords.close()
-#    print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-#
-#    fit_train_datas = [get_dict(d.get("sentence")) for d in splited_words_list]
     train_feature = feature_hasher.transform(fit_train_datas).toarray()
 
     feature_count = np.sum(train_feature, axis=0)
@@ -47,16 +37,6 @@ def check_test_feature():
     # test feature
     key_words, _ = TFIDFFeature().get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]
-    # 分词
-#    print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-#    SplitWords.__init__()
-#    splited_words_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
-#                           "sentence": SplitWords.split_words(sentence.get("sentence"))}
-#                          for sentence in flatten(sentence_list)]
-#    SplitWords.close()
-#    print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
-
-#    fit_all_datas = [get_dict(d.get("sentence")) for d in splited_words_list]
     test_feature = feature_hasher.transform(fit_test_datas).toarray()
 
     feature_count = np.sum(test_feature, axis=0)

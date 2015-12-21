@@ -28,6 +28,8 @@ class FileUtil:
         for i, d in enumerate(data):
             fp.write(",".join(d["sentence"]))
             fp.write("," + d["emotion-1-type"])
+#            [fp.write(t[0] + ":" + str(t[1]) + ",") for t in d["sentence"].items()]
+#            fp.write(d["emotion-1-type"])
             if i < s - 1:
                 fp.write("\n")
         fp.close()
@@ -38,7 +40,7 @@ class FileUtil:
             d = {}
             l = line.split(",")
             d["emotion-1-type"] = l.pop()
-            d["sentence"] = list(l)
+            d["sentence"] = l
             return d
         return [process(line.strip("\n")) for line in open(path)]
 
