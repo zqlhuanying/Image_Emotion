@@ -43,7 +43,7 @@ class TFIDFFeature(Feature):
 
     @staticmethod
     def idf(word, wordslist):
-        return math.log(len(wordslist) / (1 + TFIDFFeature.n_contains(word, wordslist)))
+        return math.log(len(wordslist) + 1 / (1 + TFIDFFeature.n_contains(word, wordslist))) + 1
 
     @staticmethod
     def tfidf(word, words, wordslist):
