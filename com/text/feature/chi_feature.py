@@ -72,6 +72,10 @@ class CHIFeature(Feature):
             B = CHIFeature.n_contains(t, other_class_datas)
             C = M - A
             D = N - A - B - C
+            if A == 0:
+                A = 1
+            if B == 0:
+                B = 1
             x = N * math.pow((A * D - B * C), 2) / ((A + C) * (A + B) * (B + D) * (C + D))
             return x
         N = len(all_datas)

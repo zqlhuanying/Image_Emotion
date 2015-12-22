@@ -151,7 +151,7 @@ class Feature(object):
 #            splited_words = splited_words_dict.get("sentence")
 #            # 计算每个单词的权重
 #            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
-#                                                    [d.get("sentence") for d in splited_words_list])
+#                                                    [d.get("sentence") for d in splited_words_list[train_range]])
 #                      for splited_word in set(splited_words)}
 #            # 归一化
 #            norm(scores)
@@ -181,7 +181,9 @@ class Feature(object):
             # 归一化
             norm(scores)
             # 降维处理
-            sorted_words = reduce_dim(scores)
+            sorted_words = scores
+            if len(splited_words_list) != sentence_size:
+                sorted_words = reduce_dim(scores)
             # Collection
             res.append({"sentence": sorted_words,
                         "emotion-1-type": splited_words_dict.get("emotion-1-type")})
