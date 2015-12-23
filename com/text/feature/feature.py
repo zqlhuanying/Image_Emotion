@@ -118,15 +118,16 @@ class Feature(object):
 
         def reduce_dim(word_scores):
             """
-            降维：选取累加权重信息超过 0.9 的特征词（从非 1.0 的特征词开始）
-            因归一化时保证了每个句子中必有 1.0 的权重词，所以最后应选取 1.0 + 0.9
+            降维：选取累加权重信息占比超过 0.9 的特征词
             """
+            _size = len(word_scores)
+            _max = math.pow(_size, 1.0 / 2) * 0.85
             res = {}
             # 降序排序
             sort = sorted(word_scores.items(), key=lambda x: x[1], reverse=True)
             _sum = 0.0
             for k, v in sort:
-                if(_sum > 0.9):
+                if(_sum > _max):
                     break
                 res[k] = v
                 if v != 1.0:

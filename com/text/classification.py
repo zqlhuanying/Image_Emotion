@@ -3,10 +3,12 @@ import numpy as np
 import scipy.sparse as sp
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score
+from com import EMOTION_CLASS
 from com.image.utils.common_util import CommonUtil
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
 from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
+from com.text.feature.ig_feature import IGFeature
 from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
 
@@ -50,13 +52,13 @@ class Classification:
         return self.bayes.predict(fit_test_datas)
 
     def metrics_precision(self, c_true, c_pred):
-        return precision_score(c_true, c_pred, average="macro")
+        return precision_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
 
     def metrics_recall(self, c_true, c_pred):
-        return recall_score(c_true, c_pred, average="macro")
+        return recall_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
 
     def metrics_f1(self, c_true, c_pred):
-        return f1_score(c_true, c_pred, average="macro")
+        return f1_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
 
 if __name__ == "__main__":
     # 加载数据集

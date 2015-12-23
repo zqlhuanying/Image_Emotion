@@ -57,15 +57,44 @@ class Load:
             _range = slice(int(len(direct_childs) * ratio))
             if not direction:
                 _range = slice(int(len(direct_childs) * (1 - ratio)), len(direct_childs), None)
-            sentences = [child.findall("sentence") for child in direct_childs[_range]]
+
+            sentences = [Load.chd_a_little_1(child) for child in direct_childs[_range]]
 
             # 返回训练集中属于主观句的部分
             return [{"sentence": sentence.text.encode("utf_8"),
                      "emotion-tag": sentence.get("emotion_tag"),
-                     "emotion-1-type": sentence.get("emotion-1-type"),
+                     "emotion-1-type": sentence.get("emotion-type"),
                      "emotion-2-type": sentence.get("emotion-2-type")}
                     for sentence in flatten(sentences)
-                    if sentence.get("emotion_tag") == "Y"]
+                    if sentence.get("emotion-type") != "none"]
+#            sentences = [child.findall("sentence") for child in direct_childs[_range]]
+#            # 将 emotion-2-type 的部分也 add 进来
+#            sentences += [Load.chd_a_little(child) for child in flatten(sentences)
+#                          if child.get("emotion-2-type") and child.get("emotion-2-type") != "none"]
+#
+#            # 返回训练集中属于主观句的部分
+#            return [{"sentence": sentence.text.encode("utf_8"),
+#                     "emotion-tag": sentence.get("emotion_tag"),
+#                     "emotion-1-type": sentence.get("emotion-1-type"),
+#                     "emotion-2-type": sentence.get("emotion-2-type")}
+#                    for sentence in flatten(sentences)
+#                    if sentence.get("emotion_tag") == "Y"]
+
+    @staticmethod
+    def chd_a_little_1(sentence):
+        sentence.text = "".join([text for text in sentence.itertext() if text.strip()])
+        return sentence
+        # print sentence.text
+        # print
+
+    @staticmethod
+    def chd_a_little(sentence):
+        attribute = sentence.attrib
+        e = ET.Element("sentence", attribute)
+        e.text = sentence.text
+        e.attrib["emotion-1-type"] = e.attrib["emotion-2-type"]
+        return e
+
 
 if __name__ == "__main__":
     s = Load.load_training()
