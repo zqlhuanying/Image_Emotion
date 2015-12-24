@@ -22,7 +22,7 @@ class FastTFIDFFeature(Feature):
     """
     def __init__(self):
         # 特征 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
         super(FastTFIDFFeature, self).__init__()
 
     def _collect(self, splited_words_list, sentence_size):

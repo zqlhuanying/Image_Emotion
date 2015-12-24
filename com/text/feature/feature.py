@@ -35,7 +35,7 @@ class Feature(object):
 
 #        # 加载训练集
 #        # 每个句子还包含类别信息
-#        training_datas = Load.load_training()
+#        training_datas = Load.load_training_balance()
 #
 #        sentence_list = training_datas
 #        sentence_size = len(training_datas)
@@ -203,7 +203,7 @@ class Feature(object):
         if self.f or not FileUtil.isexist(split_txt) or FileUtil.isempty(split_txt):
             # 加载训练集
             # 每个句子还包含类别信息
-            training_datas = Load.load_training()
+            training_datas = Load.load_training_balance()
 
             splited_words_list = Feature.__split(flatten(training_datas))
 

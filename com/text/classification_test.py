@@ -13,7 +13,7 @@ __date__ = '2015/12/14'
 
 def test_classification(feature):
     # 加载数据集
-    test = Load.load_test()
+    test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
 

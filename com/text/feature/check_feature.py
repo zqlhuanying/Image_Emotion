@@ -12,7 +12,7 @@ from com.text.split_words import SplitWords
 __author__ = 'zql'
 __date__ = '2015/12/15'
 
-feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
+feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
 
 
 def get_dict(l):
@@ -33,7 +33,7 @@ def check_train_feature():
 
 
 def check_test_feature():
-    test_datas = Load.load_test()
+    test_datas = Load.load_test_balance()
     # test feature
     key_words, _ = TFIDFFeature().get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]

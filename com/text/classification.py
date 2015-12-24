@@ -23,7 +23,7 @@ class Classification:
     def __init__(self, bayes=Bayes()):
         self.bayes = bayes
         # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
 
     def get_classificator(self, train_datas, class_label):
         """
@@ -62,7 +62,7 @@ class Classification:
 
 if __name__ == "__main__":
     # 加载数据集
-    test = Load.load_test()
+    test = Load.load_test_balance()
     train_datas, class_label = TFIDFFeature().get_key_words()
     test_datas, c_true = TFIDFFeature().get_key_words(test)
 #    c_true = [data.get("emotion-1-type") for data in test_datas]
