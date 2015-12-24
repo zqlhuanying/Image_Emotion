@@ -5,7 +5,7 @@ import time
 import math
 
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL
-from com.text.fileutil import FileUtil
+from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words import SplitWords
 
