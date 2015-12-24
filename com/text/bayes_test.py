@@ -35,7 +35,7 @@ __date__ = '15-11-28'
 #        data.append(1)
 #    indptr.append(len(indices))
 #
-#aa = csr_matrix((data, indices, indptr), dtype=int).toarray()
+#aa = csr_matrix((data, indices, indptr), dtype=int)
 #print indices[indptr[0]:indptr[1]]
 
 # test MultinomialNB in sklearn
@@ -43,7 +43,7 @@ __date__ = '15-11-28'
 # 就算取得很大也无妨，因为是稀疏矩阵，还是消耗不了多少内存
 train_datas = [{'monkey': 1, 'dog': 1, 'cat': 2, 'elephant': 4}, {'dog': 2, 'run': 5}]
 feature_hasher = FeatureHasher(n_features=2 ** 20, non_negative=True)
-train_datas = feature_hasher.transform(train_datas).toarray()
+train_datas = feature_hasher.transform(train_datas)
 """X = np.array([[1, 2, 4, 1, 1, 1],
  [3, 2, 4, 2, 2, 3],
  [2, 2, 3, 4, 4, 1],
@@ -55,7 +55,7 @@ class_label = np.array([1, 2])
 clf = MultinomialNB(alpha=0.01)
 train = clf.fit(train_datas, class_label)
 test_datas = [{'monkey': 3, 'mouse': 1}]
-test_datas = feature_hasher.transform(test_datas).toarray()
+test_datas = feature_hasher.transform(test_datas)
 test = clf.predict(test_datas)
 print train_datas
 print test_datas

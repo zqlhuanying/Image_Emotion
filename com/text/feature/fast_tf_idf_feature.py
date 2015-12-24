@@ -29,7 +29,7 @@ class FastTFIDFFeature(Feature):
         print "Collection datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
         data = [self.get_dict(d.get("sentence")) for d in splited_words_list[: sentence_size]]
         class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
-        fit_data = self.feature_hasher.transform(data).toarray()
+        fit_data = self.feature_hasher.transform(data)
         tfidf = TfidfTransformer()
         tfidf.fit(fit_data)
         a = tfidf.transform(fit_data)

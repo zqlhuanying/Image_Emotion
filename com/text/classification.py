@@ -32,7 +32,7 @@ class Classification:
         """
         fit_train_datas = train_datas
         if not sp.issparse(train_datas):
-            fit_train_datas = self.feature_hasher.transform(train_datas).toarray()
+            fit_train_datas = self.feature_hasher.transform(train_datas)
 
         # 训练模型
         self.bayes.fit(fit_train_datas, class_label)
@@ -46,7 +46,7 @@ class Classification:
         """
         fit_test_datas = test_datas
         if not sp.issparse(test_datas):
-            fit_test_datas = self.feature_hasher.transform(test_datas).toarray()
+            fit_test_datas = self.feature_hasher.transform(test_datas)
 
         # 预测
         return self.bayes.predict(fit_test_datas)
