@@ -26,18 +26,18 @@ def check_train_feature():
     # train_feature
     key_words, _ = TFIDFFeature().get_key_words()
     fit_train_datas = [d.get("sentence") for d in key_words]
-    train_feature = feature_hasher.transform(fit_train_datas).toarray()
+    train_feature = feature_hasher.transform(fit_train_datas)
 
     feature_count = np.sum(train_feature, axis=0)
     CommonUtil.img_array_to_file(TEST_BASE_URL + "train_feature.txt", feature_count.reshape(-1, 1))
 
 
 def check_test_feature():
-    test_datas = Load.load_test()
+    test_datas = Load.load_test_balance()
     # test feature
     key_words, _ = TFIDFFeature().get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]
-    test_feature = feature_hasher.transform(fit_test_datas).toarray()
+    test_feature = feature_hasher.transform(fit_test_datas)
 
     feature_count = np.sum(test_feature, axis=0)
     CommonUtil.img_array_to_file(TEST_BASE_URL + "test_feature.txt", feature_count.reshape(-1, 1))

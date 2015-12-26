@@ -30,7 +30,7 @@ class CHIFeature(Feature):
 #    def get_key_words(self, sentences):
 #        # 加载训练集
 #        # 每个句子还包含类别信息
-#        training_datas = Load.load_training()
+#        training_datas = Load.load_training_balance()
 #        # 去除无用信息，只留下文本信息
 #        pure_training_datas = [data.get("sentence") for data in training_datas]
 #

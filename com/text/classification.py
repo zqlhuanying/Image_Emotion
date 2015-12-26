@@ -23,7 +23,7 @@ class Classification:
     def __init__(self, bayes=Bayes()):
         self.bayes = bayes
         # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=20000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
 
     def get_classificator(self, train_datas, class_label):
         """
@@ -32,7 +32,7 @@ class Classification:
         """
         fit_train_datas = train_datas
         if not sp.issparse(train_datas):
-            fit_train_datas = self.feature_hasher.transform(train_datas).toarray()
+            fit_train_datas = self.feature_hasher.transform(train_datas)
 
         # 训练模型
         self.bayes.fit(fit_train_datas, class_label)
@@ -46,7 +46,7 @@ class Classification:
         """
         fit_test_datas = test_datas
         if not sp.issparse(test_datas):
-            fit_test_datas = self.feature_hasher.transform(test_datas).toarray()
+            fit_test_datas = self.feature_hasher.transform(test_datas)
 
         # 预测
         return self.bayes.predict(fit_test_datas)
@@ -62,7 +62,7 @@ class Classification:
 
 if __name__ == "__main__":
     # 加载数据集
-    test = Load.load_test()
+    test = Load.load_test_balance()
     train_datas, class_label = TFIDFFeature().get_key_words()
     test_datas, c_true = TFIDFFeature().get_key_words(test)
 #    c_true = [data.get("emotion-1-type") for data in test_datas]

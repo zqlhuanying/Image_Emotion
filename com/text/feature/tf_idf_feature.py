@@ -20,7 +20,7 @@ class TFIDFFeature(Feature):
 #    def get_key_words(self, sentences):
 #        sentence_list = list()
 #        sentence_list.append(sentences)
-#        training_datas = Load.load_training()
+#        training_datas = Load.load_training_balance()
 #        pure_training_datas = [data.get("sentence") for data in training_datas]
 #        sentence_list.append(pure_training_datas)
 #
