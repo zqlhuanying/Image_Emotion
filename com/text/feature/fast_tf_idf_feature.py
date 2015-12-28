@@ -1,16 +1,7 @@
 # encoding: utf-8
-from compiler.ast import flatten
 import time
-import numpy as np
-from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.metrics import precision_score
-from com import RESOURCE_BASE_URL
-from com.image.utils.common_util import CommonUtil
-from com.text.bayes import Bayes
 from com.text.feature.feature import Feature
-from com.text.load_sample import Load
-from com.text.split_words import SplitWords
 
 __author__ = 'root'
 __date__ = '15-12-14'
@@ -22,7 +13,6 @@ class FastTFIDFFeature(Feature):
     """
     def __init__(self):
         # 特征 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
         super(FastTFIDFFeature, self).__init__()
 
     def _collect(self, splited_words_list, sentence_size):

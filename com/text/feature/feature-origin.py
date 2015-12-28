@@ -24,7 +24,7 @@ class Feature(object):
         #   若资源有更新，可以打开开关，强制写入新的分词后的结果
         self.f = False
         self.istrain = False
-        self.feature_hasher = FeatureHasher(n_features=100000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
 
     def get_key_words(self, sentences=None):
         """
@@ -41,6 +41,34 @@ class Feature(object):
         splited_words_list, sentence_size = self._split(sentences)
 
         return self._collect(splited_words_list, sentence_size)
+
+#        # 加载训练集
+#        # 每个句子还包含类别信息
+#        training_datas = Load.load_training_balance()
+#
+#        sentence_list = training_datas
+#        sentence_size = len(training_datas)
+#        if sentences is not None:
+#            l = Feature.__pre_process(sentences)
+#            sentence_list = l + training_datas
+#            sentence_size = len(l)
+#
+#        # 分词
+#        print "Before Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#        split_txt = RESOURCE_BASE_URL + "split/" + self.__class__.__name__ + ".txt"
+#        splited_words_list = self._split(split_txt, sentence_list)
+#        print "After Split: ", time.strftime('%Y-%m-%d %H:%M:%S')
+
+        # print
+#        for splited_words_dict in splited_words_list[0: sentence_size]:
+#            print
+#            splited_words = splited_words_dict.get("sentence")
+#            scores = {splited_word: self.cal_weight(splited_word, splited_words, all_class_datas,
+#                                                    [d.get("sentence") for d in splited_words_list])
+#                      for splited_word in set(splited_words)}
+#            sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+#            for word, score in sorted_words[:min(10, len(sorted_words))]:
+#                print("\tWord: %s, Weight: %f" % (word.decode("utf_8"), score))
 
     def cal_weight(self, key_words):
         """
@@ -78,6 +106,12 @@ class Feature(object):
             l = Feature.__pre_process(sentences)
 
             splited_sentence_list = Feature.__split(flatten(l))
+#            SplitWords.__init__()
+#            splited_sentence_list = [{"emotion-1-type": sentence.get("emotion-1-type"),
+#                                      "sentence": SplitWords.split_words(sentence.get("sentence"))}
+#                                     for sentence in flatten(l)]
+#            SplitWords.close()
+
             splited_words_list = splited_sentence_list + splited_words_list
             sentence_size = len(splited_sentence_list)
 
@@ -168,9 +202,33 @@ class Feature(object):
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
         return res, class_label
 
+            # return term/weight
+#            print "Collecting datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#            res = []
+#            for splited_words_dict in splited_words_list[0: sentence_size]:
+#                splited_words = splited_words_dict.get("sentence")
+#                # 计算每个单词的权重
+#                scores = {splited_word: self.cal_score(splited_word, splited_words, all_class_datas,
+#                                                        [d.get("sentence") for d in splited_words_list[train_range]])
+#                          for splited_word in set(splited_words)}
+#                # 归一化
+#                norm(scores)
+#                # 降维处理
+#                sorted_words = scores
+#                if len(splited_words_list) != sentence_size:
+#                    sorted_words = reduce_dim(scores)
+#                # Collection
+#                res.append({"sentence": sorted_words,
+#                            "emotion-1-type": splited_words_dict.get("emotion-1-type")})
+#            print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+#            # 写入文件
+#            FileUtil.write(TEST_BASE_URL + "11.txt", res)
+#            return res, class_label
+
     def _get_splited_train(self):
         """
         优先从文件中读取训练集分词后的结果
+        :param sentence_list:
         :return:
         """
         split_txt = RESOURCE_BASE_URL + "split/" + self.__class__.__name__ + ".txt"

@@ -26,21 +26,33 @@ class FileUtil:
         s = len(data)
         fp = open(path, "w")
         for i, d in enumerate(data):
-            fp.write(",".join(d["sentence"]))
-            fp.write("," + d["emotion-1-type"])
-#            [fp.write(t[0] + ":" + str(t[1]) + ",") for t in d["sentence"].items()]
-#            fp.write(d["emotion-1-type"])
+#            fp.write(",".join(d["sentence"]))
+#            fp.write("," + d["emotion-1-type"])
+            sentence = d["sentence"]
+            if isinstance(sentence, list):
+                fp.write(",".join(sentence))
+                fp.write(",")
+            else:
+                [fp.write(t[0] + ":" + str(t[1]) + ",") for t in sentence.items()]
+            fp.write(d["emotion-1-type"])
             if i < s - 1:
                 fp.write("\n")
         fp.close()
 
     @staticmethod
     def read(path):
+        def try_list_2_dict(l):
+            if l[0].find(":") > 0:
+                d = {}
+                map(lambda x: d.setdefault(x.split(":")[0], int(x.split(":")[1])), l)
+                return d
+            return l
+
         def process(line):
             d = {}
             l = line.split(",")
             d["emotion-1-type"] = l.pop()
-            d["sentence"] = l
+            d["sentence"] = try_list_2_dict(l)
             return d
         return [process(line.strip("\n")) for line in open(path)]
 
