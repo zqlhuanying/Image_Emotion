@@ -23,7 +23,7 @@ class Classification:
     def __init__(self, bayes=Bayes()):
         self.bayes = bayes
         # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=100000, non_negative=True)
 
     def get_classificator(self, train_datas, class_label):
         """
@@ -62,18 +62,13 @@ class Classification:
 
 if __name__ == "__main__":
     # 加载数据集
+    feature = IGFeature()
     test = Load.load_test_balance()
-    train_datas, class_label = TFIDFFeature().get_key_words()
-    test_datas, c_true = TFIDFFeature().get_key_words(test)
-#    c_true = [data.get("emotion-1-type") for data in test_datas]
+    train_datas, class_label = feature.get_key_words()
+    test_datas, c_true = feature.get_key_words(test)
 
-    train = train_datas
-    test = test_datas
-    # 构建适合 bayes 分类的数据集
-    if not sp.issparse(train_datas):
-        train = [data.get("sentence") for data in train_datas]
-        test = [data.get("sentence") for data in test_datas]
-
+    train = feature.cal_weight(train_datas)
+    test = feature.cal_weight(test_datas)
     clf = Classification()
     clf.get_classificator(train, class_label)
     c_pred = clf.predict(test)

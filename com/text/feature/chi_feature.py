@@ -47,7 +47,7 @@ class CHIFeature(Feature):
 #        SplitWords.close()
 #        print int(time.time())
 
-    def cal_weight(self, t, sentence, class_sentences, sentences):
+    def cal_score(self, t, sentence, class_sentences, sentences):
         return CHIFeature.chi(t, class_sentences, sentences)
 
     @staticmethod
