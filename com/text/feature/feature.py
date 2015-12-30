@@ -25,7 +25,7 @@ class Feature(object):
         #   若资源有更新，可以打开开关，强制写入新的分词后的结果
         self.f = False
         self.istrain = False
-        self.feature_hasher = FeatureHasher(n_features=100000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
     def get_key_words(self, sentences=None):
         """
@@ -180,11 +180,12 @@ class Feature(object):
             # Try Convert term/score to term/frequency
             # if False return term/score
             # if True  return term/frequency
-            if True:
-                for d in res:
-                    ws = d.get("sentence")
-                    for k, v in ws.items():
-                        ws[k] = v[0]
+            for d in res:
+                ws = d.get("sentence")
+                for k, v in ws.items():
+                    ws[k] = v[0]
+                    if True:
+                        ws[k] = v[1]
 
             # 写入文件
             if self.istrain:
@@ -287,8 +288,7 @@ class Feature(object):
 
         all_class = Feature.all_class_text(word_scores)
 
-        for c in EMOTION_CLASS.keys():
-            reduce_dim_0(c)
+        [reduce_dim_0(c) for c in EMOTION_CLASS.keys()]
 
         # 保持 word_scores 的形式不变，删除 mark 标记
         # 若 1, 则只需要删除 mark 标记；若 0，则删除单词

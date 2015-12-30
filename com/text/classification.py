@@ -23,7 +23,7 @@ class Classification:
     def __init__(self, bayes=Bayes()):
         self.bayes = bayes
         # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=100000, non_negative=True)
+        self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
     def get_classificator(self, train_datas, class_label):
         """
@@ -60,9 +60,35 @@ class Classification:
     def metrics_f1(self, c_true, c_pred):
         return f1_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
 
+    def metrics_correct(self, c_true, c_pred):
+        self._correct(c_true, c_pred, labels=EMOTION_CLASS.keys())
+
+    def _correct(self, c_true, c_pred, labels=None):
+        if len(c_true) != len(c_pred):
+            raise ValueError("the two lists have different size!")
+
+        present_labels = set(c_true)
+        if labels is None:
+            labels = list(present_labels)
+
+        # 每个类别共有的样本数
+        true_sum = [c_true.count(c) for c in labels]
+
+        # 每个类别下预测的正确数
+        diff = map(lambda x: labels.index(x[0]) + 1 if x[0] == x[1] else 0, zip(c_true, c_pred))
+        tp_sum = [diff.count(i + 1) for i, c in enumerate(labels)]
+
+        # print
+        for i, c in enumerate(labels):
+            print(c)
+            print("total samples: %d" % true_sum[i])
+            print("predict correct: %d" % tp_sum[i])
+            print("predict incorrect: %d" % (true_sum[i] - tp_sum[i]))
+            print
+
 if __name__ == "__main__":
     # 加载数据集
-    feature = CHIFeature()
+    feature = TFIDFFeature()
     test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
@@ -76,3 +102,5 @@ if __name__ == "__main__":
     print "precision:", clf.metrics_precision(c_true, c_pred)
     print "recall:", clf.metrics_recall(c_true, c_pred)
     print "f1:", clf.metrics_f1(c_true, c_pred)
+    print
+    clf.metrics_correct(c_true, c_pred)
