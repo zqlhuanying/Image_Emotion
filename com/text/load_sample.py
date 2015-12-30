@@ -80,7 +80,7 @@ class Load:
 
             # shuffle
             sentences = flatten(sentences)
-            random.shuffle(sentences)
+            # random.shuffle(sentences)
 
             # 返回训练集中属于主观句的部分
             return [{"sentence": sentence.text.encode("utf_8"),

@@ -37,10 +37,10 @@ class SplitWords:
         s = SplitWords.__del_punctuation(s)
 
         # 去除数字
-        s = SplitWords.__del_digit(s)
+        # s = SplitWords.__del_digit(s)
 
         # 分词
-        words = nlpir.ParagraphProcess(s, False)
+        words = nlpir.ParagraphProcess(s, True)
 
         # 去掉左右两边多余的空格，并分割
         words = words.strip().split(" ")
@@ -56,6 +56,9 @@ class SplitWords:
 
         # 去掉多余的空格
         words = SplitWords.__del_blank(words)
+
+        # 去掉无用的词性词汇，并将剩下的词汇的词性删除
+        words = SplitWords.__del_non_pos(words)
 
         return words
 
@@ -176,12 +179,30 @@ class SplitWords:
         fp.close()
         return stoplist
 
+    @staticmethod
+    def __del_non_pos(words):
+        def is_use_pos(s):
+            non_pos = ("nr", "ns", "nt", "s", "f", "t", "m", "q", "p", "c")
+            return not s.split("/")[1].startswith(non_pos)
+
+        # 删除无用的词性的词
+        words = filter(is_use_pos, words)
+        # 删除词性
+        return map(lambda x: x.split("/")[0], words)
+
+
 if __name__ == "__main__":
-    string1 = r'//@王久辛:@王久辛 @王久辛 留大量[愤怒] 预习与@王久辛:作业,让家长@hj 给孩子报铺导#辅导班#班,他们再#《》赚一把钱~~美特伺邦威周成健: 做 ME AND CITY是非常有价值的。' \
+    string1 = r'//@王久辛:@王久辛 @王久辛 留大量[愤怒] 预习与@王久辛:作业,让家长@hj 给孩子' \
+              r'报游动轮换辅导班作死妖娆佳丽微博铺导班#辅导班#,他们再#《》赚一把钱~~美特伺邦威周成健: ' \
+              r'做 ME AND CITY是非常有价值的。' \
               r'群众的呼声VERY very importantly！！！[大笑] [大笑] *^_^*'
     string2 = "给孩子辅导班我媽話你們宿捨怎麼這麼失敗的?"
+    string3 = r"想黄山说今年高考作文题披露，巨无聊。虚假、做做、装逼，一无是处。能不能出点富于新意、能多少融入个人生活的题目？" \
+              r"我记得大约15年前，台湾的高考作文题是《生活中的苦涩与甘美》。" \
+              r"譬如，《我在马勒戈壁的青春放浪》、《动物凶猛的饮食生活》啥的。" \
+              r"里屋"
     SplitWords.__init__()
-    splited_words = SplitWords.split_words(string2)
+    splited_words = SplitWords.split_words(string3)
     SplitWords.close()
     print len(splited_words)
     for splited_word in splited_words:

@@ -26,8 +26,6 @@ class FileUtil:
         s = len(data)
         fp = open(path, "w")
         for i, d in enumerate(data):
-#            fp.write(",".join(d["sentence"]))
-#            fp.write("," + d["emotion-1-type"])
             sentence = d["sentence"]
             if isinstance(sentence, list):
                 fp.write(",".join(sentence))
@@ -44,7 +42,7 @@ class FileUtil:
         def try_list_2_dict(l):
             if l[0].find(":") > 0:
                 d = {}
-                map(lambda x: d.setdefault(x.split(":")[0], int(x.split(":")[1])), l)
+                map(lambda x: d.setdefault(x.split(":")[0], float(x.split(":")[1])), l)
                 return d
             return l
 
