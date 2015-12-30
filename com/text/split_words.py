@@ -163,21 +163,26 @@ class SplitWords:
 
     @staticmethod
     def __read_chinese_stoplist():
-        url = RESOURCE_BASE_URL + "chinese_stoplist.txt"
+        url_0 = RESOURCE_BASE_URL + "chinese_stoplist_0.txt"
+        url_1 = RESOURCE_BASE_URL + "chinese_stoplist_1.txt"
         # 下面这行使用方便，但觉得会不会不会关闭打开文件后的资源
         # return [line.strip("\n") for line in open(url).readlines()]
-        fp = open(url)
-        stoplist = [line.strip("\n") for line in fp.readlines()]
-        fp.close()
-        return stoplist
+        url = (url_0, url_1)
+        stoplist = []
+        for u in url:
+            with open(u) as fp:
+                stoplist += [line.strip("\n") for line in fp]
+        return set(stoplist)
 
     @staticmethod
     def __read_english_stoplist():
-        url = RESOURCE_BASE_URL + "english_stoplist.txt"
-        fp = open(url)
-        stoplist = [line.strip("\n") for line in fp.readlines()]
-        fp.close()
-        return stoplist
+        url_0 = RESOURCE_BASE_URL + "english_stoplist.txt"
+        url = (url_0,)
+        stoplist = []
+        for u in url:
+            with open(u) as fp:
+                stoplist += [line.strip("\n") for line in fp]
+        return set(stoplist)
 
     @staticmethod
     def __del_non_pos(words):
