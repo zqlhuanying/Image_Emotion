@@ -184,7 +184,7 @@ class Feature(object):
                 ws = d.get("sentence")
                 for k, v in ws.items():
                     ws[k] = v[0]
-                    if True:
+                    if False:
                         ws[k] = v[1]
 
             # 写入文件

@@ -50,7 +50,7 @@ def append_data(src, dest, classes):
 
 
 if __name__ == "__main__":
-    src_url = RESOURCE_BASE_URL + "weibo_trains.xml"
-    dest_url = RESOURCE_BASE_URL + "weibo_samples_extend.xml"
-    classes = ["fear", "surprise", "anger", "disgust", "like", "happiness", "sadness"]
+    src_url = RESOURCE_BASE_URL + "weibo_trains_2013.xml"
+    dest_url = RESOURCE_BASE_URL + "weibo_fulls.xml"
+    classes = ["fear", "surprise", "anger", "like", "happiness", "disgust", "sadness", "none"]
     append_data(src_url, dest_url, classes)
