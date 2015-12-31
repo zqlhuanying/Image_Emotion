@@ -37,7 +37,7 @@ class SplitWords:
         s = SplitWords.__del_punctuation(s)
 
         # 去除数字
-        # s = SplitWords.__del_digit(s)
+        s = SplitWords.__del_digit(s)
 
         # 分词
         words = nlpir.ParagraphProcess(s, True)
@@ -118,6 +118,7 @@ class SplitWords:
         # 表情符号暂时不考虑 *^_^*
         """
         去除标点符号，不管是英文标点还是中文标点
+        暂时删除英文单词，即暂时不对英文进行处理
         :return:
         """
         """
@@ -136,7 +137,7 @@ class SplitWords:
         这样就可以使用 \p{} 这样的 unicode 属性
         使用时，正则表达式和字符串都必须经过 unicode 编码
         """
-        s = regex.sub(ur"\p{P}|\p{S}", "", s if isinstance(s, unicode) else s.decode("utf_8"))
+        s = regex.sub(ur"\p{P}|\p{S}|\p{Ll}|\p{Lu}", "", s if isinstance(s, unicode) else s.decode("utf_8"))
         return s.encode("utf_8")
 
     @staticmethod
@@ -187,7 +188,7 @@ class SplitWords:
     @staticmethod
     def __del_non_pos(words):
         def is_use_pos(s):
-            non_pos = ("nr", "ns", "nt", "s", "f", "t", "m", "q", "p", "c")
+            non_pos = ("nr", "ns", "nt", "s", "f", "t", "m", "q", "p", "c", "u")
             return not s.split("/")[1].startswith(non_pos)
 
         # 删除无用的词性的词
@@ -202,7 +203,7 @@ if __name__ == "__main__":
               r'做 ME AND CITY是非常有价值的。' \
               r'群众的呼声VERY very importantly！！！[大笑] [大笑] *^_^*'
     string2 = "给孩子辅导班我媽話你們宿捨怎麼這麼失敗的?"
-    string3 = r"想黄山说今年高考作文题披露，巨无聊。虚假、做做、装逼，一无是处。能不能出点富于新意、能多少融入个人生活的题目？" \
+    string3 = r"如果中国黄山我们一个说今年高考作文题a AaBb披露，巨无聊。虚假、做做、装逼，一无是处。能不能出点富于新意、能多少融入个人生活的题目？" \
               r"我记得大约15年前，台湾的高考作文题是《生活中的苦涩与甘美》。" \
               r"譬如，《我在马勒戈壁的青春放浪》、《动物凶猛的饮食生活》啥的。" \
               r"里屋"
