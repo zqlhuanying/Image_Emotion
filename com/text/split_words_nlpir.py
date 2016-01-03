@@ -11,7 +11,7 @@ __date__ = '2015/11/10'
 
 class SplitWords:
     """
-    中文分词
+    中科院中文分词
     """
     @staticmethod
     def __init__():
