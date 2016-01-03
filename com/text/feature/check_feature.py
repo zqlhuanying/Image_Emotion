@@ -13,7 +13,7 @@ from com.text.utils.fileutil import FileUtil
 __author__ = 'zql'
 __date__ = '2015/12/15'
 
-feature_hasher = FeatureHasher(n_features=35000, non_negative=True)
+feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
 
 def get_dict(l):

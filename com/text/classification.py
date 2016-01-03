@@ -51,19 +51,76 @@ class Classification:
         # 预测
         return self.bayes.predict(fit_test_datas)
 
+    def predict_unknow(self, test_datas):
+        """
+        预测，若预测的概率小于一定的阖值，则输出 unknow
+        :param test_datas:
+        :return:
+        """
+        _max = 0.3
+
+        fit_test_datas = test_datas
+        if not sp.issparse(test_datas):
+            fit_test_datas = self.feature_hasher.transform(test_datas)
+
+        # proba: [n_samples, n_class]
+        proba = self.bayes.predict_proba(fit_test_datas)
+        max_proba_index = np.argmax(proba, axis=1)
+
+        rowid = 0
+        res = []
+        for row in proba:
+            index = max_proba_index[rowid]
+            c = self.bayes.classes_[index] if row[index] > _max else "unknow"
+            res.append(c)
+            rowid += 1
+        return res
+
     def metrics_precision(self, c_true, c_pred):
-        return precision_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
+        fit_true_pred = self.__del_unknow(c_true, c_pred)
+        c_true_0 = fit_true_pred[0]
+        c_pred_0 = fit_true_pred[1]
+        return precision_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
 
     def metrics_recall(self, c_true, c_pred):
-        return recall_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
+        fit_true_pred = self.__del_unknow(c_true, c_pred)
+        c_true_0 = fit_true_pred[0]
+        c_pred_0 = fit_true_pred[1]
+        return recall_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
 
     def metrics_f1(self, c_true, c_pred):
-        return f1_score(c_true, c_pred, labels=EMOTION_CLASS.keys(), average="macro")
+        fit_true_pred = self.__del_unknow(c_true, c_pred)
+        c_true_0 = fit_true_pred[0]
+        c_pred_0 = fit_true_pred[1]
+        return f1_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
 
     def metrics_correct(self, c_true, c_pred):
+        # 不能过滤 unknow 部分，因统计时需要
         self._correct(c_true, c_pred, labels=EMOTION_CLASS.keys())
 
     def _correct(self, c_true, c_pred, labels=None):
+        def _diff(label_tuple):
+            """
+            if label0 == label1:
+                return the (index + 1) of label0 in labels
+            if label0 != label1 and label1 == 'unknow':
+                return the (-1) * (index + 1) of label0 in labels
+            else:
+                return 0
+
+            :param label0:
+            :param label1:
+            :return:
+            """
+            label0, label1 = label_tuple
+
+            if label0 == label1:
+                return labels.index(label0) + 1
+            elif label1 == "unknow":
+                return (labels.index(label0) + 1) * (-1)
+            else:
+                return 0
+
         if len(c_true) != len(c_pred):
             raise ValueError("the two lists have different size!")
 
@@ -74,17 +131,40 @@ class Classification:
         # 每个类别共有的样本数
         true_sum = [c_true.count(c) for c in labels]
 
+        # 每个类别预测的样本数
+        pred = c_pred if isinstance(c_pred, list) else c_pred.tolist()
+        pred_sum = [pred.count(c) for c in labels]
+
         # 每个类别下预测的正确数
-        diff = map(lambda x: labels.index(x[0]) + 1 if x[0] == x[1] else 0, zip(c_true, c_pred))
+        diff = map(_diff, zip(c_true, c_pred))
         tp_sum = [diff.count(i + 1) for i, c in enumerate(labels)]
+
+        # 每个类别 unknow 数
+        unknow_sum = [diff.count(-i - 1) for i, c in enumerate(labels)]
 
         # print
         for i, c in enumerate(labels):
             print(c)
             print("total samples: %d" % true_sum[i])
             print("predict correct: %d" % tp_sum[i])
-            print("predict incorrect: %d" % (true_sum[i] - tp_sum[i]))
+            print("predict others into this class: %d" % (pred_sum[i] - tp_sum[i]))
+            print("predict unknow: %d" % unknow_sum[i])
+            print("predict incorrect: %d" % (true_sum[i] - tp_sum[i] - unknow_sum[i]))
             print
+
+    @staticmethod
+    def __del_unknow(c_true, c_pred):
+        """
+        过滤 c_pred 中 unknow 部分
+        :param c_true:
+        :param c_pred:
+        :return:
+        """
+        if len(c_true) != len(c_pred):
+            raise ValueError("the two lists have different size!")
+
+        l = filter(lambda x: x[1] != "unknow", zip(c_true, c_pred))
+        return zip(*l)
 
 if __name__ == "__main__":
     # 加载数据集
@@ -98,9 +178,10 @@ if __name__ == "__main__":
     clf = Classification()
     clf.get_classificator(train, class_label)
     c_pred = clf.predict(test)
+    c_pred_unknow = clf.predict_unknow(test)
     print c_pred
-    print "precision:", clf.metrics_precision(c_true, c_pred)
-    print "recall:", clf.metrics_recall(c_true, c_pred)
-    print "f1:", clf.metrics_f1(c_true, c_pred)
+    print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
+    print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
+    print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
     print
-    clf.metrics_correct(c_true, c_pred)
+    clf.metrics_correct(c_true, c_pred_unknow)
