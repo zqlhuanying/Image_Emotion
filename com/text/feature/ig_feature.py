@@ -6,7 +6,7 @@ import time
 from com import EMOTION_CLASS
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
-from com.text.split_words import SplitWords
+from com.text.split_words_nlpir import SplitWords
 
 __author__ = 'root'
 __date__ = '15-11-24'

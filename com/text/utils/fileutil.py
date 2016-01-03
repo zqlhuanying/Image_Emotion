@@ -27,14 +27,15 @@ class FileUtil:
         fp = open(path, "w")
         for i, d in enumerate(data):
             sentence = d["sentence"]
-            if isinstance(sentence, list):
-                fp.write(",".join(sentence))
-                fp.write(",")
-            else:
-                [fp.write(t[0] + ":" + str(t[1]) + ",") for t in sentence.items()]
-            fp.write(d["emotion-1-type"])
-            if i < s - 1:
-                fp.write("\n")
+            if sentence:
+                if isinstance(sentence, list):
+                    fp.write(",".join(sentence))
+                    fp.write(",")
+                else:
+                    [fp.write(t[0] + ":" + str(t[1]) + ",") for t in sentence.items()]
+                fp.write(d["emotion-1-type"])
+                if i < s - 1:
+                    fp.write("\n")
         fp.close()
 
     @staticmethod

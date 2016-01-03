@@ -4,7 +4,7 @@ from compiler.ast import flatten
 import math
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
-from com.text.split_words import SplitWords
+from com.text.split_words_nlpir import SplitWords
 
 __author__ = 'zql'
 __date__ = '2015/11/12'

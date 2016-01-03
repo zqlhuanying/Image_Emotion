@@ -5,6 +5,7 @@
 有一天
 微博    N
 我们		PRON
+我们    RR
 时间		N
 中国		N,ADJ
 可以		ADJ,AUX
