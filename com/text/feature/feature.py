@@ -166,10 +166,11 @@ class Feature(object):
                 res.append({"sentence": sorted_words,
                             "emotion-1-type": splited_words_dict.get("emotion-1-type")})
             print "Cal Scores Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
-
+            # FileUtil.write(TEST_BASE_URL + "scores.txt", res)
             print "Begin Normalization: ", time.strftime('%Y-%m-%d %H:%M:%S')
             # 归一化
             self.norm(res)
+            # FileUtil.write(TEST_BASE_URL + "norm.txt", res)
             print "Normalization Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
             print "Begin Reduce: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -184,14 +185,14 @@ class Feature(object):
                 ws = d.get("sentence")
                 for k, v in ws.items():
                     ws[k] = v[0]
-                    if False:
+                    if True:
                         ws[k] = v[1]
 
             # 写入文件
             if self.istrain:
                 FileUtil.write(key_words_txt, res)
             else:
-                FileUtil.write(TEST_BASE_URL + "11.txt", res)
+                FileUtil.write(TEST_BASE_URL + "reduce.txt", res)
         else:
             res = FileUtil.read(key_words_txt)
             class_label = [r["emotion-1-type"] for r in res]
@@ -386,18 +387,18 @@ class Feature(object):
         合并两个字典
         if has the same key, then add value
         else append {key: value}
-        :param dict1:
-        :param dict2:
+        :param dict1: {key: [weight, frequency, ...]} or {key: weight}
+        :param dict2: {key: [weight, frequency, ...]} or {key: weight}
         :return: d
         """
         d = dict(dict1)
         for k, v in dict2.items():
             if k in dict1:
                 if hasattr(v, "__getitem__"):
-                    d[k][0] += v[0]
+                    d[k][0] = (d[k][0] + v[0]) / 2
                     d[k][1] += v[1]
                 else:
-                    d[k] += v
+                    d[k] = (d[k] + v) / 2
             else:
                 d[k] = v
         return d

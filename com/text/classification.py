@@ -168,7 +168,7 @@ class Classification:
 
 if __name__ == "__main__":
     # 加载数据集
-    feature = IGFeature()
+    feature = CHIFeature()
     test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
