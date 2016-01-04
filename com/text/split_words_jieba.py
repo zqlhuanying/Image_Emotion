@@ -1,7 +1,7 @@
 # encoding: utf-8
+import jieba
 import jieba.posseg as pseg
 import regex
-import pynlpir.nlpir as nlpir
 import time
 from com import RESOURCE_BASE_URL
 from com.text.third_part.langconv import Converter
@@ -16,7 +16,11 @@ class SplitWords:
     """
     @staticmethod
     def __init__():
-        pass
+        # 添加用户词典
+        SplitWords.add_user_word("netword.txt")
+        SplitWords.add_user_word("ntusd.txt")
+        SplitWords.add_user_word("hownet.txt")
+        # SplitWords.import_user_dict("sogoulabdict-jieba.txt")
 
     @staticmethod
     def split_words(s):
@@ -33,7 +37,7 @@ class SplitWords:
         s = SplitWords.__del_digit(s)
 
         # 分词 带有词性
-        words = pseg.lcut(s)
+        words = pseg.lcut(s, HMM=True)
         # 重新编码 UTF-8
         words = SplitWords.__reencoding(words)
 
@@ -58,15 +62,13 @@ class SplitWords:
     @staticmethod
     def add_user_word(path):
         # 添加用户词典
-        [nlpir.AddUserWord(line.strip("\n"))
+        [jieba.add_word(line.strip("\n"))
          for line in open(RESOURCE_BASE_URL + path)]
 
     @staticmethod
     def import_user_dict(path):
         print "Before Import User Dict: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        n = nlpir.ImportUserDict(RESOURCE_BASE_URL + path)
-        nlpir.SaveTheUsrDic()
-        print "Success Import: ", n
+        jieba.load_userdict(RESOURCE_BASE_URL + path)
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
@@ -189,7 +191,7 @@ if __name__ == "__main__":
               r'做 ME AND CITY是非常有价值的。' \
               r'群众的呼声VERY very importantly！！！[大笑] [大笑] *^_^*'
     string2 = "给孩子辅导班我媽話你們宿捨怎麼這麼失敗的?"
-    string3 = r"想做如果中国黄山的我们一个说今年高考作文题a AaBb披露，巨无聊。虚假、做做、装逼，一无是处。能不能出点富于新意、能多少融入个人生活的题目？" \
+    string3 = r"想做微博如果中国黄山的我们一个说今年高考作文题a AaBb披露，巨无聊。虚假、做做、装逼，一无是处。能不能出点富于新意、能多少融入个人生活的题目？" \
               r"我记得大约15年前，台湾的高考作文题是《生活中的苦涩与甘美》。" \
               r"譬如，《我在马勒戈壁的青春放浪》、《动物凶猛的饮食生活》啥的。" \
               r"里屋"
