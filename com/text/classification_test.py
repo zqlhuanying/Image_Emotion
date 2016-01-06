@@ -17,15 +17,12 @@ def test_classification(feature):
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
 
-    train = feature.cal_weight(train_datas)
-    test = feature.cal_weight(test_datas)
-
-#    train = train_datas
-#    test = test_datas
-#    # 构建适合 bayes 分类的数据集
-#    if not sp.issparse(train_datas):
-#        train = [data.get("sentence") for data in train_datas]
-#        test = [data.get("sentence") for data in test_datas]
+    train = train_datas
+    test = test_datas
+    # 构建适合 bayes 分类的数据集
+    if not sp.issparse(train_datas):
+        train = feature.cal_weight(train_datas)
+        test = feature.cal_weight(test_datas)
 
     clf = Classification()
     clf.get_classificator(train, class_label)
@@ -40,8 +37,12 @@ def classifict(feature, sentences):
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(sentences)
 
-    train = feature.cal_weight(train_datas)
-    test = feature.cal_weight(test_datas)
+    train = train_datas
+    test = test_datas
+    # 构建适合 bayes 分类的数据集
+    if not sp.issparse(train_datas):
+        train = feature.cal_weight(train_datas)
+        test = feature.cal_weight(test_datas)
 
     clf = Classification()
     clf.get_classificator(train, class_label)
