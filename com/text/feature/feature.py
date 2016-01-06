@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL
 from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
-from com.text.split_words_jieba import SplitWords
+from com.text.split_words_nlpir import SplitWords
 
 __author__ = 'zql'
 __date__ = '2015/11/12'

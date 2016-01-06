@@ -20,7 +20,7 @@ class SplitWords:
         SplitWords.add_user_word("netword.txt")
         SplitWords.add_user_word("ntusd.txt")
         SplitWords.add_user_word("hownet.txt")
-        # SplitWords.import_user_dict("sogoulabdict-jieba.txt")
+        SplitWords.import_user_dict("dict-jieba.txt")
 
     @staticmethod
     def split_words(s):

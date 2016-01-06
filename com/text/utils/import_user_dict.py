@@ -5,5 +5,5 @@ __author__ = 'zql'
 __date__ = '2015/12/16'
 
 SplitWords.__init__()
-SplitWords.import_user_dict("sogoulabdict.txt")
+SplitWords.import_user_dict("dict-nlpir.txt")
 SplitWords.close()
