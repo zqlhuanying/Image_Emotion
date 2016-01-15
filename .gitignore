@@ -3,3 +3,5 @@
 *.pyc
 /com/resource/split
 /com/resource/key_words
+/com/resource/collect
+/com/resource/img
