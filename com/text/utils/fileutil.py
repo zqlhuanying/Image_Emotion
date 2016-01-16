@@ -11,17 +11,78 @@ class FileUtil:
 
     @staticmethod
     def isexist(path):
+        """
+        判断文件或目录是否存在
+        :param path:
+        :return:
+        """
         return os.path.exists(path)
 
     @staticmethod
     def isempty(path):
-        return len(open(path).read()) == 0
+        """
+        判断文件或目录是否为空
+        文件或目录必须存在
+        :param path:
+        :return:
+        """
+        if not FileUtil.isexist(path):
+            raise ValueError("file or dir must be exist")
+        if FileUtil.isfile(path):
+            return len(open(path).read()) == 0
+        else:
+            return len(FileUtil.listdir(path)) == 0
+
+    @staticmethod
+    def isfile(path):
+        """
+        判断是否是文件
+        isfile: 前提是必须存在
+        :param path: 必须存在的路径，否则均返回false
+        :return:
+        """
+        return os.path.isfile(path)
+
+    @staticmethod
+    def getparentdir(path):
+        """
+        取得父目录
+        :param path:
+        :return:
+        """
+        return os.path.dirname(path)
+
+    @staticmethod
+    def mkdirs(path):
+        """
+        创建目录
+        :param path:
+        :return:
+        """
+        if not FileUtil.isexist(path):
+            os.makedirs(path)
+
+    @staticmethod
+    def listdir(path, isrecursion=True):
+        """
+        列出目录下所有的文件
+        :param path:
+        :param isrecursion: 是否递归子目录
+        :return:
+        """
+        if FileUtil.isfile(path):
+            raise ValueError("must be a dir")
+        l = []
+        for parent, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                l.append(os.path.join(parent, filename))
+            if not isrecursion:
+                break
+        return l
 
     @staticmethod
     def write(path, data):
-        parent_dir = os.path.dirname(path)
-        if not FileUtil.isexist(parent_dir):
-            os.makedirs(parent_dir)
+        FileUtil.mkdirs(path)
 
         s = len(data)
         fp = open(path, "w")
@@ -56,3 +117,10 @@ class FileUtil:
         return [process(line.strip("\n")) for line in open(path)]
 
 
+if __name__ == "__main__":
+    p = "/home/zhuang/1/11/111"
+    FileUtil.mkdirs(p)
+    p = "/home/zhuang/PythonWorkspace/Image_Emotion/com/resource"
+    FileUtil.listdir(p, True)
+    p = "/home/zhuang/1/11/111.txt"
+    print FileUtil.isfile(p)
