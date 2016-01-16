@@ -34,18 +34,38 @@ class Load:
         return Load.__load(url, ratio, direction=False, balance=True)
 
     @staticmethod
+    def load_training_objective_balance():
+        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        ratio = 2 / 3
+        datas = Load.__load(url, ratio, subjective=False, balance=True)
+        [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
+         for data in datas]
+        return datas
+
+    @staticmethod
+    def load_test_objective_balance():
+        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        ratio = 1 / 3
+        datas = Load.__load(url, ratio, direction=False, subjective=False, balance=True)
+        [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
+         for data in datas]
+        return datas
+
+    @staticmethod
     def __load(url, ratio, direction=True, subjective=True, balance=False):
         """
         Loading Training Data Except Objective Sentence
         :param url:
         :param direction: 默认从上往下取
         :param subjective: 加载主观句还是客观句，默认加载主观数据
+                            True: 加载多类别，即情绪标签
+                            False: 加载二类别，即主客观
         :param balance: 是否需要平衡加载数据集，默认以非平衡的方式加载
         :return:
         """
         # 若是加载客观的数据，也就没有平衡加载的概念
-        if not subjective and balance:
-            raise AttributeError("can not load data which is objective and use balanced way!")
+#        if not subjective and balance:
+#            raise AttributeError("can not load data which is objective and use balanced way!")
 
         tree = None
         try:
@@ -63,10 +83,14 @@ class Load:
             # ElementTree XPath 貌似不支持 not、!= 操作，所有暂时采用以下方案代替
             each_class = [[sentence for sentence in root.findall("weibo") if sentence.get("emotion-type") != "none"]]
             if not subjective:
-                each_class = [root.findall("weibo[@emotion-type='none']")]
+                each_class = [root.findall("weibo[@emotion-type]")]
 
             if balance:
                 each_class = [root.findall("weibo[@emotion-type='%s']" % c) for c in EMOTION_CLASS.keys()]
+                if not subjective:
+                    each_class = Load.partition(root.findall("weibo[@emotion-type]"),
+                                                lambda x: x.get("emotion-type") == "none")
+
             each_class_size = [len(c) for c in each_class]
             each_class_range = [slice(int(n * ratio)) for n in each_class_size]
             if not direction:
@@ -76,13 +100,12 @@ class Load:
             sentences = []
             for i, each in enumerate(each_class):
                 _range = each_class_range[i]
-                sentences.append([Load.chd_a_little_1(sentence) for sentence in each[_range]])
+                sentences.append([Load.integrate(sentence) for sentence in each[_range]])
 
             # shuffle
             sentences = flatten(sentences)
             # random.shuffle(sentences)
 
-            # 返回训练集中属于主观句的部分
             return [{"sentence": sentence.text.encode("utf_8"),
                      "emotion-tag": sentence.get("emotion_tag"),
                      "emotion-1-type": sentence.get("emotion-type"),
@@ -117,7 +140,7 @@ class Load:
 #            if not direction:
 #                _range = slice(int(len(direct_childs) * (1 - ratio)), len(direct_childs), None)
 #
-#            sentences = [Load.chd_a_little_1(child) for child in direct_childs[_range]]
+#            sentences = [Load.integrate(child) for child in direct_childs[_range]]
 #
 #            # 返回训练集中属于主观句的部分
 #            return [{"sentence": sentence.text.encode("utf_8"),
@@ -141,21 +164,30 @@ class Load:
 #                    if sentence.get("emotion_tag") == "Y"]
 
     @staticmethod
-    def chd_a_little_1(sentence):
+    def integrate(sentence):
         sentence.text = "".join([text for text in sentence.itertext() if text.strip()])
         return sentence
-        # print sentence.text
-        # print
 
     @staticmethod
-    def chd_a_little(sentence):
-        attribute = sentence.attrib
-        e = ET.Element("sentence", attribute)
-        e.text = sentence.text
-        e.attrib["emotion-1-type"] = e.attrib["emotion-2-type"]
-        return e
+    def chd_attr(element, attr0, value):
+        if attr0 not in element:
+            raise ValueError("wrong attibute")
+        element[attr0] = value
 
+    @staticmethod
+    def partition(iterable, condition):
+        """
+        separate a Python list into two lists, according to condition
+        :param iterable:
+        :param condition:
+        :return:
+        """
+        def partition_element(partitions, element):
+            (partitions[0] if condition(element) else partitions[1]).append(element)
+            return partitions
+        return reduce(partition_element, iterable, [[], []])
 
 if __name__ == "__main__":
     s = Load.load_training_balance()
+    s1 = Load.load_training_objective_balance()
     print len(s)
