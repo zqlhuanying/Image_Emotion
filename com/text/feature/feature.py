@@ -1,5 +1,7 @@
 # encoding: utf-8
 from __future__ import division
+
+import os
 from compiler.ast import flatten
 import copy
 import time
@@ -7,7 +9,7 @@ import math
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
 
-from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL
+from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL, OBJECTIVE_CLASS
 from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
@@ -20,11 +22,12 @@ class Feature(object):
     """
     文本特征词抽取
     """
-    def __init__(self):
+    def __init__(self, f=False, subjective=True):
         # f 开关，将分词后的结果写入到文本中
         #   若资源有更新，可以打开开关，强制写入新的分词后的结果
-        self.f = False
+        self.f = f
         self.istrain = False
+        self.subjective = subjective
         self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
     def get_key_words(self, sentences=None):
@@ -32,6 +35,7 @@ class Feature(object):
         获取关键词
         如果 sentences 为 None，则获取训练集中的关键词
         否则获取 sentences 中的关键词
+        :param sentences
         :return:
         """
         if sentences is None:
@@ -49,8 +53,7 @@ class Feature(object):
         :param key_words: [{'sentence': {}}, ...] or [{}, ...]
         :return:
         """
-        has_sentence = "sentence" in key_words[0]
-        if has_sentence:
+        if "sentence" in key_words[0]:
             key_words = [d.get("sentence") for d in key_words]
         fit_data = self.feature_hasher.transform(key_words)
         tfidf = TfidfTransformer()
@@ -88,7 +91,11 @@ class Feature(object):
         return splited_words_list, sentence_size
 
     def _collect(self, splited_words_list, sentence_size):
-        key_words_txt = RESOURCE_BASE_URL + "key_words/" + self.__class__.__name__ + ".txt"
+        dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+        if self.subjective:
+            key_words_txt = os.path.join(dir_, self.__class__.__name__ + ".txt")
+        else:
+            key_words_txt = os.path.join(dir_, self.__class__.__name__ + "_objective.txt")
 #        def norm(word_scores):
 #            """
 #            以样本为单位正则化
@@ -135,7 +142,7 @@ class Feature(object):
                 train_range = slice(sentence_size, len(splited_words_list))
 
             # 获取所有类别下的文本
-            all_class_datas = Feature.all_class_text(splited_words_list[train_range])
+            all_class_datas = Feature.all_class_text(splited_words_list[train_range], self.getclasses())
 
             # 获取类别标签
             class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
@@ -207,12 +214,17 @@ class Feature(object):
         优先从文件中读取训练集分词后的结果
         :return:
         """
-        split_txt = RESOURCE_BASE_URL + "split/" + self.__class__.__name__ + ".txt"
+        dir_ = os.path.join(RESOURCE_BASE_URL, "split")
+        if self.subjective:
+            split_txt = os.path.join(dir_, self.__class__.__name__ + ".txt")
+            training_datas = Load.load_training_balance()
+        else:
+            split_txt = os.path.join(dir_, self.__class__.__name__ + "_objective.txt")
+            training_datas = Load.load_training_objective_balance()
+
         if self.f or not FileUtil.isexist(split_txt) or FileUtil.isempty(split_txt):
             # 加载训练集
             # 每个句子还包含类别信息
-            training_datas = Load.load_training_balance()
-
             splited_words_list = Feature.__split(flatten(training_datas))
             # splited_words_list = Feature.__del_low_df_word(splited_words_list)
 
@@ -222,8 +234,7 @@ class Feature(object):
 
         return splited_words_list
 
-    @staticmethod
-    def norm(word_scores):
+    def norm(self, word_scores):
         """
         以类别为单位正则化
         归一化（正则化）
@@ -249,14 +260,14 @@ class Feature(object):
                     for k, v in ws.items():
                         ws[k][0] = v[0] / p
 
-        all_class = Feature.all_class_text(word_scores)
-        for c in EMOTION_CLASS.keys():
+        all_class = Feature.all_class_text(word_scores, self.getclasses())
+        for c in all_class.keys():
             norm_0(c)
 
-    @staticmethod
-    def reduce_dim(word_scores):
+    def reduce_dim(self, word_scores):
         """
         降维：选取累加权重信息占比超过 0.9 的特征词
+        :param word_scores
         """
         def reduce_dim_0(c0):
             word_score = reduce(Feature.union, all_class.get(c0))
@@ -287,9 +298,9 @@ class Feature(object):
             for k, v in ws.items():
                 ws[k].append(0)
 
-        all_class = Feature.all_class_text(word_scores)
+        all_class = Feature.all_class_text(word_scores, self.getclasses())
 
-        [reduce_dim_0(c) for c in EMOTION_CLASS.keys()]
+        [reduce_dim_0(c) for c in all_class.keys()]
 
         # 保持 word_scores 的形式不变，删除 mark 标记
         # 若 1, 则只需要删除 mark 标记；若 0，则删除单词
@@ -301,6 +312,13 @@ class Feature(object):
                     ws[k].pop()
                 else:
                     del ws[k]
+
+    def getclasses(self):
+        if self.subjective:
+            classes = EMOTION_CLASS.keys()
+        else:
+            classes = OBJECTIVE_CLASS.keys()
+        return classes
 
     @staticmethod
     def tf(word, words):
@@ -318,11 +336,15 @@ class Feature(object):
         return sum(1 for words in wordslist if word in words)
 
     @staticmethod
-    def all_class_text(datas):
+    def all_class_text(datas, classes):
+        def each_class_text(c):
+            # 获取 datas 下，类别 c 的文本
+            return [data.get("sentence") for data in datas if data.get("emotion-1-type") == c]
         # 将 datas 下的数据以 {类别 ：[文档]} 的形式返回
-        return {c: Feature.__each_class_text(datas, c) for c in EMOTION_CLASS.keys()}
+        return {c: each_class_text(c) for c in classes}
 
     @staticmethod
+    @DeprecationWarning
     def __each_class_text(datas, c):
         # 获取 datas 下，类别 c 的文本
         if c not in EMOTION_CLASS.keys():
@@ -403,10 +425,9 @@ class Feature(object):
                 d[k] = v
         return d
 
-    @staticmethod
-    def __print_top_key_word(res):
-        all_class = Feature.all_class_text(res)
-        for c in EMOTION_CLASS.keys():
+    def __print_top_key_word(self, res):
+        all_class = Feature.all_class_text(res, self.getclasses())
+        for c in all_class.keys():
             each_class = reduce(Feature.union, all_class.get(c))
             sort = sorted(each_class.items(), key=lambda x: x[1], reverse=True)
             sort = sort[0:50]

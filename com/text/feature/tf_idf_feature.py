@@ -14,8 +14,8 @@ class TFIDFFeature(Feature):
     """
     文本的 TF_IDF 特征
     """
-    def __init__(self):
-        super(TFIDFFeature, self).__init__()
+    def __init__(self, f=False, subjective=True):
+        super(TFIDFFeature, self).__init__(f, subjective)
 
 #    def get_key_words(self, sentences):
 #        sentence_list = list()

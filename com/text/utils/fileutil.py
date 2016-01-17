@@ -82,7 +82,8 @@ class FileUtil:
 
     @staticmethod
     def write(path, data):
-        FileUtil.mkdirs(path)
+        parent_dir = FileUtil.getparentdir(path)
+        FileUtil.mkdirs(parent_dir)
 
         s = len(data)
         fp = open(path, "w")

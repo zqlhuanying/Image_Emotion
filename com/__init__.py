@@ -18,3 +18,9 @@ EMOTION_CLASS = {
     "sadness": "悲伤",
     "surprise": "惊讶"
 }
+
+# 主客观类别
+OBJECTIVE_CLASS = {
+    "Y": "主观句",
+    "N": "客观句"
+}
