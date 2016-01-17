@@ -11,9 +11,9 @@ class FastTFIDFFeature(Feature):
     """
     文本的 TFIDF 特征，速度快
     """
-    def __init__(self):
+    def __init__(self, f=False, subjective=True):
         # 特征 Hash 散列器
-        super(FastTFIDFFeature, self).__init__()
+        super(FastTFIDFFeature, self).__init__(f, subjective)
 
     def _collect(self, splited_words_list, sentence_size):
         print "Collection datas: ", time.strftime('%Y-%m-%d %H:%M:%S')

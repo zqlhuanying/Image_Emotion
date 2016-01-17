@@ -3,7 +3,7 @@ import numpy as np
 import scipy.sparse as sp
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score
-from com import EMOTION_CLASS
+from com import EMOTION_CLASS, OBJECTIVE_CLASS
 from com.image.utils.common_util import CommonUtil
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
@@ -20,7 +20,8 @@ class Classification:
     """
     分类
     """
-    def __init__(self, bayes=Bayes()):
+    def __init__(self, bayes=Bayes(), subjective=True):
+        self.subjective = subjective
         self.bayes = bayes
         # 特征词 Hash 散列器
         self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
@@ -80,23 +81,29 @@ class Classification:
         fit_true_pred = self.__del_unknow(c_true, c_pred)
         c_true_0 = fit_true_pred[0]
         c_pred_0 = fit_true_pred[1]
-        return precision_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return precision_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_recall(self, c_true, c_pred):
         fit_true_pred = self.__del_unknow(c_true, c_pred)
         c_true_0 = fit_true_pred[0]
         c_pred_0 = fit_true_pred[1]
-        return recall_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return recall_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_f1(self, c_true, c_pred):
         fit_true_pred = self.__del_unknow(c_true, c_pred)
         c_true_0 = fit_true_pred[0]
         c_pred_0 = fit_true_pred[1]
-        return f1_score(c_true_0, c_pred_0, labels=EMOTION_CLASS.keys(), average="macro")
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return f1_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_correct(self, c_true, c_pred):
         # 不能过滤 unknow 部分，因统计时需要
-        self._correct(c_true, c_pred, labels=EMOTION_CLASS.keys())
+        self._correct(c_true, c_pred, labels=self.getclasses())
 
     def _correct(self, c_true, c_pred, labels=None):
         def _diff(label_tuple):
@@ -152,6 +159,21 @@ class Classification:
             print("predict incorrect: %d" % (true_sum[i] - tp_sum[i] - unknow_sum[i]))
             print
 
+    def getclasses(self):
+        if self.subjective:
+            classes = EMOTION_CLASS.keys()
+        else:
+            classes = OBJECTIVE_CLASS.keys()
+        return classes
+
+    def __get_label_average(self, classes):
+        if len(classes) <= 1:
+            raise ValueError("must two classes")
+        elif len(classes) <= 2:
+            return "Y", "binary"
+        else:
+            return 1, "macro"
+
     @staticmethod
     def __del_unknow(c_true, c_pred):
         """
@@ -167,7 +189,8 @@ class Classification:
         return zip(*l)
 
 if __name__ == "__main__":
-    # 加载数据集
+    print
+    # 加载情绪分类数据集
     feature = CHIFeature()
     test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
@@ -190,3 +213,27 @@ if __name__ == "__main__":
     print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
+
+    # 加载主客观分类数据集
+#    feature = CHIFeature(subjective=False)
+#    test = Load.load_test_objective_balance()
+#    train_datas, class_label = feature.get_key_words()
+#    test_datas, c_true = feature.get_key_words(test)
+#
+#    train = train_datas
+#    test = test_datas
+#    # 构建适合 bayes 分类的数据集
+#    if not sp.issparse(train_datas):
+#        train = feature.cal_weight(train_datas)
+#        test = feature.cal_weight(test_datas)
+#
+#    clf = Classification(subjective=False)
+#    clf.get_classificator(train, class_label)
+#    c_pred = clf.predict(test)
+#    c_pred_unknow = clf.predict_unknow(test)
+#    print c_pred
+#    print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
+#    print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
+#    print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
+#    print
+#    clf.metrics_correct(c_true, c_pred_unknow)

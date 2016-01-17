@@ -3,7 +3,6 @@ from __future__ import division
 from compiler.ast import flatten
 import time
 import math
-from com import EMOTION_CLASS
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
@@ -24,8 +23,8 @@ class CHIFeature(Feature):
     包含特征词 T             A                   B
     不包含特征词 T           C                   D
     """
-    def __init__(self):
-        super(CHIFeature, self).__init__()
+    def __init__(self, f=False, subjective=True):
+        super(CHIFeature, self).__init__(f, subjective)
 
 #    def get_key_words(self, sentences):
 #        # 加载训练集
@@ -54,7 +53,7 @@ class CHIFeature(Feature):
     def chi(t, all_class_datas, all_datas):
         def o_class_datas(c):
             l = []
-            for c1 in EMOTION_CLASS.keys():
+            for c1 in all_class_datas.keys():
                 if c1 != c:
                     l += all_class_datas.get(c1)
             return l
@@ -79,10 +78,11 @@ class CHIFeature(Feature):
             x = N * math.pow((A * D - B * C), 2) / ((A + C) * (A + B) * (B + D) * (C + D))
             return x
         N = len(all_datas)
-        chi = [c_chi(c_1) for c_1 in EMOTION_CLASS.keys()]
+        chi = [c_chi(c_1) for c_1 in all_class_datas.keys()]
         return max(chi)
 
 if __name__ == "__main__":
     s1 = ur"源海都学愤怒鸟的声音，好像好厉害…"
+#    CHIFeature(subjective=False).get_key_words()
     CHIFeature().get_key_words()
 #    IGFeature().get_key_words(s1)

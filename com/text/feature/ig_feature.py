@@ -3,7 +3,6 @@ from __future__ import division
 from compiler.ast import flatten
 import math
 import time
-from com import EMOTION_CLASS
 from com.text.feature.feature import Feature
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
@@ -17,8 +16,8 @@ class IGFeature(Feature):
     文本的信息增益特征
     IG（T） = H（C） - H（C|T）
     """
-    def __init__(self):
-        super(IGFeature, self).__init__()
+    def __init__(self, f=False, subjective=True):
+        super(IGFeature, self).__init__(f, subjective)
 
 #    def get_key_words(self, sentences):
 #        # 加载训练集
@@ -76,7 +75,7 @@ class IGFeature(Feature):
 
         s = 0
         pt_num = pt()
-        for c in EMOTION_CLASS.keys():
+        for c in all_class_datas.keys():
             pct_num = pct(all_class_datas.get(c))
             npct_num = npct(all_class_datas.get(c))
             if pct_num != 0:
@@ -90,7 +89,7 @@ class IGFeature(Feature):
     def hc(all_class_datas, datas_size):
         # 计算 H(C) 的信息熵
         s = 0
-        for c in EMOTION_CLASS.keys():
+        for c in all_class_datas.keys():
             p_each_class = len(all_class_datas.get(c)) / datas_size
             if p_each_class != 0:
                 s += p_each_class * math.log(p_each_class, 2)
