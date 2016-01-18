@@ -2,7 +2,7 @@
 import numpy as np
 import scipy.sparse as sp
 from sklearn.feature_extraction import FeatureHasher
-from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss
 from com import EMOTION_CLASS, OBJECTIVE_CLASS
 from com.image.utils.common_util import CommonUtil
 from com.text.bayes import Bayes
@@ -38,6 +38,57 @@ class Classification:
         # 训练模型
         self.bayes.fit(fit_train_datas, class_label)
         return self
+
+    def get_incr_classificator(self, incr_datas, test_datas, test_class_label):
+        """
+        对增量式贝叶斯的增量集部分进行处理
+        :param incr_datas:
+        :param test_datas:
+        :param test_class_label:
+        :return:
+        """
+        if not hasattr(self.bayes, "feature_log_prob_") or not hasattr(self.bayes, "class_log_prior_"):
+            raise ValueError("please use get_classificator() to get classificator firstly")
+
+        for i in range(len(incr_datas)):
+            # 分类损失，求最小值的处理方式
+            loss = 1
+            # 增量集中优先选择更改分类器参数的文本
+            text = None
+            # 增量集中优先选择更改分类器参数的文本所对应的类别
+            c_pred = None
+            # 增量集中优先选择更改分类器参数的文本所对应的下标
+            index = 0
+
+            origin_class_log_prob_ = self.bayes.class_log_prior_
+            origin_feature_log_prob_ = self.bayes.feature_log_prob_
+            for i0, data in enumerate(incr_datas):
+                c_true0 = data.get("emotion-1-type", "unknow")
+                text0 = [data.get("sentence") if "sentence" in data else data]
+                # todo
+                # predict 接受的参数是计算过权重后，而这里的 text0 是未计算权重的，这里是否有影响？
+                c_pred0 = self.predict(text0)[0]
+                text0 = text0[0]
+                if c_true0 == c_pred0:
+                    text = text0
+                    c_pred = c_pred0
+                    index = i0
+                    break
+                else:
+                    self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
+                    test_c_pred = self.predict(test_datas)
+                    loss0 = self.metrics_zero_one_loss(test_class_label, test_c_pred)
+                    if loss0 < loss:
+                        loss = loss0
+                        text = text0
+                        c_pred = c_pred0
+                        index = i0
+
+                self.bayes.class_log_prior_ = origin_class_log_prob_
+                self.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            self.bayes.update(c_pred, text)
+            del incr_datas[index]
 
     def predict(self, test_datas):
         """
@@ -100,6 +151,12 @@ class Classification:
         classes = self.getclasses()
         pos_label, average = self.__get_label_average(classes)
         return f1_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
+
+    def metrics_zero_one_loss(self, c_true, c_pred):
+        fit_true_pred = self.__del_unknow(c_true, c_pred)
+        c_true_0 = fit_true_pred[0]
+        c_pred_0 = fit_true_pred[1]
+        return zero_one_loss(c_true_0, c_pred_0)
 
     def metrics_correct(self, c_true, c_pred):
         # 不能过滤 unknow 部分，因统计时需要
@@ -211,6 +268,7 @@ if __name__ == "__main__":
     print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
     print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
     print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
+    print "zero_one_loss", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
 
@@ -235,5 +293,6 @@ if __name__ == "__main__":
 #    print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
 #    print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
 #    print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
+#    print "zero_one_loss", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
 #    print
 #    clf.metrics_correct(c_true, c_pred_unknow)
