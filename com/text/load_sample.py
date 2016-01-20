@@ -3,6 +3,8 @@ from __future__ import division
 from compiler.ast import flatten
 import random
 from com import RESOURCE_BASE_URL, EMOTION_CLASS
+from com.text import collect
+from com.text.split_words_nlpir import SplitWords
 
 try:
     import xml.etree.cElementTree as ET
@@ -50,6 +52,22 @@ class Load:
         [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
          for data in datas]
         return datas
+
+    @staticmethod
+    def load_incr_datas():
+#        url = RESOURCE_BASE_URL + "weibo_samples_incr.xml"
+#        ratio = 1 / 5
+#        incr_train_datas = Load.__load(url, ratio, balance=True)
+#        SplitWords.__init__()
+#        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in incr_train_datas]
+#        SplitWords.close()
+#        incr_train_datas = [{d: data.count(d) for d in set(data)} for data in incr_train_datas]
+#        return incr_train_datas
+        SplitWords.__init__()
+        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in collect.read_weibo("collect/incr")]
+        SplitWords.close()
+        incr_train_datas = [{d: data.count(d) for d in set(data)} for data in incr_train_datas]
+        return incr_train_datas
 
     @staticmethod
     def __load(url, ratio, direction=True, subjective=True, balance=False):

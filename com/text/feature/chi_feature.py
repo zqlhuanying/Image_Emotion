@@ -46,11 +46,11 @@ class CHIFeature(Feature):
 #        SplitWords.close()
 #        print int(time.time())
 
-    def cal_score(self, t, sentence, class_sentences, sentences):
-        return CHIFeature.chi(t, class_sentences, sentences)
+    def cal_score(self, t, sentence, label, class_sentences, sentences):
+        return CHIFeature.chi(t, label, class_sentences, sentences)
 
     @staticmethod
-    def chi(t, all_class_datas, all_datas):
+    def chi(t, label, all_class_datas, all_datas):
         def o_class_datas(c):
             l = []
             for c1 in all_class_datas.keys():
@@ -78,6 +78,8 @@ class CHIFeature(Feature):
             x = N * math.pow((A * D - B * C), 2) / ((A + C) * (A + B) * (B + D) * (C + D))
             return x
         N = len(all_datas)
+#        chi = c_chi(label)
+#        return chi
         chi = [c_chi(c_1) for c_1 in all_class_datas.keys()]
         return max(chi)
 

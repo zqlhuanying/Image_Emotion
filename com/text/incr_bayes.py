@@ -8,7 +8,7 @@ from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
 
-__author__ = 'root'
+__author__ = 'zql'
 __date__ = '15-12-27'
 
 
@@ -138,6 +138,8 @@ if __name__ == "__main__":
     train_datas, class_label = feature.get_key_words()
     test_datas, c_true = feature.get_key_words(test)
 
+    incr_train_datas = Load.load_incr_datas()
+
     train = train_datas
     test = test_datas
     # 构建适合 bayes 分类的数据集
@@ -149,14 +151,23 @@ if __name__ == "__main__":
     clf = Classification(bayes=bayes)
     clf.get_classificator(train, class_label)
     c_pred = clf.predict(test)
-#    bayes.update(c_pred[0], test_datas[0].get("sentence"))
-    clf.get_incr_classificator([test_datas[0], test_datas[1], test_datas[2], test_datas[3]], test, c_true)
+    c_pred_unknow = clf.predict_unknow(test)
+    print c_pred
+    print "origin precision:", clf.metrics_precision(c_true, c_pred_unknow)
+    print "origin recall:", clf.metrics_recall(c_true, c_pred_unknow)
+    print "origin f1:", clf.metrics_f1(c_true, c_pred_unknow)
+    print "origin zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
     print
-#    c_pred_unknow = clf.predict_unknow(test)
-#    print c_pred
-#    print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
-#    print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
-#    print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
-#    print
-#    clf.metrics_correct(c_true, c_pred_unknow)
+    clf.metrics_correct(c_true, c_pred_unknow)
+
+#    bayes.update(c_pred[0], test_datas[0].get("sentence"))
+    clf.get_incr_classificator(incr_train_datas, test, c_true)
+    c_pred_unknow = clf.predict_unknow(test)
+    print c_pred
+    print "incr precision:", clf.metrics_precision(c_true, c_pred_unknow)
+    print "incr recall:", clf.metrics_recall(c_true, c_pred_unknow)
+    print "incr f1:", clf.metrics_f1(c_true, c_pred_unknow)
+    print "incr zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    print
+    clf.metrics_correct(c_true, c_pred_unknow)
 

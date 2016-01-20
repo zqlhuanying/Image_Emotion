@@ -45,7 +45,11 @@ class Feature(object):
 
         splited_words_list, sentence_size = self._split(sentences)
 
-        return self._collect(splited_words_list, sentence_size)
+        if self.istrain:
+            return self._collect(splited_words_list, sentence_size)
+        else:
+            class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
+            return splited_words_list[: sentence_size], class_label
 
     def cal_weight(self, key_words):
         """
@@ -53,19 +57,19 @@ class Feature(object):
         :param key_words: [{'sentence': {}}, ...] or [{}, ...]
         :return:
         """
-        if "sentence" in key_words[0]:
-            key_words = [d.get("sentence") for d in key_words]
+        key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
         fit_data = self.feature_hasher.transform(key_words)
         tfidf = TfidfTransformer()
         tfidf.fit(fit_data)
         weight_matrix = tfidf.transform(fit_data)
         return weight_matrix
 
-    def cal_score(self, t, sentence, class_sentences, sentences):
+    def cal_score(self, t, sentence, label, class_sentences, sentences):
         """
         计算特征词 t 的得分
         :param t: 特征词
         :param sentence: 特征词所在的句子，分词后
+        :param label: 类别
         :param class_sentences: 带有类别信息的句子集，即类别 c 下的句子集，最好也是分词后（不分词貌似也不影响）
         :param sentences: 句子集，最好也是分词后（不分词貌似也不影响）
         :return:
@@ -151,11 +155,12 @@ class Feature(object):
             res = []
             for splited_words_dict in splited_words_list[0: sentence_size]:
                 splited_words = splited_words_dict.get("sentence")
+                label = splited_words_dict.get("emotion-1-type")
                 # 计算每个单词的得分 scores: {word: [score, frequency], ...}
-                scores = {splited_word: [self.cal_score(splited_word, splited_words, all_class_datas,
+                scores = {splited_word: [self.cal_score(splited_word, splited_words, label, all_class_datas,
                                                         [d.get("sentence") for d in splited_words_list[train_range]]),
-                                         splited_words.count(splited_word)]
-                          for splited_word in set(splited_words)}
+                                         frequency]
+                          for splited_word, frequency in splited_words.items()}
                 # 归一化
                 # norm(scores)
                 # 降维处理
@@ -382,7 +387,8 @@ class Feature(object):
             if splited_words:
                 d = {}
                 d["emotion-1-type"] = sentence.get("emotion-1-type")
-                d["sentence"] = splited_words
+                d["sentence"] = {splited_word: splited_words.count(splited_word)
+                                 for splited_word in set(splited_words)}
                 l.append(d)
 
         SplitWords.close()
@@ -417,8 +423,9 @@ class Feature(object):
         for k, v in dict2.items():
             if k in dict1:
                 if hasattr(v, "__getitem__"):
-                    d[k][0] = (d[k][0] + v[0]) / 2
-                    d[k][1] += v[1]
+                    d[k] = [(d[k][0] + v[0]) / 2, d[k][1] + v[1]]
+                    # d[k][0] = (d[k][0] + v[0]) / 2
+                    # d[k][1] += v[1]
                 else:
                     d[k] = (d[k] + v) / 2
             else:

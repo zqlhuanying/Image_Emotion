@@ -75,7 +75,7 @@ def collect_emotion():
     print "Collecting Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
 
-def read_weibo(isreadimg=False):
+def read_weibo(path, isreadimg=False):
     def handle_read(datas):
         fit_datas = datas
         if not isreadimg:
@@ -92,7 +92,7 @@ def read_weibo(isreadimg=False):
                 d["img"] = filter(lambda x: x, data[data.find(":") + 1:].split(","))
         return l
 
-    path = os.path.join(RESOURCE_BASE_URL, "collect")
+    path = path if path.startswith(RESOURCE_BASE_URL) else os.path.join(RESOURCE_BASE_URL, path)
     filenames = FileUtil.listdir(path, isrecursion=False)
     return flatten([read_from_file(filename, handle_read) for filename in filenames])
 
@@ -159,7 +159,7 @@ def basicauth():
 #    print r.json()
 
 if __name__ == "__main__":
-    # collect_weibo()
+    collect_weibo()
     # collect_emotion()
-    l = read_weibo(True)
+    # l = read_weibo("collect/incr")
     print

@@ -38,8 +38,12 @@ class TFIDFFeature(Feature):
 #            for word, score in sorted_words[:min(10, len(sorted_words))]:
 #                print("\tWord: %s, TF-IDF: %f" % (word.decode("utf_8"), score))
 
-    def cal_score(self, t, sentence, class_sentences, sentences):
+    def cal_score(self, t, sentence, label, class_sentences, sentences):
         return TFIDFFeature.tfidf(t, sentence, sentences)
+
+    @staticmethod
+    def tf(word, words):
+        return words.get(word)
 
     @staticmethod
     def idf(word, wordslist):

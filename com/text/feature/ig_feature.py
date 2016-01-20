@@ -49,7 +49,7 @@ class IGFeature(Feature):
 #            for word, score in sorted_words[:min(10, len(sorted_words))]:
 #               print("\tWord: %s, IG: %f" % (word.decode("utf_8"), score))
 
-    def cal_score(self, t, sentence, class_sentences, sentences):
+    def cal_score(self, t, sentence, label, class_sentences, sentences):
         hc = IGFeature.hc(class_sentences, len(sentences))
         hct = IGFeature.hct(t, class_sentences, sentences)
         return hc - hct

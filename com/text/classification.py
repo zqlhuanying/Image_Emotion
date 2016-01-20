@@ -1,16 +1,17 @@
 # encoding: utf-8
+import os
+
 import numpy as np
 import scipy.sparse as sp
+import time
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss
-from com import EMOTION_CLASS, OBJECTIVE_CLASS
-from com.image.utils.common_util import CommonUtil
+
+from com import EMOTION_CLASS, OBJECTIVE_CLASS, RESOURCE_BASE_URL
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
-from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
-from com.text.feature.ig_feature import IGFeature
-from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
+from com.text.utils.fileutil import FileUtil
 
 __author__ = 'root'
 __date__ = '15-12-13'
@@ -20,9 +21,12 @@ class Classification:
     """
     分类
     """
-    def __init__(self, bayes=Bayes(), subjective=True):
-        self.subjective = subjective
+    def __init__(self, f=False, bayes=Bayes(), subjective=True):
+        # f 开关，将分词后的结果写入到文本中
+        #   若资源有更新，可以打开开关，强制写入新的分词后的结果
+        self.f = f
         self.bayes = bayes
+        self.subjective = subjective
         # 特征词 Hash 散列器
         self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
@@ -33,6 +37,7 @@ class Classification:
         """
         fit_train_datas = train_datas
         if not sp.issparse(train_datas):
+            train_datas = [d.get("sentence") if "sentence" in d else d for d in train_datas]
             fit_train_datas = self.feature_hasher.transform(train_datas)
 
         # 训练模型
@@ -42,53 +47,81 @@ class Classification:
     def get_incr_classificator(self, incr_datas, test_datas, test_class_label):
         """
         对增量式贝叶斯的增量集部分进行处理
-        :param incr_datas:
+        :param incr_datas: [{"emorion-1-type": value, "sentence": {}},...]
+                            (emotion-1-type and sentence are optional)
         :param test_datas:
         :param test_class_label:
         :return:
         """
-        if not hasattr(self.bayes, "feature_log_prob_") or not hasattr(self.bayes, "class_log_prior_"):
-            raise ValueError("please use get_classificator() to get classificator firstly")
+        print "Begin Increment Classification: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        # 将参数写入/读取
+        dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
+        FileUtil.mkdirs(dir_)
 
-        for i in range(len(incr_datas)):
-            # 分类损失，求最小值的处理方式
-            loss = 1
-            # 增量集中优先选择更改分类器参数的文本
-            text = None
-            # 增量集中优先选择更改分类器参数的文本所对应的类别
-            c_pred = None
-            # 增量集中优先选择更改分类器参数的文本所对应的下标
-            index = 0
+        class_count_out = os.path.join(dir_, "class_count.txt")
+        class_log_prob_out = os.path.join(dir_, "class_log_prob.txt")
+        feature_count_out = os.path.join(dir_, "feature_count.txt")
+        feature_log_prob_out = os.path.join(dir_, "feature_log_prob.txt")
 
-            origin_class_log_prob_ = self.bayes.class_log_prior_
-            origin_feature_log_prob_ = self.bayes.feature_log_prob_
-            for i0, data in enumerate(incr_datas):
-                c_true0 = data.get("emotion-1-type", "unknow")
-                text0 = [data.get("sentence") if "sentence" in data else data]
-                # todo
-                # predict 接受的参数是计算过权重后，而这里的 text0 是未计算权重的，这里是否有影响？
-                c_pred0 = self.predict(text0)[0]
-                text0 = text0[0]
-                if c_true0 == c_pred0:
-                    text = text0
-                    c_pred = c_pred0
-                    index = i0
-                    break
-                else:
-                    self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
-                    test_c_pred = self.predict(test_datas)
-                    loss0 = self.metrics_zero_one_loss(test_class_label, test_c_pred)
-                    if loss0 < loss:
-                        loss = loss0
+        out = (class_count_out, class_log_prob_out, feature_count_out, feature_log_prob_out)
+
+        if self.f or not FileUtil.isexist(out) or FileUtil.isempty(out):
+            if not hasattr(self.bayes, "feature_log_prob_") or not hasattr(self.bayes, "class_log_prior_"):
+                raise ValueError("please use get_classificator() to get classificator firstly")
+
+            for i in range(len(incr_datas)):
+                if i % 5 == 0:
+                    print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
+                # 分类损失，求最小值的处理方式
+                loss = 1
+                # 增量集中优先选择更改分类器参数的文本
+                text = None
+                # 增量集中优先选择更改分类器参数的文本所对应的类别
+                c_pred = None
+                # 增量集中优先选择更改分类器参数的文本所对应的下标
+                index = 0
+
+                origin_class_log_prob_ = self.bayes.class_log_prior_
+                origin_feature_log_prob_ = self.bayes.feature_log_prob_
+                for i0, data in enumerate(incr_datas):
+                    c_true0 = data.get("emotion-1-type", "unknow")
+                    text0 = [data.get("sentence") if "sentence" in data else data]
+                    # todo
+                    # predict 接受的参数是计算过权重后，而这里的 text0 是未计算权重的，这里是否有影响？
+                    c_pred0 = self.predict(text0)[0]
+                    text0 = text0[0]
+                    if c_true0 == c_pred0:
                         text = text0
                         c_pred = c_pred0
                         index = i0
+                        break
+                    else:
+                        self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
+                        test_c_pred = self.predict(test_datas)
+                        loss0 = self.metrics_zero_one_loss(test_class_label, test_c_pred)
+                        if loss0 < loss:
+                            loss = loss0
+                            text = text0
+                            c_pred = c_pred0
+                            index = i0
 
-                self.bayes.class_log_prior_ = origin_class_log_prob_
-                self.bayes.feature_log_prob_ = origin_feature_log_prob_
+                    self.bayes.class_log_prior_ = origin_class_log_prob_
+                    self.bayes.feature_log_prob_ = origin_feature_log_prob_
 
-            self.bayes.update(c_pred, text)
-            del incr_datas[index]
+                self.bayes.update(c_pred, text)
+                del incr_datas[index]
+
+            bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
+                          self.bayes.feature_count_, self.bayes.feature_log_prob_)
+            map(lambda x: np.savetxt(x[0], x[1]), zip(out, bayes_args))
+        else:
+            self.bayes.class_count_ = np.loadtxt(out[0])
+            self.bayes.class_log_prior_ = np.loadtxt(out[1])
+            self.bayes.feature_count_ = np.loadtxt(out[2])
+            self.bayes.feature_log_prob_ = np.loadtxt(out[3])
+
+        print "Increment Classification Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        return self
 
     def predict(self, test_datas):
         """
@@ -98,6 +131,7 @@ class Classification:
         """
         fit_test_datas = test_datas
         if not sp.issparse(test_datas):
+            test_datas = [d.get("sentence") if "sentence" in d else d for d in test_datas]
             fit_test_datas = self.feature_hasher.transform(test_datas)
 
         # 预测
@@ -113,6 +147,7 @@ class Classification:
 
         fit_test_datas = test_datas
         if not sp.issparse(test_datas):
+            test_datas = [d.get("sentence") if "sentence" in d else d for d in test_datas]
             fit_test_datas = self.feature_hasher.transform(test_datas)
 
         # proba: [n_samples, n_class]
@@ -268,7 +303,7 @@ if __name__ == "__main__":
     print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
     print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
     print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
-    print "zero_one_loss", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    print "zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
 
@@ -293,6 +328,6 @@ if __name__ == "__main__":
 #    print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
 #    print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
 #    print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
-#    print "zero_one_loss", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+#    print "zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
 #    print
 #    clf.metrics_correct(c_true, c_pred_unknow)
