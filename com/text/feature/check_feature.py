@@ -67,7 +67,7 @@ def _check_feature_size(url):
     feature_size = set(flatten(l))
     return len(feature_size)
 
-feature = IGFeature()
+feature = CHIFeature()
 check_splited_words(feature)
 check_key_words(feature)
 # check_train_feature(feature)

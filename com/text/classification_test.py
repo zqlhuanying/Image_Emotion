@@ -13,7 +13,9 @@ __date__ = '2015/12/14'
 
 
 def test_classification(feature, incr=False):
-    # 加载数据集
+    clf = get_classification(feature, incr)
+
+    # 加载测试数据集
     if feature.subjective:
         test = Load.load_test_balance()
     else:
@@ -25,7 +27,6 @@ def test_classification(feature, incr=False):
     if not sp.issparse(test_datas):
         test = feature.cal_weight(test_datas)
 
-    clf = get_classification(feature, incr)
     c_pred_unknow = clf.predict_unknow(test)
     print c_pred_unknow
     print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
@@ -37,18 +38,19 @@ def test_classification(feature, incr=False):
 
 
 def classifict(feature, sentences):
-    test_datas, c_true = feature.get_key_words(sentences)
-
-    test = test_datas
-    if not sp.issparse(test_datas):
-        test = feature.cal_weight(test_datas)
-
     # 获得主客观分类器
     feature.subjective = False
     objective_clf = get_objective_classification(feature)
     # 获得情绪分类器
     feature.subjective = True
     emotion_clf = get_emotion_classification(feature, incr=False)
+
+    # 测试集
+    test_datas, c_true = feature.get_key_words(sentences)
+
+    test = test_datas
+    if not sp.issparse(test_datas):
+        test = feature.cal_weight(test_datas)
 
     c_pred = objective_clf.predict(test)
     c_pred = [emotion_clf.predict(test[i])[0] if c == "Y" else c for i, c in enumerate(c_pred)]

@@ -134,17 +134,16 @@ class IncrBayes(Bayes):
 if __name__ == "__main__":
     # 加载情绪分类数据集
     feature = CHIFeature()
-    test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
-    test_datas, c_true = feature.get_key_words(test)
-
-    incr_train_datas = Load.load_incr_datas()
-
     train = train_datas
+    if not sp.issparse(train_datas):
+        train = feature.cal_weight(train_datas)
+
+    test = Load.load_test_balance()
+    test_datas, c_true = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(train_datas):
-        train = feature.cal_weight(train_datas)
         test = feature.cal_weight(test_datas)
 
     bayes = IncrBayes()
@@ -161,6 +160,7 @@ if __name__ == "__main__":
     clf.metrics_correct(c_true, c_pred_unknow)
 
 #    bayes.update(c_pred[0], test_datas[0].get("sentence"))
+    incr_train_datas = Load.load_incr_datas()
     clf.get_incr_classificator(incr_train_datas, test, c_true)
     c_pred_unknow = clf.predict_unknow(test)
     print c_pred

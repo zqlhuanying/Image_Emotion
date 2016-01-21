@@ -284,15 +284,16 @@ if __name__ == "__main__":
     print
     # 加载情绪分类数据集
     feature = CHIFeature()
-    test = Load.load_test_balance()
     train_datas, class_label = feature.get_key_words()
-    test_datas, c_true = feature.get_key_words(test)
-
     train = train_datas
+    if not sp.issparse(train_datas):
+        train = feature.cal_weight(train_datas)
+
+    test = Load.load_test_balance()
+    test_datas, c_true = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(train_datas):
-        train = feature.cal_weight(train_datas)
         test = feature.cal_weight(test_datas)
 
     clf = Classification()
@@ -309,15 +310,16 @@ if __name__ == "__main__":
 
     # 加载主客观分类数据集
 #    feature = CHIFeature(subjective=False)
-#    test = Load.load_test_objective_balance()
 #    train_datas, class_label = feature.get_key_words()
-#    test_datas, c_true = feature.get_key_words(test)
-#
 #    train = train_datas
+#    if not sp.issparse(train_datas):
+#        train = feature.cal_weight(train_datas)
+#
+#    test = Load.load_test_objective_balance()
+#    test_datas, c_true = feature.get_key_words(test)
 #    test = test_datas
 #    # 构建适合 bayes 分类的数据集
 #    if not sp.issparse(train_datas):
-#        train = feature.cal_weight(train_datas)
 #        test = feature.cal_weight(test_datas)
 #
 #    clf = Classification(subjective=False)

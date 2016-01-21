@@ -54,14 +54,26 @@ class Feature(object):
     def cal_weight(self, key_words):
         """
         计算获取特征词后的权重信息
-        :param key_words: [{'sentence': {}}, ...] or [{}, ...]
+        :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
         :return:
         """
+        if not self.istrain:
+            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
+            url = os.path.join(dir_, filename)
+            train_key_words = FileUtil.read(url)
+        else:
+            train_key_words = key_words
+        train_key_words = [d.get("sentence") if "sentence" in d else d for d in train_key_words]
         key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
-        fit_data = self.feature_hasher.transform(key_words)
+        # 获得 tf
+        key_words = [{k: v / sum(d.values()) for k, v in d.items()} for d in key_words]
+        fit_train_key_words = self.feature_hasher.transform(train_key_words)
+        fit_key_words = self.feature_hasher.transform(key_words)
         tfidf = TfidfTransformer()
-        tfidf.fit(fit_data)
-        weight_matrix = tfidf.transform(fit_data)
+        # 训练 idf
+        tfidf.fit(fit_train_key_words)
+        weight_matrix = tfidf.transform(fit_key_words)
         return weight_matrix
 
     def cal_score(self, t, sentence, label, class_sentences, sentences):
@@ -86,7 +98,8 @@ class Feature(object):
             l = Feature.__pre_process(sentences)
 
             splited_sentence_list = Feature.__split(flatten(l))
-            # splited_sentence_list = Feature.__del_low_df_word(splited_sentence_list)
+#            splited_sentence_list = Feature.__del_low_frequency_word(splited_sentence_list)
+
             splited_words_list = splited_sentence_list + splited_words_list
             sentence_size = len(splited_sentence_list)
 
@@ -231,7 +244,7 @@ class Feature(object):
             # 加载训练集
             # 每个句子还包含类别信息
             splited_words_list = Feature.__split(flatten(training_datas))
-            # splited_words_list = Feature.__del_low_df_word(splited_words_list)
+#            splited_words_list = Feature.__del_low_frequency_word(splited_words_list)
 
             FileUtil.write(split_txt, splited_words_list)
         else:
@@ -395,17 +408,25 @@ class Feature(object):
         return l
 
     @staticmethod
-    def __del_low_df_word(splited_words_list):
+    def __del_low_frequency_word(splited_words_list):
         """
-        删除文档频率 <= 3 的词汇，因这些词汇有可能是生僻词或表意能力比较差的词
+        删除频率 <= 3 的词汇，因这些词汇有可能是生僻词或表意能力比较差的词
         :return:
         """
         def fun(splited_words):
             splited_words_0 = splited_words.get("sentence")
-            aa = filter(lambda t: Feature.n_contains(t, splited_words_list_0) > 3, splited_words_0)
-            splited_words["sentence"] = aa
+            aa = filter(lambda x: x[0] in leave, splited_words_0.items())
+            splited_words["sentence"] = {a[0]: a[1] for a in aa}
 
-        splited_words_list_0 = [d.get("sentence") for d in splited_words_list]
+        final = reduce(Feature.union, [d.get("sentence") for d in splited_words_list])
+        # 单词总数
+        words_sum = sum(final.values())
+        # words_sum = sum([sum(d.get("sentence").values()) for d in current_splited_words])
+        # 阖值, 词频小于等于该阖值将删除
+        max_ = min(0.0001 * words_sum, 1)
+        leave = filter(lambda x: x[1] > max_, final.items())
+        leave = {d[0]: d[1] for d in leave}
+        leave_words_sum = sum(leave.values())
         map(fun, splited_words_list)
         return [d for d in splited_words_list if d.get("sentence")]
 
@@ -415,8 +436,8 @@ class Feature(object):
         合并两个字典
         if has the same key, then add value
         else append {key: value}
-        :param dict1: {key: [weight, frequency, ...]} or {key: weight}
-        :param dict2: {key: [weight, frequency, ...]} or {key: weight}
+        :param dict1: {key: [weight, frequency]} or {key: frequency}
+        :param dict2: {key: [weight, frequency]} or {key: frequency}
         :return: d
         """
         d = dict(dict1)
@@ -427,7 +448,7 @@ class Feature(object):
                     # d[k][0] = (d[k][0] + v[0]) / 2
                     # d[k][1] += v[1]
                 else:
-                    d[k] = (d[k] + v) / 2
+                    d[k] = d[k] + v
             else:
                 d[k] = v
         return d

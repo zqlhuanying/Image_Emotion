@@ -43,7 +43,7 @@ class TFIDFFeature(Feature):
 
     @staticmethod
     def tf(word, words):
-        return words.get(word)
+        return words.get(word) / sum(words.values())
 
     @staticmethod
     def idf(word, wordslist):
