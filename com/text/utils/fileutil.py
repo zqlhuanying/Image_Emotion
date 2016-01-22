@@ -1,6 +1,8 @@
 # encoding: utf-8
 import os
 
+import shutil
+
 __author__ = 'zql'
 __date__ = '2015/12/15'
 
@@ -40,6 +42,19 @@ class FileUtil:
         else:
             size_ = [len(FileUtil.listdir(p)) == 0 for p in path]
         return all(size_)
+
+    @staticmethod
+    def empty(path):
+        """
+        清空文件或文件夹
+        support tuple or list
+        :param path:
+        :return:
+        """
+        if isinstance(path, basestring):
+            path = [path]
+        [os.remove(p) if FileUtil.isfile(p) else shutil.rmtree(p)
+         for p in path if FileUtil.isexist(p)]
 
     @staticmethod
     def isfile(path):

@@ -1,8 +1,6 @@
 /.idea
 /test
 *.pyc
-/com/resource/split*
-/com/resource/key_words*
-/com/resource/collect
-/com/resource/img
-/com/resource/bayes_args*
+/com/resource/*
+
+!/com/resource/*.*
