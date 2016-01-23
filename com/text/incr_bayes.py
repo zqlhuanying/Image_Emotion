@@ -41,9 +41,12 @@ class IncrBayes(Bayes):
             class_count_out = self.class_count_
             feature_count_out = self.feature_count_
 
-        o1 = self._update_class_prob(c_pred, class_prob_out)
-        o2 = self._update_feature_prob(c_pred, sentence, feature_prob_out)
         self._update_class_count(c_pred, class_count_out)
+        o1 = self._update_class_prob(c_pred, class_prob_out)
+        # todo
+        # 个人倾向于先更新 feature_count 再更新 feature_log_prob
+#        self._update_feature_count(c_pred, sentence, feature_count_out)
+        o2 = self._update_feature_prob(c_pred, sentence, feature_prob_out)
         self._update_feature_count(c_pred, sentence, feature_count_out)
 
         return o1, o2
@@ -127,7 +130,8 @@ class IncrBayes(Bayes):
         correct_row = copy_feature_count[index: index + 1, :]
         l = [sentence]
         fit_sentence = self.feature_hasher.transform(l).toarray()
-        np.power(correct_row + fit_sentence, 1, correct_row)
+        b_matrix = fit_sentence
+        np.power(correct_row + b_matrix, 1, correct_row)
         np.power(copy_feature_count, 1, out)
         return copy_feature_count
 
@@ -151,11 +155,12 @@ if __name__ == "__main__":
     clf.get_classificator(train, class_label)
     c_pred = clf.predict(test)
     c_pred_unknow = clf.predict_unknow(test)
-    print c_pred
+#    print c_pred
     print "origin precision:", clf.metrics_precision(c_true, c_pred_unknow)
     print "origin recall:", clf.metrics_recall(c_true, c_pred_unknow)
     print "origin f1:", clf.metrics_f1(c_true, c_pred_unknow)
     print "origin zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
 
@@ -163,11 +168,12 @@ if __name__ == "__main__":
     incr_train_datas = Load.load_incr_datas()
     clf.get_incr_classificator(incr_train_datas, test, c_true)
     c_pred_unknow = clf.predict_unknow(test)
-    print c_pred
+#    print c_pred
     print "incr precision:", clf.metrics_precision(c_true, c_pred_unknow)
     print "incr recall:", clf.metrics_recall(c_true, c_pred_unknow)
     print "incr f1:", clf.metrics_f1(c_true, c_pred_unknow)
     print "incr zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
 

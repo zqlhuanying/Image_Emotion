@@ -84,8 +84,8 @@ class Classification:
             for i in range(len(incr_datas)):
                 if i % 5 == 0:
                     print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
-                # 分类损失，求最大值的处理方式
-                loss = 0
+                # 分类损失，求最小值的处理方式
+                loss = 1
                 # 增量集中优先选择更改分类器参数的文本
                 text = None
                 # 增量集中优先选择更改分类器参数的文本所对应的类别
@@ -110,7 +110,7 @@ class Classification:
                     else:
                         self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
                         loss0 = self.metrics_my_zero_one_loss(test_datas)
-                        if loss0 > loss:
+                        if loss0 < loss:
                             loss = loss0
                             text = text0
                             c_pred = c_pred0
@@ -406,26 +406,27 @@ if __name__ == "__main__":
     train_datas, class_label = feature.get_key_words()
     train = train_datas
     if not sp.issparse(train_datas):
-        train = feature.cal_weight(train_datas)
+        train = feature.cal_weight_improve(train_datas, class_label)
 
     test = Load.load_test_balance()
     test_datas, test_label = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(train_datas):
-        test = feature.cal_weight(test_datas)
+        test = feature.cal_weight_improve(test_datas, test_label)
 
     clf = Classification()
     # clf.cross_validation(train, class_label, score="f1")
-    clf.get_classificator(train, class_label, iscrossvalidate=True)
+    clf.get_classificator(train, class_label, iscrossvalidate=False)
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
-    print pred
+#    print pred
     print "precision:", clf.metrics_precision(test_label, pred_unknow)
     print "recall:", clf.metrics_recall(test_label, pred_unknow)
     print "f1:", clf.metrics_f1(test_label, pred_unknow)
     print "accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
+    print "my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
     clf.metrics_correct(test_label, pred_unknow)
 

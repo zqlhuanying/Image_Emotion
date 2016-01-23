@@ -21251,4 +21251,7 @@
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="1">人生不止，寂寞不已。</sentence>
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2">寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、它说它很想念你，原来我和我的影子，都在想你。</sentence>
   </weibo>
+  <weibo emotion-type="anger" id="4001">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y">一个小偷，居然有那么多人同情，真特么的奇了怪了。这个世界上分不清善恶，美丑，是非的傻逼还真是大把抓。</sentence>
+  </weibo>
 </SampleData>

@@ -10,6 +10,7 @@ from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL, OBJECTIVE_CLASS
+from com.text.feature.vectorize.improve_tf_idf import TfidfImprove
 from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
@@ -45,11 +46,12 @@ class Feature(object):
 
         splited_words_list, sentence_size = self._split(sentences)
 
-        if self.istrain:
-            return self._collect(splited_words_list, sentence_size)
-        else:
-            class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
-            return splited_words_list[: sentence_size], class_label
+        return self._collect(splited_words_list, sentence_size)
+#        if self.istrain:
+#            return self._collect(splited_words_list, sentence_size)
+#        else:
+#            class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
+#            return splited_words_list[: sentence_size], class_label
 
     def cal_weight(self, key_words):
         """
@@ -57,6 +59,7 @@ class Feature(object):
         :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
         :return:
         """
+        print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
             dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
@@ -74,6 +77,38 @@ class Feature(object):
         # 训练 idf
         tfidf.fit(fit_train_key_words)
         weight_matrix = tfidf.transform(fit_key_words)
+        print "Cal Weight Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print
+        return weight_matrix
+
+    def cal_weight_improve(self, key_words, class_label):
+        """
+        计算获取特征词后的权重信息
+        :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
+        :return:
+        """
+        print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        if not self.istrain:
+            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
+            url = os.path.join(dir_, filename)
+            train_key_words = FileUtil.read(url)
+            train_class_label = [d.get("emotion-1-type") for d in train_key_words]
+        else:
+            train_key_words = key_words
+            train_class_label = class_label
+        train_key_words = [d.get("sentence") if "sentence" in d else d for d in train_key_words]
+        key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
+        # 获得 tf
+        key_words = [{k: v / sum(d.values()) for k, v in d.items()} for d in key_words]
+        fit_train_key_words = self.feature_hasher.transform(train_key_words)
+        fit_key_words = self.feature_hasher.transform(key_words)
+        tfidf = TfidfImprove()
+        # 训练 idf
+        tfidf.fit(fit_train_key_words, train_class_label)
+        weight_matrix = tfidf.transform(fit_key_words, class_label)
+        print "Cal Weight Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print
         return weight_matrix
 
     def cal_score(self, t, sentence, label, class_sentences, sentences):
@@ -223,7 +258,7 @@ class Feature(object):
             class_label = [r["emotion-1-type"] for r in res]
 
         # 输出统计信息
-        if True:
+        if False:
             self.__print_top_key_word(res)
         return res, class_label
 
