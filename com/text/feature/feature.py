@@ -10,6 +10,7 @@ from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL, OBJECTIVE_CLASS
+from com.text.feature.vectorize.another_improve_tf_idf import TfidfImproveSec
 from com.text.feature.vectorize.improve_tf_idf import TfidfImprove
 from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
@@ -111,6 +112,35 @@ class Feature(object):
         print
         return weight_matrix
 
+    def cal_weight_improve_sec(self, key_words, class_label):
+        """
+        计算获取特征词后的权重信息
+        :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
+        :return:
+        """
+        print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        if not self.istrain:
+            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
+            url = os.path.join(dir_, filename)
+            train_key_words = FileUtil.read(url)
+            train_class_label = [d.get("emotion-1-type") for d in train_key_words]
+        else:
+            train_key_words = key_words
+            train_class_label = class_label
+        train_key_words = [d.get("sentence") if "sentence" in d else d for d in train_key_words]
+        key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
+
+        fit_train_key_words = self.feature_hasher.transform(train_key_words)
+        fit_key_words = self.feature_hasher.transform(key_words)
+        tfidf = TfidfImproveSec()
+        # 训练 idf
+        tfidf.fit(fit_train_key_words, train_class_label)
+        weight_matrix = tfidf.transform(fit_key_words, class_label)
+        print "Cal Weight Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print
+        return weight_matrix
+
     def cal_score(self, t, sentence, label, class_sentences, sentences):
         """
         计算特征词 t 的得分
@@ -186,8 +216,8 @@ class Feature(object):
 #                _sum += v
 #            return res
 
-        print "Cal Scores: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain or self.f or not FileUtil.isexist(key_words_txt) or FileUtil.isempty(key_words_txt):
+            print "Cal Scores: ", time.strftime('%Y-%m-%d %H:%M:%S')
             if len(splited_words_list) == sentence_size:
                 train_range = slice(sentence_size)
             else:

@@ -45,9 +45,9 @@ class IncrBayes(Bayes):
         o1 = self._update_class_prob(c_pred, class_prob_out)
         # todo
         # 个人倾向于先更新 feature_count 再更新 feature_log_prob
-#        self._update_feature_count(c_pred, sentence, feature_count_out)
-        o2 = self._update_feature_prob(c_pred, sentence, feature_prob_out)
         self._update_feature_count(c_pred, sentence, feature_count_out)
+        o2 = self._update_feature_prob(c_pred, sentence, feature_prob_out)
+#        self._update_feature_count(c_pred, sentence, feature_count_out)
 
         return o1, o2
 
@@ -141,39 +141,38 @@ if __name__ == "__main__":
     train_datas, class_label = feature.get_key_words()
     train = train_datas
     if not sp.issparse(train_datas):
-        train = feature.cal_weight(train_datas)
+        train = feature.cal_weight_improve(train_datas, class_label)
 
     test = Load.load_test_balance()
-    test_datas, c_true = feature.get_key_words(test)
+    test_datas, test_label = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(train_datas):
-        test = feature.cal_weight(test_datas)
+        test = feature.cal_weight_improve(test_datas, test_label)
 
     bayes = IncrBayes()
     clf = Classification(bayes=bayes)
     clf.get_classificator(train, class_label)
-    c_pred = clf.predict(test)
-    c_pred_unknow = clf.predict_unknow(test)
-#    print c_pred
-    print "origin precision:", clf.metrics_precision(c_true, c_pred_unknow)
-    print "origin recall:", clf.metrics_recall(c_true, c_pred_unknow)
-    print "origin f1:", clf.metrics_f1(c_true, c_pred_unknow)
-    print "origin zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    pred = clf.predict(test)
+    pred_unknow = clf.predict_unknow(test)
+#    print pred
+    print "origin precision:", clf.metrics_precision(test_label, pred_unknow)
+    print "origin recall:", clf.metrics_recall(test_label, pred_unknow)
+    print "origin f1:", clf.metrics_f1(test_label, pred_unknow)
+    print "origin zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
     print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
-    clf.metrics_correct(c_true, c_pred_unknow)
+    clf.metrics_correct(test_label, pred_unknow)
 
 #    bayes.update(c_pred[0], test_datas[0].get("sentence"))
     incr_train_datas = Load.load_incr_datas()
-    clf.get_incr_classificator(incr_train_datas, test, c_true)
-    c_pred_unknow = clf.predict_unknow(test)
-#    print c_pred
-    print "incr precision:", clf.metrics_precision(c_true, c_pred_unknow)
-    print "incr recall:", clf.metrics_recall(c_true, c_pred_unknow)
-    print "incr f1:", clf.metrics_f1(c_true, c_pred_unknow)
-    print "incr zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    clf.get_incr_classificator(incr_train_datas, test, test_label)
+    pred_unknow = clf.predict_unknow(test)
+#    print pred
+    print "incr precision:", clf.metrics_precision(test_label, pred_unknow)
+    print "incr recall:", clf.metrics_recall(test_label, pred_unknow)
+    print "incr f1:", clf.metrics_f1(test_label, pred_unknow)
+    print "incr zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
     print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
-    clf.metrics_correct(c_true, c_pred_unknow)
-
+    clf.metrics_correct(test_label, pred_unknow)
