@@ -331,7 +331,7 @@ class Feature(object):
         :param word_scores: a list [{emotion-1-type: "like", sentence: {word: score}}, ...]
         """
         def norm_0(c0):
-            word_score = reduce(Feature.union, all_class.get(c))
+            word_score = reduce(Feature.union, all_class.get(c), {})
             p = 0.0
             for k, v in word_score.items():
                 p += math.pow(math.fabs(v[0]), 2)
@@ -353,7 +353,7 @@ class Feature(object):
         :param word_scores
         """
         def reduce_dim_0(c0):
-            word_score = reduce(Feature.union, all_class.get(c0))
+            word_score = reduce(Feature.union, all_class.get(c0), {})
             _size = len(word_score)
             _max = math.pow(_size, 1.0 / 2) * 0.85
 

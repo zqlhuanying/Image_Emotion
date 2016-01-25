@@ -25,7 +25,7 @@ class IncrBayes(Bayes):
         更新 class_count 样本数
         更新 feature_count
         :param c_pred:
-        :param sentence: 分词后 a dict {word: frequency}
+        :param sentence: sparse matrix, [1, n_features]
         :param copy: False: 表示真正的更新，将修改原始的数据
                      True: 不修改原始的数据，返回一个副本
         :return:
@@ -86,12 +86,13 @@ class IncrBayes(Bayes):
         # 相加矩阵
         # todo
         # 暂时还无法检验，暂且认为构建的 b_matrix 是正确的
-        l = []
-        d = {}
-        for k, v in sentence.items():
-            d[k] = v * b
-        l.append(d)
-        fit_sentence = self.feature_hasher.transform(l).toarray()
+#        l = []
+#        d = {}
+#        for k, v in sentence.items():
+#            d[k] = v * b
+#        l.append(d)
+#        fit_sentence = self.feature_hasher.transform(l).toarray()
+        fit_sentence = sentence.multiply(b).toarray()
         bool_diff = np.logical_and(correct_row, fit_sentence)
         b_matrix = np.select(bool_diff, fit_sentence)
 
@@ -128,9 +129,9 @@ class IncrBayes(Bayes):
         # 获得与 c_pred 相对应的那一类的数据
         copy_feature_count = self.feature_count_.copy()
         correct_row = copy_feature_count[index: index + 1, :]
-        l = [sentence]
-        fit_sentence = self.feature_hasher.transform(l).toarray()
-        b_matrix = fit_sentence
+#        l = [sentence]
+#        fit_sentence = self.feature_hasher.transform(l).toarray()
+        b_matrix = sentence.toarray()
         np.power(correct_row + b_matrix, 1, correct_row)
         np.power(copy_feature_count, 1, out)
         return copy_feature_count
@@ -147,7 +148,7 @@ if __name__ == "__main__":
     test_datas, test_label = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
-    if not sp.issparse(train_datas):
+    if not sp.issparse(test_datas):
         test = feature.cal_weight_improve(test_datas, test_label)
 
     bayes = IncrBayes()
@@ -159,6 +160,7 @@ if __name__ == "__main__":
     print "origin precision:", clf.metrics_precision(test_label, pred_unknow)
     print "origin recall:", clf.metrics_recall(test_label, pred_unknow)
     print "origin f1:", clf.metrics_f1(test_label, pred_unknow)
+    print "origin accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "origin zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
     print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print
@@ -166,12 +168,17 @@ if __name__ == "__main__":
 
 #    bayes.update(c_pred[0], test_datas[0].get("sentence"))
     incr_train_datas = Load.load_incr_datas()
-    clf.get_incr_classificator(incr_train_datas, test, test_label)
+    incr_train, incr_class_label = feature.get_key_words(incr_train_datas)
+    # 构建适合 bayes 分类的增量集
+    if not sp.issparse(incr_train):
+        incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
+    clf.get_incr_classificator(incr_train, incr_class_label, test, test_label)
     pred_unknow = clf.predict_unknow(test)
 #    print pred
     print "incr precision:", clf.metrics_precision(test_label, pred_unknow)
     print "incr recall:", clf.metrics_recall(test_label, pred_unknow)
     print "incr f1:", clf.metrics_f1(test_label, pred_unknow)
+    print "incr accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "incr zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
     print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
     print

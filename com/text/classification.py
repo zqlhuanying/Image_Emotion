@@ -56,7 +56,7 @@ class Classification:
         self.bayes.fit(fit_train_datas[train_index], class_label[train_index])
         return self
 
-    def get_incr_classificator(self, incr_datas, test_datas, test_class_label):
+    def get_incr_classificator(self, incr_datas, incr_class_label, test_datas, test_class_label):
         """
         对增量式贝叶斯的增量集部分进行处理
         :param incr_datas: [{"emorion-1-type": value, "sentence": {}},...]
@@ -81,7 +81,11 @@ class Classification:
             if not hasattr(self.bayes, "feature_log_prob_") or not hasattr(self.bayes, "class_log_prior_"):
                 raise ValueError("please use get_classificator() to get classificator firstly")
 
-            for i in range(len(incr_datas)):
+            fit_incr_datas = self.fit_data(incr_datas)
+            n_samples, _ = fit_incr_datas.shape
+            incr_class_label = np.array(incr_class_label)
+
+            for i in range(n_samples):
                 if i % 5 == 0:
                     print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
                 # 分类损失，求最小值的处理方式
@@ -95,13 +99,10 @@ class Classification:
 
                 origin_class_log_prob_ = self.bayes.class_log_prior_
                 origin_feature_log_prob_ = self.bayes.feature_log_prob_
-                for i0, data in enumerate(incr_datas):
-                    c_true0 = data.get("emotion-1-type", "unknow")
-                    text0 = [data.get("sentence") if "sentence" in data else data]
-                    # todo
-                    # predict 接受的参数是计算过权重后，而这里的 text0 是未计算权重的，这里是否有影响？
+                for i0 in range(fit_incr_datas.shape[0]):
+                    c_true0 = incr_class_label[i0: i0 + 1][0]
+                    text0 = fit_incr_datas.getrow(i0)
                     c_pred0 = self.predict(text0)[0]
-                    text0 = text0[0]
                     if c_true0 == c_pred0:
                         text = text0
                         c_pred = c_pred0
@@ -120,7 +121,7 @@ class Classification:
                     self.bayes.feature_log_prob_ = origin_feature_log_prob_
 
                 self.bayes.update(c_pred, text)
-                del incr_datas[index]
+                fit_incr_datas = sp.vstack([fit_incr_datas[:index, :], fit_incr_datas[index + 1:, :]])
 
             bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
                           self.bayes.feature_count_, self.bayes.feature_log_prob_)

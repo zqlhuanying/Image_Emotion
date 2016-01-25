@@ -25,13 +25,13 @@ class Load:
 
     @staticmethod
     def load_training_balance():
-        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        url = RESOURCE_BASE_URL + "weibo_samples_part.xml"
         ratio = 2 / 3
         return Load.__load(url, ratio, balance=True)
 
     @staticmethod
     def load_test_balance():
-        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        url = RESOURCE_BASE_URL + "weibo_samples_part.xml"
         ratio = 1 / 3
         return Load.__load(url, ratio, direction=False, balance=True)
 
@@ -55,19 +55,15 @@ class Load:
 
     @staticmethod
     def load_incr_datas():
-#        url = RESOURCE_BASE_URL + "weibo_samples_incr.xml"
-#        ratio = 1 / 5
-#        incr_train_datas = Load.__load(url, ratio, balance=True)
+        url = RESOURCE_BASE_URL + "weibo_samples_incr.xml"
+        ratio = 1 / 2
+        incr_train_datas = Load.__load(url, ratio, balance=True)
+        return incr_train_datas
 #        SplitWords.__init__()
-#        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in incr_train_datas]
+#        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in collect.read_weibo("collect/incr")]
 #        SplitWords.close()
 #        incr_train_datas = [{d: data.count(d) for d in set(data)} for data in incr_train_datas]
 #        return incr_train_datas
-        SplitWords.__init__()
-        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in collect.read_weibo("collect/incr")]
-        SplitWords.close()
-        incr_train_datas = [{d: data.count(d) for d in set(data)} for data in incr_train_datas]
-        return incr_train_datas
 
     @staticmethod
     def __load(url, ratio, direction=True, subjective=True, balance=False):
