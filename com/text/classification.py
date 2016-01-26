@@ -1,5 +1,7 @@
 # encoding: utf-8
+import copy
 import os
+import threading
 
 import numpy as np
 import scipy.sparse as sp
@@ -7,6 +9,7 @@ import time
 from sklearn import cross_validation
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss, accuracy_score
+from threadpool import ThreadPool, makeRequests
 
 from com import EMOTION_CLASS, OBJECTIVE_CLASS, RESOURCE_BASE_URL
 from com.text.bayes import Bayes
@@ -56,11 +59,133 @@ class Classification:
         self.bayes.fit(fit_train_datas[train_index], class_label[train_index])
         return self
 
+    def get_incr_classificator_thread(self, incr_datas, incr_class_label, test_datas, test_class_label):
+        """
+        对增量式贝叶斯的增量集部分进行处理
+        :param incr_datas: [{"emorion-1-type": value, "sentence": {}},...]
+                            (emotion-1-type and sentence are optional)
+        :param incr_class_label:
+        :param test_datas:
+        :param test_class_label:
+        :return:
+        """
+        def func1(i0):
+            c_true0 = incr_class_label[i0: i0 + 1][0]
+            text0 = fit_incr_datas.getrow(i0)
+            c_pred0 = self.predict(text0)[0]
+
+            if c_true0 == c_pred0:
+                loss0 = 0
+            else:
+                clf0 = copy.deepcopy(self)
+                clf0.bayes.class_log_prior_, clf0.bayes.feature_log_prob_ = clf0.bayes.update(c_pred0, text0, copy=True)
+                loss0 = clf0.metrics_my_zero_one_loss(test_datas)
+
+                # clf0.bayes.class_log_prior_ = origin_class_log_prob_
+                # clf0.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            if lock1.acquire():
+                text.append(text0)
+                c_pred.append(c_pred0)
+                loss.append(loss0)
+
+                lock1.release()
+
+        def func(i0):
+            c_true0 = incr_class_label[i0: i0 + 1][0]
+            text0 = fit_incr_datas.getrow(i0)
+            c_pred0 = self.predict(text0)[0]
+
+            if c_true0 == c_pred0:
+                loss0 = 0
+            else:
+                if lock0.acquire():
+                    self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
+                    loss0 = self.metrics_my_zero_one_loss(test_datas)
+
+                    self.bayes.class_log_prior_ = origin_class_log_prob_
+                    self.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+                    lock0.release()
+
+            if lock1.acquire():
+                text.append(text0)
+                c_pred.append(c_pred0)
+                loss.append(loss0)
+
+                lock1.release()
+
+        print "Begin Increment Classification: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        # 将参数写入/读取
+        dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
+        FileUtil.mkdirs(dir_)
+
+        class_count_out = os.path.join(dir_, "class_count.txt")
+        class_log_prob_out = os.path.join(dir_, "class_log_prob.txt")
+        feature_count_out = os.path.join(dir_, "feature_count.txt")
+        feature_log_prob_out = os.path.join(dir_, "feature_log_prob.txt")
+
+        out = (class_count_out, class_log_prob_out, feature_count_out, feature_log_prob_out)
+
+        if self.f or not FileUtil.isexist(out) or FileUtil.isempty(out):
+            if not hasattr(self.bayes, "feature_log_prob_") or not hasattr(self.bayes, "class_log_prior_"):
+                raise ValueError("please use get_classificator() to get classificator firstly")
+
+            fit_incr_datas = self.fit_data(incr_datas)
+            n_samples, _ = fit_incr_datas.shape
+            incr_class_label = np.array(incr_class_label)
+
+            lock0 = threading.Lock()
+            lock1 = threading.Lock()
+
+            # threadpool
+            poolsize = 30
+            pool = ThreadPool(poolsize)
+
+            for i in range(n_samples):
+                if i % 5 == 0:
+                    print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
+                # 分类损失，求最小值的处理方式
+                loss = []
+                # 增量集中优先选择更改分类器参数的文本
+                text = []
+                # 增量集中优先选择更改分类器参数的文本所对应的类别
+                c_pred = []
+                # 增量集中优先选择更改分类器参数的文本所对应的下标
+                # index = 0
+
+                origin_class_log_prob_ = self.bayes.class_log_prior_
+                origin_feature_log_prob_ = self.bayes.feature_log_prob_
+
+                # threadpool
+                requests = makeRequests(func, range(fit_incr_datas.shape[0]))
+                [pool.putRequest(req) for req in requests]
+                pool.wait()
+#                for i0 in range(fit_incr_datas.shape[0]):
+#                    threading.Thread(target=func, args=(i0, )).start()
+
+                minindex = np.argmin(loss)
+                self.bayes.update(c_pred[minindex], text[minindex])
+                fit_incr_datas = sp.vstack([fit_incr_datas[:minindex, :], fit_incr_datas[minindex + 1:, :]])
+
+            bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
+                          self.bayes.feature_count_, self.bayes.feature_log_prob_)
+            map(lambda x: np.savetxt(x[0], x[1]), zip(out, bayes_args))
+        else:
+            self.bayes.class_count_ = np.loadtxt(out[0])
+            self.bayes.class_log_prior_ = np.loadtxt(out[1])
+            self.bayes.feature_count_ = np.loadtxt(out[2])
+            self.bayes.feature_log_prob_ = np.loadtxt(out[3])
+
+        print "Increment Classification Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        return self
+
     def get_incr_classificator(self, incr_datas, incr_class_label, test_datas, test_class_label):
         """
         对增量式贝叶斯的增量集部分进行处理
         :param incr_datas: [{"emorion-1-type": value, "sentence": {}},...]
                             (emotion-1-type and sentence are optional)
+        :param incr_class_label:
         :param test_datas:
         :param test_class_label:
         :return:
