@@ -91,7 +91,7 @@ class IncrBayes(Bayes):
 #        for k, v in sentence.items():
 #            d[k] = v * b
 #        l.append(d)
-#        fit_sentence = self.feature_hasher.transform(l).toarray()
+#        fit_sentence = Feature_Hasher.transform(l).toarray()
         fit_sentence = sentence.multiply(b).toarray()
         bool_diff = np.logical_and(correct_row, fit_sentence)
         b_matrix = np.select(bool_diff, fit_sentence)
@@ -130,7 +130,7 @@ class IncrBayes(Bayes):
         copy_feature_count = self.feature_count_.copy()
         correct_row = copy_feature_count[index: index + 1, :]
 #        l = [sentence]
-#        fit_sentence = self.feature_hasher.transform(l).toarray()
+#        fit_sentence = Feature_Hasher.transform(l).toarray()
         b_matrix = sentence.toarray()
         np.power(correct_row + b_matrix, 1, correct_row)
         np.power(copy_feature_count, 1, out)
@@ -162,7 +162,8 @@ if __name__ == "__main__":
     print "origin f1:", clf.metrics_f1(test_label, pred_unknow)
     print "origin accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "origin zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
-    print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
+    test_proba = clf.predict_max_proba(test)
+    print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)
 
@@ -172,7 +173,7 @@ if __name__ == "__main__":
     # 构建适合 bayes 分类的增量集
     if not sp.issparse(incr_train):
         incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
-    clf.get_incr_classificator(incr_train, incr_class_label, test, test_label)
+    clf.get_incr_classificator(incr_train, incr_class_label, test, test_label, method="second")
     pred_unknow = clf.predict_unknow(test)
 #    print pred
     print "incr precision:", clf.metrics_precision(test_label, pred_unknow)
@@ -180,6 +181,7 @@ if __name__ == "__main__":
     print "incr f1:", clf.metrics_f1(test_label, pred_unknow)
     print "incr accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "incr zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
-    print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
+    test_proba = clf.predict_max_proba(test)
+    print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)

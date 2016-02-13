@@ -6,10 +6,10 @@ from compiler.ast import flatten
 import copy
 import time
 import math
-from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL, OBJECTIVE_CLASS
+from com.text import Feature_Hasher
 from com.text.feature.vectorize.another_improve_tf_idf import TfidfImproveSec
 from com.text.feature.vectorize.improve_tf_idf import TfidfImprove
 from com.text.utils.fileutil import FileUtil
@@ -30,7 +30,6 @@ class Feature(object):
         self.f = f
         self.istrain = False
         self.subjective = subjective
-        self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
     def get_key_words(self, sentences=None):
         """
@@ -72,8 +71,8 @@ class Feature(object):
         key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
         # 获得 tf
         key_words = [{k: v / sum(d.values()) for k, v in d.items()} for d in key_words]
-        fit_train_key_words = self.feature_hasher.transform(train_key_words)
-        fit_key_words = self.feature_hasher.transform(key_words)
+        fit_train_key_words = Feature_Hasher.transform(train_key_words)
+        fit_key_words = Feature_Hasher.transform(key_words)
         tfidf = TfidfTransformer()
         # 训练 idf
         tfidf.fit(fit_train_key_words)
@@ -102,8 +101,8 @@ class Feature(object):
         key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
         # 获得 tf
         key_words = [{k: v / sum(d.values()) for k, v in d.items()} for d in key_words]
-        fit_train_key_words = self.feature_hasher.transform(train_key_words)
-        fit_key_words = self.feature_hasher.transform(key_words)
+        fit_train_key_words = Feature_Hasher.transform(train_key_words)
+        fit_key_words = Feature_Hasher.transform(key_words)
         tfidf = TfidfImprove()
         # 训练 idf
         tfidf.fit(fit_train_key_words, train_class_label)
@@ -131,8 +130,8 @@ class Feature(object):
         train_key_words = [d.get("sentence") if "sentence" in d else d for d in train_key_words]
         key_words = [d.get("sentence") if "sentence" in d else d for d in key_words]
 
-        fit_train_key_words = self.feature_hasher.transform(train_key_words)
-        fit_key_words = self.feature_hasher.transform(key_words)
+        fit_train_key_words = Feature_Hasher.transform(train_key_words)
+        fit_key_words = Feature_Hasher.transform(key_words)
         tfidf = TfidfImproveSec()
         # 训练 idf
         tfidf.fit(fit_train_key_words, train_class_label)

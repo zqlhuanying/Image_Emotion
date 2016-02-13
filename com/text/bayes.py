@@ -12,8 +12,6 @@ __date__ = '15-12-13'
 class Bayes(MultinomialNB):
     def __init__(self, alpha=0.01):
         super(Bayes, self).__init__(alpha)
-        # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
 
 if __name__ == "__main__":

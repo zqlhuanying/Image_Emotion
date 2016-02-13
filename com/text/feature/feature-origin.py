@@ -3,10 +3,10 @@ from __future__ import division
 from compiler.ast import flatten
 import time
 import math
-from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL
+from com.text import Feature_Hasher
 from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
@@ -24,7 +24,6 @@ class Feature(object):
         #   若资源有更新，可以打开开关，强制写入新的分词后的结果
         self.f = False
         self.istrain = False
-        self.feature_hasher = FeatureHasher(n_features=60000, non_negative=True)
 
     def get_key_words(self, sentences=None):
         """
@@ -79,7 +78,7 @@ class Feature(object):
         has_sentence = "sentence" in key_words[0]
         if has_sentence:
             key_words = [d.get("sentence") for d in key_words]
-        fit_data = self.feature_hasher.transform(key_words)
+        fit_data = Feature_Hasher.transform(key_words)
         tfidf = TfidfTransformer()
         tfidf.fit(fit_data)
         weight_matrix = tfidf.transform(fit_data)

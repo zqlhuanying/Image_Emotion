@@ -1,6 +1,8 @@
 # encoding: utf-8
 import time
 from sklearn.feature_extraction.text import TfidfTransformer
+
+from com.text import Feature_Hasher
 from com.text.feature.feature import Feature
 
 __author__ = 'root'
@@ -19,7 +21,7 @@ class FastTFIDFFeature(Feature):
         print "Collection datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
         data = [self.get_dict(d.get("sentence")) for d in splited_words_list[: sentence_size]]
         class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
-        fit_data = self.feature_hasher.transform(data)
+        fit_data = Feature_Hasher.transform(data)
         tfidf = TfidfTransformer()
         tfidf.fit(fit_data)
         a = tfidf.transform(fit_data)

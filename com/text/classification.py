@@ -7,11 +7,11 @@ import numpy as np
 import scipy.sparse as sp
 import time
 from sklearn import cross_validation
-from sklearn.feature_extraction import FeatureHasher
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss, accuracy_score
 from threadpool import ThreadPool, makeRequests
 
 from com import EMOTION_CLASS, OBJECTIVE_CLASS, RESOURCE_BASE_URL
+from com.text import Feature_Hasher
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
@@ -31,8 +31,6 @@ class Classification:
         self.f = f
         self.bayes = bayes
         self.subjective = subjective
-        # 特征词 Hash 散列器
-        self.feature_hasher = FeatureHasher(n_features=600000, non_negative=True)
 
     def get_classificator(self, train_datas, class_label, iscrossvalidate=False):
         """
@@ -180,7 +178,7 @@ class Classification:
         print "Increment Classification Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
         return self
 
-    def get_incr_classificator(self, incr_datas, incr_class_label, test_datas, test_class_label):
+    def get_incr_classificator(self, incr_datas, incr_class_label, test_datas, test_class_label, method="first"):
         """
         对增量式贝叶斯的增量集部分进行处理
         :param incr_datas: [{"emorion-1-type": value, "sentence": {}},...]
@@ -190,15 +188,96 @@ class Classification:
         :param test_class_label:
         :return:
         """
+        def handle(clf):
+            if method == "first":
+                return handle_first(clf)
+            elif method == "second":
+                return handle_second(clf)
+            else:
+                pass
+
+        def handle_first(clf):
+            # 分类损失，求最小值的处理方式
+            loss = 1
+            # 增量集中优先选择更改分类器参数的文本
+            text = None
+            # 增量集中优先选择更改分类器参数的文本所对应的类别
+            c_pred = None
+            # 增量集中优先选择更改分类器参数的文本所对应的下标
+            index = 0
+
+            origin_class_log_prob_ = clf.bayes.class_log_prior_
+            origin_feature_log_prob_ = clf.bayes.feature_log_prob_
+            for i0 in range(fit_incr_datas.shape[0]):
+                c_true0 = incr_class_label[i0: i0 + 1][0]
+                text0 = fit_incr_datas.getrow(i0)
+                c_pred0 = clf.predict(text0)[0]
+                if c_true0 == c_pred0:
+                    loss = 0
+                    text = text0
+                    c_pred = c_pred0
+                    index = i0
+                    break
+                else:
+                    clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                    test_proba = clf.predict_max_proba(test_datas)
+                    loss0 = clf.metrics_my_zero_one_loss(test_proba)
+                    if loss0 < loss:
+                        loss = loss0
+                        text = text0
+                        c_pred = c_pred0
+                        index = i0
+
+                clf.bayes.class_log_prior_ = origin_class_log_prob_
+                clf.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            return [(loss, text, c_pred, index)]
+
+        def handle_second(clf):
+            # 分类损失，求最小值的处理方式
+            loss = 1
+            # 增量集中优先选择更改分类器参数的文本
+            text = None
+            # 增量集中优先选择更改分类器参数的文本所对应的类别
+            c_pred = None
+            # 增量集中优先选择更改分类器参数的文本所对应的下标
+            index = 0
+
+            origin_class_log_prob_ = clf.bayes.class_log_prior_
+            origin_feature_log_prob_ = clf.bayes.feature_log_prob_
+            origin_proba = clf.predict_max_proba(test_datas)
+            for i0 in range(fit_incr_datas.shape[0]):
+                c_true0 = incr_class_label[i0: i0 + 1][0]
+                text0 = fit_incr_datas.getrow(i0)
+                c_pred0 = clf.predict(text0)[0]
+
+                clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                test_proba = clf.predict_max_proba(test_datas)
+                loss0 = self.metrics_another_zero_one_loss(origin_proba, test_proba)
+                if loss0 < loss:
+                    loss = loss0
+                    text = text0
+                    c_pred = c_pred0
+                    index = i0
+
+                clf.bayes.class_log_prior_ = origin_class_log_prob_
+                clf.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            return [(loss, text, c_pred, index)]
+
+        method_options = ("first", "second", "third")
+        if method not in method_options:
+            raise ValueError("method has to be one of " + str(method_options))
+
         print "Begin Increment Classification: ", time.strftime('%Y-%m-%d %H:%M:%S')
         # 将参数写入/读取
         dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
         FileUtil.mkdirs(dir_)
 
-        class_count_out = os.path.join(dir_, "class_count.txt")
-        class_log_prob_out = os.path.join(dir_, "class_log_prob.txt")
-        feature_count_out = os.path.join(dir_, "feature_count.txt")
-        feature_log_prob_out = os.path.join(dir_, "feature_log_prob.txt")
+        class_count_out = os.path.join(dir_, "class_count_" + method + ".txt")
+        class_log_prob_out = os.path.join(dir_, "class_log_prob_" + method + ".txt")
+        feature_count_out = os.path.join(dir_, "feature_count_" + method + ".txt")
+        feature_log_prob_out = os.path.join(dir_, "feature_log_prob_" + method + ".txt")
 
         out = (class_count_out, class_log_prob_out, feature_count_out, feature_log_prob_out)
 
@@ -207,49 +286,29 @@ class Classification:
                 raise ValueError("please use get_classificator() to get classificator firstly")
 
             fit_incr_datas = self.fit_data(incr_datas)
-            n_samples, _ = fit_incr_datas.shape
             incr_class_label = np.array(incr_class_label)
 
-            for i in range(n_samples):
+            i = 0
+            while fit_incr_datas.nnz > 0:
                 if i % 5 == 0:
                     print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
-                # 分类损失，求最小值的处理方式
-                loss = 1
-                # 增量集中优先选择更改分类器参数的文本
-                text = None
-                # 增量集中优先选择更改分类器参数的文本所对应的类别
-                c_pred = None
-                # 增量集中优先选择更改分类器参数的文本所对应的下标
-                index = 0
 
-                origin_class_log_prob_ = self.bayes.class_log_prior_
-                origin_feature_log_prob_ = self.bayes.feature_log_prob_
-                for i0 in range(fit_incr_datas.shape[0]):
-                    c_true0 = incr_class_label[i0: i0 + 1][0]
-                    text0 = fit_incr_datas.getrow(i0)
-                    c_pred0 = self.predict(text0)[0]
-                    if c_true0 == c_pred0:
-                        text = text0
-                        c_pred = c_pred0
-                        index = i0
-                        break
-                    else:
-                        self.bayes.class_log_prior_, self.bayes.feature_log_prob_ = self.bayes.update(c_pred0, text0, copy=True)
-                        loss0 = self.metrics_my_zero_one_loss(test_datas)
-                        if loss0 < loss:
-                            loss = loss0
-                            text = text0
-                            c_pred = c_pred0
-                            index = i0
+                need_to_update = handle(self)
+                # 根据 loss 从小到大排序
+                accord_to_loss = sorted(need_to_update, key=lambda x: x[0])
+                [self.bayes.update(data[2], data[1]) for data in accord_to_loss]
+                # 根据 index 排序
+                accord_to_index = sorted(need_to_update, key=lambda x: x[3])
+                block = []
+                reduce(lambda x, y: block.append(fit_incr_datas[x[3] + 1: y[3], :]), accord_to_index, (0.0, "", "", -1))
+                block.append(fit_incr_datas[accord_to_index.pop()[3] + 1:, :])
+                fit_incr_datas = sp.vstack(block)
 
-                    self.bayes.class_log_prior_ = origin_class_log_prob_
-                    self.bayes.feature_log_prob_ = origin_feature_log_prob_
-
-                self.bayes.update(c_pred, text)
-                fit_incr_datas = sp.vstack([fit_incr_datas[:index, :], fit_incr_datas[index + 1:, :]])
+                i += 1
 
             bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
                           self.bayes.feature_count_, self.bayes.feature_log_prob_)
+            # 保存到文本
             map(lambda x: np.savetxt(x[0], x[1]), zip(out, bayes_args))
         else:
             self.bayes.class_count_ = np.loadtxt(out[0])
@@ -282,6 +341,16 @@ class Classification:
         fit_test_datas = self.fit_data(test_datas)
 
         return self.bayes.predict_proba(fit_test_datas)
+
+    def predict_max_proba(self, test_datas):
+        """
+        预测每个样本的概率
+        :param test_datas:
+        :return: [n_samples]
+        """
+        proba = self.predict_proba(test_datas)
+        # 计算每个样本最大的概率，即每个样本最应该属于某个类别的概率
+        return np.max(proba, axis=1)
 
     def predict_unknow(self, test_datas):
         """
@@ -381,55 +450,50 @@ class Classification:
             )
 
     def metrics_precision(self, c_true, c_pred):
-        fit_true_pred = self.__del_unknow(c_true, c_pred)
-        c_true_0 = fit_true_pred[0]
-        c_pred_0 = fit_true_pred[1]
+        c_true_0, c_pred_0 = self.__del_unknow(c_true, c_pred)
         classes = self.getclasses()
         pos_label, average = self.__get_label_average(classes)
         return precision_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_recall(self, c_true, c_pred):
-        fit_true_pred = self.__del_unknow(c_true, c_pred)
-        c_true_0 = fit_true_pred[0]
-        c_pred_0 = fit_true_pred[1]
+        c_true_0, c_pred_0 = self.__del_unknow(c_true, c_pred)
         classes = self.getclasses()
         pos_label, average = self.__get_label_average(classes)
         return recall_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_f1(self, c_true, c_pred):
-        fit_true_pred = self.__del_unknow(c_true, c_pred)
-        c_true_0 = fit_true_pred[0]
-        c_pred_0 = fit_true_pred[1]
+        c_true_0, c_pred_0 = self.__del_unknow(c_true, c_pred)
         classes = self.getclasses()
         pos_label, average = self.__get_label_average(classes)
         return f1_score(c_true_0, c_pred_0, labels=classes, pos_label=pos_label, average=average)
 
     def metrics_accuracy(self, c_true, c_pred):
-        fit_true_pred = self.__del_unknow(c_true, c_pred)
-        c_true_0 = fit_true_pred[0]
-        c_pred_0 = fit_true_pred[1]
+        c_true_0, c_pred_0 = self.__del_unknow(c_true, c_pred)
         return accuracy_score(c_true_0, c_pred_0)
 
     def metrics_zero_one_loss(self, c_true, c_pred):
-        fit_true_pred = self.__del_unknow(c_true, c_pred)
-        c_true_0 = fit_true_pred[0]
-        c_pred_0 = fit_true_pred[1]
+        c_true_0, c_pred_0 = self.__del_unknow(c_true, c_pred)
         return zero_one_loss(c_true_0, c_pred_0)
 
-    def metrics_my_zero_one_loss(self, test_datas):
+    def metrics_my_zero_one_loss(self, proba):
         """
         依据增量式贝叶斯论文所提供的分类损失度的计算方式
-        :param test_datas:
+        :param proba: [n_samples] 每个类别所属的概率
         :return:
         """
-        # fit data
-        fit_test_datas = self.fit_data(test_datas)
+        n_samples = proba.shape[0]
+        return np.sum(1 - proba) / (n_samples - 1)
 
-        n_samples = fit_test_datas.shape[0]
-        proba = self.predict_proba(test_datas)
-        # 计算每个样本最大的概率，即每个样本最应该属于某个类别的概率
-        max_proba = np.max(proba, axis=1)
-        return np.sum(1 - max_proba) / (n_samples - 1)
+    def metrics_another_zero_one_loss(self, o_proba, proba):
+        """
+        另一种计算分类损失度的方法
+        :param o_proba: [n_samples] origin proba
+        :param proba: proba after update
+        :return:
+        """
+        diff_proba = proba - o_proba
+        sensitivity = np.multiply(o_proba, np.exp(diff_proba))
+        return np.sum(np.multiply(sensitivity, np.fabs(diff_proba)))
 
     def metrics_correct(self, c_true, c_pred):
         # 不能过滤 unknow 部分，因统计时需要
@@ -508,7 +572,7 @@ class Classification:
         fit_datas = datas
         if not sp.issparse(datas):
             datas = [d.get("sentence") if "sentence" in d else d for d in datas]
-            fit_datas = self.feature_hasher.transform(datas)
+            fit_datas = Feature_Hasher.transform(datas)
         return fit_datas
 
     @staticmethod
@@ -523,7 +587,8 @@ class Classification:
             raise ValueError("the two lists have different size!")
 
         l = filter(lambda x: x[1] != "unknow", zip(c_true, c_pred))
-        return zip(*l)
+        temp = zip(*l)
+        return temp[0], temp[1]
 
 if __name__ == "__main__":
     print
@@ -552,7 +617,8 @@ if __name__ == "__main__":
     print "f1:", clf.metrics_f1(test_label, pred_unknow)
     print "accuracy:", clf.metrics_accuracy(test_label, pred_unknow)
     print "zero_one_loss:", clf.metrics_zero_one_loss(test_label, pred_unknow)
-    print "my_zero_one_loss:", clf.metrics_my_zero_one_loss(test)
+    test_proba = clf.predict_max_proba(test)
+    print "my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)
 
