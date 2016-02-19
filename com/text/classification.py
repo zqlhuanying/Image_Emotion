@@ -15,10 +15,14 @@ from com.text import Feature_Hasher
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
+from com.text.stats import f_test, levene_test
 from com.text.utils.fileutil import FileUtil
 
 __author__ = 'root'
 __date__ = '15-12-13'
+
+# 类支持度的初始值
+e = 1000
 
 
 class Classification:
@@ -188,15 +192,25 @@ class Classification:
         :param test_class_label:
         :return:
         """
+        def func(x, y):
+            block.append(fit_incr_datas[x[3] + 1: y[3], :])
+            block0.append(fit_incr_datas[y[3]:y[3] + 1, :])
+            return y
+
         def handle(clf):
             if method == "first":
                 return handle_first(clf)
             elif method == "second":
                 return handle_second(clf)
+            elif method == "third":
+                return handle_third(clf)
+            elif method == "four":
+                return handle_four(clf)
             else:
                 pass
 
         def handle_first(clf):
+            # 最原始的分类损失度的计算
             # 分类损失，求最小值的处理方式
             loss = 1
             # 增量集中优先选择更改分类器参数的文本
@@ -234,6 +248,7 @@ class Classification:
             return [(loss, text, c_pred, index)]
 
         def handle_second(clf):
+            # 另一种分类损失度的计算
             # 分类损失，求最小值的处理方式
             loss = 1
             # 增量集中优先选择更改分类器参数的文本
@@ -265,7 +280,51 @@ class Classification:
 
             return [(loss, text, c_pred, index)]
 
-        method_options = ("first", "second", "third")
+        def handle_third(clf):
+            # todo
+            # 如何获得合适的阖值
+            def get_fit(e0):
+                # 获得合适的阖值
+                # return 10
+                while len((r >= e0).nonzero()[0]) == 0:
+                    e0 = int(e0 / 2)
+                return e0
+
+            global e
+            # 类支持度的计算
+            proba = clf.predict_proba(fit_incr_datas)
+            label = clf.predict(fit_incr_datas)
+            max_proba = np.max(proba, axis=1).reshape(-1, 1)
+            second_max_proba = -np.partition(-proba, kth=1, axis=1)[:, 1:2]
+            # 支持度
+            r = np.divide(max_proba, second_max_proba)
+            # 阖值
+            e = get_fit(e)
+            # select
+            select_indices = (r >= e).nonzero()
+            return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice) for indice in select_indices[0]]
+
+        def handle_four(clf):
+            # My Own Idea
+            # 存放 F-Test 的结果
+            f_res = []
+            origin_proba = clf.predict_max_proba(test_datas)
+            for i0 in range(fit_incr_datas.shape[0]):
+                text0 = fit_incr_datas.getrow(i0)
+                c_pred0 = clf.predict(text0)[0]
+                clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                test_proba = clf.predict_max_proba(test_datas)
+
+                f_test0 = levene_test(origin_proba, test_proba)
+                if f_test0:
+                    loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
+                else:
+                    loss0 = -1
+                f_res.append((loss0, text0, c_pred0, i0, f_test0))
+            res = filter(lambda x: x[4], f_res)
+            return [(r[0], r[1], r[2], r[3]) for r in res]
+
+        method_options = ("first", "second", "third", "four")
         if method not in method_options:
             raise ValueError("method has to be one of " + str(method_options))
 
@@ -294,16 +353,23 @@ class Classification:
                     print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
 
                 need_to_update = handle(self)
-                # 根据 loss 从小到大排序
-                accord_to_loss = sorted(need_to_update, key=lambda x: x[0])
-                [self.bayes.update(data[2], data[1]) for data in accord_to_loss]
-                # 根据 index 排序
-                accord_to_index = sorted(need_to_update, key=lambda x: x[3])
+                # 如果没有可更新的，表示剩余的增量集并不适合当前的分类器，所以舍去
                 block = []
-                reduce(lambda x, y: block.append(fit_incr_datas[x[3] + 1: y[3], :]), accord_to_index, (0.0, "", "", -1))
-                block.append(fit_incr_datas[accord_to_index.pop()[3] + 1:, :])
+                block0 = []
+                if need_to_update:
+                    # 根据 loss 从小到大排序
+                    accord_to_loss = sorted(need_to_update, key=lambda x: x[0])
+                    for data in accord_to_loss:
+                        self.bayes.update(data[2], data[1])
+                    # 根据 index 排序
+                    accord_to_index = sorted(need_to_update, key=lambda x: x[3])
+                    block0.append(test_datas)
+                    reduce(func, accord_to_index, (0.0, "", "", -1))
+                    block.append(fit_incr_datas[accord_to_index.pop()[3] + 1:, :])
+                else:
+                    block.append(fit_incr_datas[0:0, :])
                 fit_incr_datas = sp.vstack(block)
-
+                test_datas = sp.vstack(block0)
                 i += 1
 
             bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
