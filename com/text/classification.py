@@ -15,7 +15,7 @@ from com.text import Feature_Hasher
 from com.text.bayes import Bayes
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
-from com.text.stats import f_test, levene_test
+from com.text.stats import f_test, levene_test, pair_test
 from com.text.utils.fileutil import FileUtil
 
 __author__ = 'root'
@@ -309,13 +309,20 @@ class Classification:
             # 存放 F-Test 的结果
             f_res = []
             origin_proba = clf.predict_max_proba(test_datas)
+            origin_label = clf.predict(test_datas)
             for i0 in range(fit_incr_datas.shape[0]):
                 text0 = fit_incr_datas.getrow(i0)
                 c_pred0 = clf.predict(text0)[0]
                 clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
                 test_proba = clf.predict_max_proba(test_datas)
+                label = clf.predict(test_datas)
+                # 考虑到类别的影响
+                # 会出现以下的情况：某个样本属于某个类的概率很高，update后属于某个类别的概率也很高，但是
+                # 前后两个类别可能不一致
+                smooth = np.asarray([1 if origin_label[j] == label[j] else -1 for j in range(len(origin_label))])
+                np.multiply(test_proba, smooth, test_proba)
 
-                f_test0 = levene_test(origin_proba, test_proba)
+                f_test0 = pair_test(origin_proba, test_proba)
                 if f_test0:
                     loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
                 else:
@@ -349,8 +356,7 @@ class Classification:
 
             i = 0
             while fit_incr_datas.nnz > 0:
-                if i % 5 == 0:
-                    print "Begin Increment Classification_%d: %s" % (i / 5, time.strftime('%Y-%m-%d %H:%M:%S'))
+                print "Begin Increment Classification_%d: %s" % (i, time.strftime('%Y-%m-%d %H:%M:%S'))
 
                 need_to_update = handle(self)
                 # 如果没有可更新的，表示剩余的增量集并不适合当前的分类器，所以舍去
@@ -366,10 +372,11 @@ class Classification:
                     block0.append(test_datas)
                     reduce(func, accord_to_index, (0.0, "", "", -1))
                     block.append(fit_incr_datas[accord_to_index.pop()[3] + 1:, :])
+                    test_datas = sp.vstack(block0)
                 else:
                     block.append(fit_incr_datas[0:0, :])
+                    print "finally leaving %d" % fit_incr_datas.shape[0]
                 fit_incr_datas = sp.vstack(block)
-                test_datas = sp.vstack(block0)
                 i += 1
 
             bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,

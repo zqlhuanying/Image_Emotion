@@ -6,7 +6,7 @@ import scipy
 __author__ = 'zql'
 __date__ = '16-02-15'
 
-ALPHA = 0.05
+ALPHA = 0.1
 
 
 def f_test(X, Y):
@@ -47,6 +47,18 @@ def levene_test(X, Y):
     """
     X, Y = _check_array(X, Y)
     statistic, p_value = scipy.stats.levene(X, Y)
+    return _choice(p_value)
+
+
+def pair_test(X, Y):
+    """
+    Pair-T Test
+    :param X:
+    :param Y:
+    :return:
+    """
+    X, Y = _check_array(X, Y)
+    statistic, p_value = scipy.stats.ttest_rel(X, Y)
     return _choice(p_value)
 
 
