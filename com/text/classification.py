@@ -4,9 +4,11 @@ import os
 import threading
 
 import numpy as np
+import bloscpack as bp
 import scipy.sparse as sp
 import time
 from sklearn import cross_validation
+from sklearn.preprocessing import _weights
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss, accuracy_score
 from threadpool import ThreadPool, makeRequests
 
@@ -36,7 +38,7 @@ class Classification:
         self.bayes = bayes
         self.subjective = subjective
 
-    def get_classificator(self, train_datas, class_label, iscrossvalidate=False):
+    def get_classificator(self, train_datas, class_label, iscrossvalidate=False, class_weight=False):
         """
         获取分类器
         :param train_datas
@@ -50,15 +52,20 @@ class Classification:
 
         # fit data
         fit_train_datas = self.fit_data(train_datas)
-        class_label = np.array(class_label)
+        class_label = np.asarray(class_label)
 
         if iscrossvalidate:
             train_index = np.loadtxt(out, dtype=int)
         else:
             train_index = np.array(range(fit_train_datas.shape[0]))
 
+        if class_weight:
+            sample_weight = _weights._balance_weights(class_label[train_index])
+        else:
+            sample_weight = None
+
         # 训练模型
-        self.bayes.fit(fit_train_datas[train_index], class_label[train_index])
+        self.bayes.fit(fit_train_datas[train_index], class_label[train_index], sample_weight=sample_weight)
         return self
 
     def get_incr_classificator_thread(self, incr_datas, incr_class_label, test_datas, test_class_label):
@@ -194,11 +201,14 @@ class Classification:
         """
         def func(x, y):
             block.append(fit_incr_datas[x[3] + 1: y[3], :])
+            label_block.append(incr_class_label[x[3] + 1: y[3]])
             block0.append(fit_incr_datas[y[3]:y[3] + 1, :])
             return y
 
-        def handle(clf):
-            if method == "first":
+        def handle(clf, method):
+            if method == "zero":
+                return handle_zero(clf)
+            elif method == "first":
                 return handle_first(clf)
             elif method == "second":
                 return handle_second(clf)
@@ -206,8 +216,40 @@ class Classification:
                 return handle_third(clf)
             elif method == "four":
                 return handle_four(clf)
+            elif method == "five":
+                return handle_five(clf)
             else:
                 pass
+
+        def handle_zero(clf):
+            """
+            寻找当前分类器下预测正确的样本
+            :param clf:
+            :return:
+            """
+            incr_pre_label = clf.predict(fit_incr_datas)
+            # 选出预测正确的下标
+            true_index = (incr_class_label == incr_pre_label).nonzero()
+
+            origin_class_log_prob_ = clf.bayes.class_log_prior_
+            origin_feature_log_prob_ = clf.bayes.feature_log_prob_
+            origin_proba = clf.predict_max_proba(test_datas)
+
+            res = []
+            for i0 in true_index[0]:
+                text0 = fit_incr_datas.getrow(i0)
+                c_pred0 = incr_pre_label[i0]
+
+                clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                test_proba = clf.predict_max_proba(test_datas)
+                loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
+
+                res.append((loss0, text0, c_pred0, i0))
+
+                clf.bayes.class_log_prior_ = origin_class_log_prob_
+                clf.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            return res
 
         def handle_first(clf):
             # 最原始的分类损失度的计算
@@ -268,7 +310,7 @@ class Classification:
 
                 clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
                 test_proba = clf.predict_max_proba(test_datas)
-                loss0 = self.metrics_another_zero_one_loss(origin_proba, test_proba)
+                loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
                 if loss0 < loss:
                     loss = loss0
                     text = text0
@@ -285,10 +327,10 @@ class Classification:
             # 如何获得合适的阖值
             def get_fit(e0):
                 # 获得合适的阖值
-                # return 10
-                while len((r >= e0).nonzero()[0]) == 0:
-                    e0 = int(e0 / 2)
-                return e0
+                return 10
+#                while len((r >= e0).nonzero()[0]) == 0:
+#                    e0 = int(e0 / 2)
+#                return e0
 
             global e
             # 类支持度的计算
@@ -306,8 +348,11 @@ class Classification:
 
         def handle_four(clf):
             # My Own Idea
-            # 存放 F-Test 的结果
+            # 存放 Test 的结果
             f_res = []
+
+            origin_class_log_prob_ = clf.bayes.class_log_prior_
+            origin_feature_log_prob_ = clf.bayes.feature_log_prob_
             origin_proba = clf.predict_max_proba(test_datas)
             origin_label = clf.predict(test_datas)
             for i0 in range(fit_incr_datas.shape[0]):
@@ -328,10 +373,60 @@ class Classification:
                 else:
                     loss0 = -1
                 f_res.append((loss0, text0, c_pred0, i0, f_test0))
+
+                clf.bayes.class_log_prior_ = origin_class_log_prob_
+                clf.bayes.feature_log_prob_ = origin_feature_log_prob_
+
             res = filter(lambda x: x[4], f_res)
             return [(r[0], r[1], r[2], r[3]) for r in res]
 
-        method_options = ("first", "second", "third", "four")
+        def handle_five(clf):
+            """
+            类支持度和无显著性差异的结合
+            :param clf:
+            :return:
+            """
+            predict_true = handle(clf, "zero")
+            if predict_true:
+                return predict_true
+
+            fit_for_class_support = handle(clf, "third")
+            print "The result of class-support: %d samples" % len(fit_for_class_support)
+            # My Own Idea
+            # 存放 Test 的结果
+            f_res = []
+
+            origin_class_log_prob_ = clf.bayes.class_log_prior_
+            origin_feature_log_prob_ = clf.bayes.feature_log_prob_
+            origin_proba = clf.predict_max_proba(test_datas)
+            origin_label = clf.predict(test_datas)
+
+            for i0 in range(len(fit_for_class_support)):
+                text0 = fit_for_class_support[i0][1]
+                c_pred0 = fit_for_class_support[i0][2]
+                clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                test_proba = clf.predict_max_proba(test_datas)
+                label = clf.predict(test_datas)
+                # 考虑到类别的影响
+                # 会出现以下的情况：某个样本属于某个类的概率很高，update后属于某个类别的概率也很高，但是
+                # 前后两个类别可能不一致
+                smooth = np.asarray([1 if origin_label[j] == label[j] else -1 for j in range(len(origin_label))])
+                np.multiply(test_proba, smooth, test_proba)
+
+                f_test0 = pair_test(origin_proba, test_proba)
+                if f_test0:
+                    loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
+                else:
+                    loss0 = -1
+                f_res.append((loss0, text0, c_pred0, i0, f_test0))
+
+                clf.bayes.class_log_prior_ = origin_class_log_prob_
+                clf.bayes.feature_log_prob_ = origin_feature_log_prob_
+
+            res = filter(lambda x: x[4], f_res)
+            return [(r[0], r[1], r[2], r[3]) for r in res]
+
+        method_options = ("first", "second", "third", "four", "five")
         if method not in method_options:
             raise ValueError("method has to be one of " + str(method_options))
 
@@ -340,10 +435,11 @@ class Classification:
         dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
         FileUtil.mkdirs(dir_)
 
-        class_count_out = os.path.join(dir_, "class_count_" + method + ".txt")
-        class_log_prob_out = os.path.join(dir_, "class_log_prob_" + method + ".txt")
-        feature_count_out = os.path.join(dir_, "feature_count_" + method + ".txt")
-        feature_log_prob_out = os.path.join(dir_, "feature_log_prob_" + method + ".txt")
+        suffix = ".blp"
+        class_count_out = os.path.join(dir_, "class_count_" + method + suffix)
+        class_log_prob_out = os.path.join(dir_, "class_log_prob_" + method + suffix)
+        feature_count_out = os.path.join(dir_, "feature_count_" + method + suffix)
+        feature_log_prob_out = os.path.join(dir_, "feature_log_prob_" + method + suffix)
 
         out = (class_count_out, class_log_prob_out, feature_count_out, feature_log_prob_out)
 
@@ -352,15 +448,19 @@ class Classification:
                 raise ValueError("please use get_classificator() to get classificator firstly")
 
             fit_incr_datas = self.fit_data(incr_datas)
-            incr_class_label = np.array(incr_class_label)
+            incr_class_label = np.asanyarray(incr_class_label)
 
             i = 0
             while fit_incr_datas.nnz > 0:
+                print
                 print "Begin Increment Classification_%d: %s" % (i, time.strftime('%Y-%m-%d %H:%M:%S'))
 
-                need_to_update = handle(self)
+                need_to_update = handle(self, method)
                 # 如果没有可更新的，表示剩余的增量集并不适合当前的分类器，所以舍去
+                # 更新时，增量集会不断减少
                 block = []
+                label_block = []
+                # 更新时，训练集会不断增加
                 block0 = []
                 if need_to_update:
                     # 根据 loss 从小到大排序
@@ -371,23 +471,33 @@ class Classification:
                     accord_to_index = sorted(need_to_update, key=lambda x: x[3])
                     block0.append(test_datas)
                     reduce(func, accord_to_index, (0.0, "", "", -1))
-                    block.append(fit_incr_datas[accord_to_index.pop()[3] + 1:, :])
+                    block.append(fit_incr_datas[accord_to_index[-1][3] + 1:, :])
+                    label_block.append(incr_class_label[accord_to_index[-1][3] + 1:])
                     test_datas = sp.vstack(block0)
+                    print "This times updates %d samples" % len(need_to_update)
                 else:
                     block.append(fit_incr_datas[0:0, :])
-                    print "finally leaving %d" % fit_incr_datas.shape[0]
+                    label_block.append(incr_class_label[0:0])
+                    print "Finally leaving %d samples that unnecessary added to train sets" % fit_incr_datas.shape[0]
                 fit_incr_datas = sp.vstack(block)
+                incr_class_label = np.concatenate(label_block)
                 i += 1
 
             bayes_args = (self.bayes.class_count_, self.bayes.class_log_prior_,
                           self.bayes.feature_count_, self.bayes.feature_log_prob_)
             # 保存到文本
-            map(lambda x: np.savetxt(x[0], x[1]), zip(out, bayes_args))
+            map(lambda x: bp.pack_ndarray_file(x[0], x[1]), zip(bayes_args, out))
         else:
-            self.bayes.class_count_ = np.loadtxt(out[0])
-            self.bayes.class_log_prior_ = np.loadtxt(out[1])
-            self.bayes.feature_count_ = np.loadtxt(out[2])
-            self.bayes.feature_log_prob_ = np.loadtxt(out[3])
+            # speed up
+            self.bayes.class_count_ = bp.unpack_ndarray_file(out[0])
+            self.bayes.class_log_prior_ = bp.unpack_ndarray_file(out[1])
+            self.bayes.feature_count_ = bp.unpack_ndarray_file(out[2])
+            self.bayes.feature_log_prob_ = bp.unpack_ndarray_file(out[3])
+
+#            self.bayes.class_count_ = np.loadtxt(out[0])
+#            self.bayes.class_log_prior_ = np.loadtxt(out[1])
+#            self.bayes.feature_count_ = np.loadtxt(out[2])
+#            self.bayes.feature_log_prob_ = np.loadtxt(out[3])
 
         print "Increment Classification Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
         return self
@@ -681,7 +791,7 @@ if __name__ == "__main__":
 
     clf = Classification()
     # clf.cross_validation(train, class_label, score="f1")
-    clf.get_classificator(train, class_label, iscrossvalidate=False)
+    clf.get_classificator(train, class_label, iscrossvalidate=False, class_weight=True)
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred

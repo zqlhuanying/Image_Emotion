@@ -6,7 +6,7 @@ import scipy
 __author__ = 'zql'
 __date__ = '16-02-15'
 
-ALPHA = 0.1
+ALPHA = 0.05
 
 
 def f_test(X, Y):
