@@ -342,7 +342,7 @@ class Feature(object):
                     for k, v in ws.items():
                         ws[k][0] = v[0] / p
 
-        all_class = Feature.all_class_text(word_scores, self.getclasses())
+        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["Unknow"])
         for c in all_class.keys():
             norm_0(c)
 
@@ -380,7 +380,7 @@ class Feature(object):
             for k, v in ws.items():
                 ws[k].append(0)
 
-        all_class = Feature.all_class_text(word_scores, self.getclasses())
+        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["Unknow"])
 
         [reduce_dim_0(c) for c in all_class.keys()]
 

@@ -15,6 +15,7 @@ from threadpool import ThreadPool, makeRequests
 from com import EMOTION_CLASS, OBJECTIVE_CLASS, RESOURCE_BASE_URL
 from com.text import Feature_Hasher
 from com.text.bayes import Bayes
+from com.text.preprocessing import preprocessing
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
 from com.text.stats import f_test, levene_test, pair_test
@@ -38,12 +39,14 @@ class Classification:
         self.bayes = bayes
         self.subjective = subjective
 
-    def get_classificator(self, train_datas, class_label, iscrossvalidate=False, class_weight=False):
+    def get_classificator(self, train_datas, class_label, iscrossvalidate=False, isbalance=False, minority_target=None):
         """
         获取分类器
         :param train_datas
         :param class_label
         :param iscrossvalidate 是否需要读取交叉验证后的结果来获得训练器
+        :param isbalance 是否需要平衡数据
+        :param minority_target 少数类，只有在 isbalance 为 true 时才起作用
         :return:
         """
         out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/train_index.txt")
@@ -59,13 +62,20 @@ class Classification:
         else:
             train_index = np.array(range(fit_train_datas.shape[0]))
 
-        if class_weight:
-            sample_weight = _weights._balance_weights(class_label[train_index])
-        else:
-            sample_weight = None
+        fit_train_datas, class_label = fit_train_datas[train_index], class_label[train_index]
+        sample_weight = None
+
+        # SMOTE
+        if isbalance:
+            fit_train_datas, class_label = preprocessing.my_smote(fit_train_datas, class_label, minority_target)
+#            sample_weight = _weights._balance_weights(class_label)
+
+        # sample_weight
+#        if isbalance:
+#            sample_weight = _weights._balance_weights(class_label)
 
         # 训练模型
-        self.bayes.fit(fit_train_datas[train_index], class_label[train_index], sample_weight=sample_weight)
+        self.bayes.fit(fit_train_datas, class_label, sample_weight=sample_weight)
         return self
 
     def get_incr_classificator_thread(self, incr_datas, incr_class_label, test_datas, test_class_label):
@@ -254,7 +264,7 @@ class Classification:
         def handle_first(clf):
             # 最原始的分类损失度的计算
             # 分类损失，求最小值的处理方式
-            loss = 1
+            loss = 9999
             # 增量集中优先选择更改分类器参数的文本
             text = None
             # 增量集中优先选择更改分类器参数的文本所对应的类别
@@ -292,7 +302,7 @@ class Classification:
         def handle_second(clf):
             # 另一种分类损失度的计算
             # 分类损失，求最小值的处理方式
-            loss = 1
+            loss = 9999
             # 增量集中优先选择更改分类器参数的文本
             text = None
             # 增量集中优先选择更改分类器参数的文本所对应的类别
@@ -327,7 +337,7 @@ class Classification:
             # 如何获得合适的阖值
             def get_fit(e0):
                 # 获得合适的阖值
-                return 10
+                return 20
 #                while len((r >= e0).nonzero()[0]) == 0:
 #                    e0 = int(e0 / 2)
 #                return e0
@@ -791,7 +801,7 @@ if __name__ == "__main__":
 
     clf = Classification()
     # clf.cross_validation(train, class_label, score="f1")
-    clf.get_classificator(train, class_label, iscrossvalidate=False, class_weight=True)
+    clf.get_classificator(train, class_label, iscrossvalidate=False, isbalance=False)
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred

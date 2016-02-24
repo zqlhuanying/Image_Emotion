@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     bayes = IncrBayes()
     clf = Classification(bayes=bayes)
-    clf.get_classificator(train, class_label, class_weight=False)
+    clf.get_classificator(train, class_label, isbalance=False, minority_target=["anger", "fear", "surprise"])
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred
