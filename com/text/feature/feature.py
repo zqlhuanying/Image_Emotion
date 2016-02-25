@@ -283,6 +283,10 @@ class Feature(object):
             res = filter(lambda x: danger_index.append(x[0]) if not x[1].get("sentence") else x,
                          enumerate(res))
             res = list(zip(*res)[1])
+
+            class_label = [c for i, c in enumerate(class_label)
+                           if i not in danger_index]
+
             # 写入文件
             if self.istrain:
                 FileUtil.write(key_words_txt, res)
