@@ -40,7 +40,7 @@ def get_classification(feature, incr=False):
     :param incr
     :return:
     """
-    train_datas, class_label = feature.get_key_words()
+    train_datas, class_label, _ = feature.get_key_words()
 
     train = train_datas
     # 构建适合 bayes 分类的数据集
@@ -60,7 +60,7 @@ def get_classification(feature, incr=False):
         else:
             test = Load.load_test_objective_balance()
 
-        test_datas, c_true = feature.get_key_words(test)
+        test_datas, c_true, _ = feature.get_key_words(test)
         test = test_datas
         # 构建适合 bayes 分类的数据集
         if not sp.issparse(test_datas):

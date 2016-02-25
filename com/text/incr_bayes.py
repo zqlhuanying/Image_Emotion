@@ -139,13 +139,13 @@ class IncrBayes(Bayes):
 if __name__ == "__main__":
     # 加载情绪分类数据集
     feature = CHIFeature()
-    train_datas, class_label = feature.get_key_words()
+    train_datas, class_label, _ = feature.get_key_words()
     train = train_datas
     if not sp.issparse(train_datas):
         train = feature.cal_weight_improve(train_datas, class_label)
 
     test = Load.load_test_balance()
-    test_datas, test_label = feature.get_key_words(test)
+    test_datas, test_label, _ = feature.get_key_words(test)
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(test_datas):
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     bayes = IncrBayes()
     clf = Classification(bayes=bayes)
-    clf.get_classificator(train, class_label, isbalance=False, minority_target=["anger", "fear", "surprise"])
+    clf.get_classificator(train, class_label, isbalance=True, minority_target=["anger", "fear", "surprise"])
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred
@@ -169,11 +169,11 @@ if __name__ == "__main__":
 
 #    bayes.update(c_pred[0], test_datas[0].get("sentence"))
     incr_train_datas = Load.load_incr_datas()
-    incr_train, incr_class_label = feature.get_key_words(incr_train_datas)
+    incr_train, incr_class_label, _ = feature.get_key_words(incr_train_datas)
     # 构建适合 bayes 分类的增量集
     if not sp.issparse(incr_train):
         incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
-    clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="five")
+    clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="second")
     pred_unknow = clf.predict_unknow(test)
 #    print pred
     print "incr precision:", clf.metrics_precision(test_label, pred_unknow)

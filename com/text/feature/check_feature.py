@@ -23,7 +23,7 @@ def get_dict(l):
 
 def check_train_feature(feature):
     # train_feature
-    key_words, _ = feature.get_key_words()
+    key_words, _, _ = feature.get_key_words()
     fit_train_datas = [d.get("sentence") for d in key_words]
     train_feature = Feature_Hasher.transform(fit_train_datas)
 
@@ -34,7 +34,7 @@ def check_train_feature(feature):
 def check_test_feature(feature):
     test_datas = Load.load_test_balance()
     # test feature
-    key_words, _ = feature.get_key_words(test_datas)
+    key_words, _, _ = feature.get_key_words(test_datas)
     fit_test_datas = [d.get("sentence") for d in key_words]
     test_feature = Feature_Hasher.transform(fit_test_datas)
 

@@ -277,6 +277,12 @@ class Feature(object):
                     if True:
                         ws[k] = v[1]
 
+            # 由于分词或降维的过程中，有可能因为样本的信息关键词不够，
+            # 使得该样本经过上诉步骤后为空，返回这类样本的索引
+            danger_index = []
+            res = filter(lambda x: danger_index.append(x[0]) if not x[1].get("sentence") else x,
+                         enumerate(res))
+            res = list(zip(*res)[1])
             # 写入文件
             if self.istrain:
                 FileUtil.write(key_words_txt, res)
@@ -285,11 +291,12 @@ class Feature(object):
         else:
             res = FileUtil.read(key_words_txt)
             class_label = [r["emotion-1-type"] for r in res]
+            danger_index = []
 
         # 输出统计信息
         if False:
             self.__print_top_key_word(res)
-        return res, class_label
+        return res, class_label, danger_index
 
     def _get_splited_train(self):
         """
@@ -461,12 +468,12 @@ class Feature(object):
         l = []
         for sentence in sentence_list:
             splited_words = SplitWords.split_words(sentence.get("sentence"))
-            if splited_words:
-                d = {}
-                d["emotion-1-type"] = sentence.get("emotion-1-type")
-                d["sentence"] = {splited_word: splited_words.count(splited_word)
-                                 for splited_word in set(splited_words)}
-                l.append(d)
+#            if splited_words:
+            d = {}
+            d["emotion-1-type"] = sentence.get("emotion-1-type")
+            d["sentence"] = {splited_word: splited_words.count(splited_word)
+                             for splited_word in set(splited_words)}
+            l.append(d)
 
         SplitWords.close()
         return l

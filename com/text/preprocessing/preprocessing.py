@@ -47,7 +47,7 @@ def my_smote(X, y, minority_target=None, per=0.5):
 
 if __name__ == "__main__":
     feature = CHIFeature()
-    train_datas, class_label = feature.get_key_words()
+    train_datas, class_label, _ = feature.get_key_words()
     train = train_datas
     if not sp.issparse(train_datas):
         train = feature.cal_weight_improve(train_datas, class_label)

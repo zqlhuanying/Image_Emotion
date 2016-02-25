@@ -1,10 +1,12 @@
 # encoding: utf-8
 import os
 
+import numpy as np
 import scipy.sparse as sp
 import time
 
 from com import RESOURCE_BASE_URL
+from com.text import collect
 from com.text.classification_util import get_classification, get_objective_classification, get_emotion_classification
 from com.text.feature.chi_feature import CHIFeature
 from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
@@ -25,7 +27,7 @@ def test_classification(feature, incr=False):
         test = Load.load_test_balance()
     else:
         test = Load.load_test_objective_balance()
-    test_datas, c_true = feature.get_key_words(test)
+    test_datas, c_true, _ = feature.get_key_words(test)
 
     test = test_datas
     # 构建适合 bayes 分类的数据集
@@ -45,19 +47,20 @@ def test_classification(feature, incr=False):
 def classifict(feature, sentences, out=False):
     if isinstance(sentences, basestring):
         sentences = [sentences]
+
     # 获得主客观分类器
     feature.subjective = False
     objective_clf = get_objective_classification(feature)
 
     # 测试集
     # 主客观部分
-    test_datas, c_true = feature.get_key_words(sentences)
+    test_datas_objective, c_true_objective, danger_index_objective = feature.get_key_words(sentences)
 
-    test = test_datas
-    if not sp.issparse(test_datas):
-        test = feature.cal_weight(test_datas)
+    test_objective = test_datas_objective
+    if not sp.issparse(test_datas_objective):
+        test_objective = feature.cal_weight(test_datas_objective)
 
-    c_pred = objective_clf.predict(test)
+    c_pred_objective = objective_clf.predict(test_objective)
 
     # 获得情绪分类器
     feature.subjective = True
@@ -65,13 +68,21 @@ def classifict(feature, sentences, out=False):
 
     # 测试集
     # 情绪部分
-    test_datas, c_true = feature.get_key_words(sentences)
+    test_datas, c_true, danger_index = feature.get_key_words(sentences)
 
     test = test_datas
     if not sp.issparse(test_datas):
         test = feature.cal_weight(test_datas)
 
-    c_pred = [emotion_clf.predict(test[i])[0] if c == "Y" else c for i, c in enumerate(c_pred)]
+    c_pred = []
+    for i in range(len(sentences)):
+        if i not in danger_index_objective and i not in danger_index:
+            before_i_in_danger_obj = np.sum(np.asarray(danger_index_objective) < i)
+            before_i_in_danger_ = np.sum(np.asarray(danger_index) < i)
+
+            c = emotion_clf.predict(test[i - before_i_in_danger_])[0] if c_pred_objective[i - before_i_in_danger_obj] == "Y"\
+                else c_pred_objective[i - before_i_in_danger_obj]
+            c_pred.append(c)
 
     if out:
         dir_ = os.path.join(RESOURCE_BASE_URL, "out")
@@ -80,41 +91,57 @@ def classifict(feature, sentences, out=False):
         o = os.path.join(dir_, current + ".xml")
 
         with open(o, "w") as fp:
-            [fp.write(
-                    """<weibo emotion-type="%s">
+            for i, s in enumerate(sentences):
+                if i not in danger_index_objective and i not in danger_index:
+                    before_i_in_danger_obj = np.sum(np.asarray(danger_index_objective) < i)
+                    before_i_in_danger_ = np.sum(np.asarray(danger_index) < i)
+                    fp.write(
+                        """<weibo emotion-type="%s">
     <sentence emotion-1-type="%s" emotion-2-type="none" emotion-tag="%s">
         %s
     </sentence>
 </weibo>
-""" % (c_pred[i], c_pred[i], "N" if c_pred[i] == "N" else "Y", s))
-             for i, s in enumerate(sentences)]
+""" % (c_pred[i - before_i_in_danger_], c_pred[i - before_i_in_danger_], "N" if c_pred_objective[i - before_i_in_danger_obj] == "N" else "Y", s))
+                else:
+                    fp.write(
+                        """<weibo emotion-type="%s">
+    <sentence emotion-1-type="%s" emotion-2-type="none" emotion-tag="%s">
+        %s
+    </sentence>
+</weibo>
+""" % ("None", "None", "N", s + "\n Can't recognize because it has insufficient key_words"))
+
     else:
         print c_pred
 
+if __name__ == "__main__":
+    path = "collect"
+    sentences = collect.read_weibo(path)
+    sentences = [s.get("sentence") for s in sentences]
+    classifict(CHIFeature(), sentences, out=True)
 
-s1 = "寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、" \
-     "它说它很想念你，原来我和我的影子，都在想你。"
-classifict(CHIFeature(), [s1,s1], out=True)
-print
-print
-
-
-# test fasttfidf
-# test_classification(FastTFIDFFeature())
-print
-print
-
-# test tfidf
-# test_classification(TFIDFFeature())
-print
-print
-
-# test IG
-# test_classification(IGFeature())
-print
-print
-
-# test CHI
-# test_classification(CHIFeature(subjective=True))
-print
-print
+#    s1 = "寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、" \
+#         "它说它很想念你，原来我和我的影子，都在想你。"
+#    classifict(CHIFeature(), [s1,s1], out=True)
+#    print
+#    print
+#
+#    # test fasttfidf
+#    test_classification(FastTFIDFFeature())
+#    print
+#    print
+#
+#    # test tfidf
+#    test_classification(TFIDFFeature())
+#    print
+#    print
+#
+#    # test IG
+#    test_classification(IGFeature())
+#    print
+#    print
+#
+#    # test CHI
+#    test_classification(CHIFeature(subjective=True))
+#    print
+#    print
