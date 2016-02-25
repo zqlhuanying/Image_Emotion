@@ -44,6 +44,9 @@ class Feature(object):
         else:
             self.istrain = False
 
+        print "%s/%s/%s" % ("emotion" if self.subjective else "subjective",
+                            "train" if self.istrain else "test",
+                            self.__class__.__name__)
         splited_words_list, sentence_size = self._split(sentences)
 
         return self._collect(splited_words_list, sentence_size)
@@ -87,7 +90,7 @@ class Feature(object):
         :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
         :return:
         """
-        print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print "Cal Improve Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
             dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
@@ -117,7 +120,7 @@ class Feature(object):
         :param key_words: [{'sentence': {}}, ...] or [{}, ...] 有可能是测试集数据有可能是训练集数据
         :return:
         """
-        print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print "Cal Improve Second Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
             dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
@@ -353,7 +356,7 @@ class Feature(object):
                     for k, v in ws.items():
                         ws[k][0] = v[0] / p
 
-        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["Unknow"])
+        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["unknow"])
         for c in all_class.keys():
             norm_0(c)
 
@@ -391,7 +394,7 @@ class Feature(object):
             for k, v in ws.items():
                 ws[k].append(0)
 
-        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["Unknow"])
+        all_class = Feature.all_class_text(word_scores, self.getclasses() + ["unknow"])
 
         [reduce_dim_0(c) for c in all_class.keys()]
 
@@ -447,7 +450,7 @@ class Feature(object):
     @staticmethod
     def __pre_process(sentences):
         def process_str(s):
-            return {"emotion-1-type": "Unknow", "sentence": s}
+            return {"emotion-1-type": "unknow", "sentence": s}
 
         def process_dict(s):
             if not s.has_key("emotion-1-type") or not s.has_key("sentence"):

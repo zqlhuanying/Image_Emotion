@@ -37,6 +37,10 @@ class TfidfImprove(object):
             labelbin = LabelBinarizer()
             # 计算样本属于哪个类别 [n_samples, n_classes]
             Y = labelbin.fit_transform(y)
+            # LabelBinarizer 对于二分类的返回结果跟多分类的返回结果有点不一样
+            # so deal with binary
+            if labelbin.y_type_ == "binary":
+                Y = np.hstack((1 - Y, Y))
             self.classes_ = labelbin.classes_
 
             # 计算每个特征词属于每个类别的样本数 [n_classes, n_features]

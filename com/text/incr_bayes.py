@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     bayes = IncrBayes()
     clf = Classification(bayes=bayes)
-    clf.get_classificator(train, class_label, isbalance=True, minority_target=["anger", "fear", "surprise"])
+    clf.get_classificator(train, class_label, isbalance=False, minority_target=["anger", "fear", "surprise"])
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     # 构建适合 bayes 分类的增量集
     if not sp.issparse(incr_train):
         incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
-    clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="second")
+    clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="five")
     pred_unknow = clf.predict_unknow(test)
 #    print pred
     print "incr precision:", clf.metrics_precision(test_label, pred_unknow)

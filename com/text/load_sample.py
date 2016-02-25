@@ -27,7 +27,11 @@ class Load:
     def load_training_balance():
         url = RESOURCE_BASE_URL + "weibo_samples_part.xml"
         ratio = 2 / 3
-        return Load.__load(url, ratio, balance=True)
+        datas = Load.__load(url, ratio, balance=True)
+
+        url = RESOURCE_BASE_URL + "weibo_samples_by_collect.xml"
+        datas1 = Load.__load(url, 0, balance=True)
+        return datas + datas1
 
     @staticmethod
     def load_test_balance():
@@ -40,9 +44,12 @@ class Load:
         url = RESOURCE_BASE_URL + "weibo_samples.xml"
         ratio = 2 / 3
         datas = Load.__load(url, ratio, subjective=False, balance=True)
+
+        url = RESOURCE_BASE_URL + "weibo_samples_by_collect.xml"
+        datas1 = Load.__load(url, 0, subjective=False, balance=True)
         [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
-         for data in datas]
-        return datas
+         for data in datas + datas1]
+        return datas + datas1
 
     @staticmethod
     def load_test_objective_balance():

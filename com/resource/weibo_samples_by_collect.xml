@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SampleData>
+    <weibo emotion-type="anger">
+        <sentence emotion-1-type="anger" emotion-2-type="none" emotion-tag="Y">
+            上班以来第一次这么烦这个工作！逼急了我  老子真撂挑子不干了！！！
+        </sentence>
+    </weibo>
+    <weibo emotion-type="happiness">
+        <sentence emotion-1-type="happiness" emotion-2-type="none" emotion-tag="Y">
+            今天才发现手机里竟然有这么多好吃的
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            面吃了一口就吃不下了  低温蛋很恶心  还不能用支付宝 如果只是想看看韩寒的很高兴遇见你餐厅 一份星你的炸鸡 两杯免费的柠檬水  还有烛光里的谈笑风声就够了 http://t.cn/R2WJLKM
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            也不知道旁边桌那俩小姑娘多大 真是不知民间疾苦啊 还尽讨论那没有的东西_ http://t.cn/R2WiFc7
+        </sentence>
+    </weibo>
+    <weibo emotion-type="none">
+        <sentence emotion-1-type="none" emotion-2-type="none" emotion-tag="N">
+            今天我的「微博等级」又升一级，记录一下我在微博的成就http://t.cn/RznUBIb
+        </sentence>
+    </weibo>
+    <weibo emotion-type="none">
+        <sentence emotion-1-type="none" emotion-2-type="none" emotion-tag="N">
+            我参与了@新浪河南 发起的投票 【#折腾到联合国也不怕#【如果你遇到被顶替，咋办？】】，我投给了“坚决维权。”这个选项。你也快来表态吧~http://t.cn/RG9xPv7
+        </sentence>
+    </weibo>
+    <weibo emotion-type="none">
+        <sentence emotion-1-type="none" emotion-2-type="none" emotion-tag="N">
+            狮子座的情绪很多变，有时会带一点孩子气。上一秒也许还疯疯癫癫，下一秒也许就会很想一个人躲起来哭一会儿。有原因，但讲不清。狮子座的心墙不低，他们总是小心翼翼的想要把自己保护在硬硬的躯壳里。狮子的心事很少清清楚楚的讲给谁听，他们害怕被看穿，却依然期待着可以被理解。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="none">
+        <sentence emotion-1-type="none" emotion-2-type="none" emotion-tag="N">
+            【芝麻辣味炒排骨】1.油热后，直接放入排骨煎炒，炒至变色水份挥发。2.放入姜蒜末，加干辣椒段，葱段炒匀。3.倒入酱油炒香，再加糖，米酒，番茄酱、醋炒匀。4.倒入芝麻，清水浸到排骨8分满，盖上盖，焖8分钟。5.将盐与水淀粉调匀，倒入排骨中，收汁，最后出锅再撒上些许芝麻。
+        </sentence>
+    </weibo>
+</SampleData>

@@ -510,6 +510,7 @@ class Classification:
 #            self.bayes.feature_log_prob_ = np.loadtxt(out[3])
 
         print "Increment Classification Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
+        print
         return self
 
     def predict(self, test_datas):

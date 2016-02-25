@@ -32,19 +32,22 @@ def test_classification(feature, incr=False):
     test = test_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(test_datas):
-        test = feature.cal_weight(test_datas)
+        test = feature.cal_weight_improve(test_datas, c_true)
 
     c_pred_unknow = clf.predict_unknow(test)
     print c_pred_unknow
     print "precision:", clf.metrics_precision(c_true, c_pred_unknow)
     print "recall:", clf.metrics_recall(c_true, c_pred_unknow)
     print "f1:", clf.metrics_f1(c_true, c_pred_unknow)
+    print "origin accuracy:", clf.metrics_accuracy(c_true, c_pred_unknow)
     print "zero_one_loss:", clf.metrics_zero_one_loss(c_true, c_pred_unknow)
+    test_proba = clf.predict_max_proba(test)
+    print "my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(c_true, c_pred_unknow)
 
 
-def classifict(feature, sentences, out=False):
+def classifict(feature, sentences, incr=False, out=False):
     if isinstance(sentences, basestring):
         sentences = [sentences]
 
@@ -58,13 +61,13 @@ def classifict(feature, sentences, out=False):
 
     test_objective = test_datas_objective
     if not sp.issparse(test_datas_objective):
-        test_objective = feature.cal_weight(test_datas_objective)
+        test_objective = feature.cal_weight_improve(test_datas_objective, c_true_objective)
 
     c_pred_objective = objective_clf.predict(test_objective)
 
     # 获得情绪分类器
     feature.subjective = True
-    emotion_clf = get_emotion_classification(feature, incr=False)
+    emotion_clf = get_emotion_classification(feature, incr=incr)
 
     # 测试集
     # 情绪部分
@@ -72,7 +75,7 @@ def classifict(feature, sentences, out=False):
 
     test = test_datas
     if not sp.issparse(test_datas):
-        test = feature.cal_weight(test_datas)
+        test = feature.cal_weight_improve(test_datas, c_true)
 
     c_pred = []
     for i in range(len(sentences)):
@@ -115,10 +118,16 @@ def classifict(feature, sentences, out=False):
         print c_pred
 
 if __name__ == "__main__":
+    if False:
+        [collect.collect_weibo() for i in range(10)]
+
+    feature = CHIFeature()
     path = "collect"
     sentences = collect.read_weibo(path)
     sentences = [s.get("sentence") for s in sentences]
-    classifict(CHIFeature(), sentences, out=True)
+    classifict(feature, sentences, incr=True, out=True)
+
+    test_classification(feature, incr=True)
 
 #    s1 = "寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、" \
 #         "它说它很想念你，原来我和我的影子，都在想你。"

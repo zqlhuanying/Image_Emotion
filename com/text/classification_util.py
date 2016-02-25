@@ -45,7 +45,7 @@ def get_classification(feature, incr=False):
     train = train_datas
     # 构建适合 bayes 分类的数据集
     if not sp.issparse(train_datas):
-        train = feature.cal_weight(train_datas)
+        train = feature.cal_weight_improve(train_datas, class_label)
 
     if incr:
         bayes = IncrBayes()
@@ -54,19 +54,24 @@ def get_classification(feature, incr=False):
     clf = Classification(bayes=bayes, subjective=feature.subjective)
     clf.get_classificator(train, class_label)
     if incr:
-        # 加载测试集
-        if feature.subjective:
-            test = Load.load_test_balance()
-        else:
-            test = Load.load_test_objective_balance()
-
-        test_datas, c_true, _ = feature.get_key_words(test)
-        test = test_datas
-        # 构建适合 bayes 分类的数据集
-        if not sp.issparse(test_datas):
-            test = feature.cal_weight(test_datas)
-
         incr_train_datas = Load.load_incr_datas()
-        clf.get_incr_classificator(incr_train_datas, test, c_true)
+        incr_train, incr_class_label, _ = feature.get_key_words(incr_train_datas)
+        # 构建适合 bayes 分类的增量集
+        if not sp.issparse(incr_train):
+            incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
+
+#        # 加载测试集
+#        if feature.subjective:
+#            test = Load.load_test_balance()
+#        else:
+#            test = Load.load_test_objective_balance()
+#
+#        test_datas, c_true, _ = feature.get_key_words(test)
+#        test = test_datas
+#        # 构建适合 bayes 分类的数据集
+#        if not sp.issparse(test_datas):
+#            test = feature.cal_weight(test_datas)
+
+        clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="five")
     return clf
 
