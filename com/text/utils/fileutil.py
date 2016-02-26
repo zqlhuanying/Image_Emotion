@@ -57,6 +57,16 @@ class FileUtil:
          for p in path if FileUtil.isexist(p)]
 
     @staticmethod
+    def getfilename(path):
+        """
+        获取文件名
+        :param path:
+        :return:
+        """
+        index = path.rfind("/")
+        return path[index + 1:]
+
+    @staticmethod
     def isfile(path):
         """
         判断是否是文件

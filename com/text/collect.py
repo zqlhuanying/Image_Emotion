@@ -5,7 +5,14 @@ import requests
 
 import time
 import urllib
+import urllib2
+from PIL import Image
 from compiler.ast import flatten
+
+from StringIO import StringIO
+
+import numpy as np
+import scipy.sparse as sp
 
 from com import RESOURCE_BASE_URL
 from com.text.utils.fileutil import FileUtil
@@ -22,12 +29,12 @@ def collect_weibo():
     # bmiddle: 中图
     # large: 大图
     def handle_write(data):
-        for d in data.get("statuses"):
-            yield ("sentence:" + d["text"] + "\n" +
-                   "img:" + process_img(d.get("pic_urls")) + "\n").encode("utf-8")
-
-    def process_img(urls):
-        return ",".join([__process_img(u.get("thumbnail_pic", "")) for u in urls])
+        data = data.get("statuses")
+        # img_urls:[[url,url...], ...]
+        img_urls = [[u.get("thumbnail_pic", "") for u in d.get("pic_urls")] for d in data]
+        img_local_urls = process_img(img_urls)
+        return [("sentence:" + d.get("text") + "\n" +
+                 "img:" + ",".join(img_local_urls[i]) + "\n").encode("utf-8") for i, d in enumerate(data)]
 
     print "Collecting WeiBo: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -53,7 +60,7 @@ def collect_emotion():
     def handle_write(data):
         for d in data:
             yield ("category:" + d["category"] + "," +
-                   "img:" + __process_img(d.get("icon", "")) + "," +
+                   "img:" + process_img(d.get("icon", "")) + "," +
                    "phrase:" + d.get("phrase") + "\n").encode("utf-8")
 
     print "Collecting Emotion: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -113,16 +120,32 @@ def _collect(url, auth="Basic"):
     return r.json()
 
 
-def __process_img(url):
-    filepath = ""
-    index = url.rfind("/")
-    if index > -1:
-        filename = url[index + 1:]
-        dir_ = RESOURCE_BASE_URL + "img"
-        FileUtil.mkdirs(dir_)
-        filepath = dir_ + os.sep + filename
-        urllib.urlretrieve(url, filepath)
+def process_img(urls):
+    dir_ = RESOURCE_BASE_URL + "img"
+    FileUtil.mkdirs(dir_)
 
+    if isinstance(urls, basestring):
+        urls = [[urls]]
+    filepath = []
+    for i, row in enumerate(urls):
+        p = []
+        for j, url in enumerate(row):
+            filename = FileUtil.getfilename(url)
+            filepath0 = os.path.join(dir_, filename)
+            try:
+                r = requests.get(url, timeout=1)
+                if r.status_code == 200:
+                    img = Image.open(StringIO(r.content))
+                    if img.mode != "RGB":
+                        img = img.convert("RGB")
+                    img.save(filepath0)
+                    p.append(filepath0)
+            except requests.exceptions.Timeout, requests.exceptions.ConnectionError:
+                print "Timeout"
+        filepath.append(p)
+
+    if len(filepath) == 1 and len(filepath[0]) == 1:
+        return filepath[0][0]
     return filepath
 
 
