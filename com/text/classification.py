@@ -68,7 +68,7 @@ class Classification:
         # SMOTE
         if isbalance:
             fit_train_datas, class_label = preprocessing.my_smote(fit_train_datas, class_label, minority_target)
-#            sample_weight = _weights._balance_weights(class_label)
+            sample_weight = _weights._balance_weights(class_label)
 
         # sample_weight
 #        if isbalance:
@@ -459,6 +459,8 @@ class Classification:
 
             fit_incr_datas = self.fit_data(incr_datas)
             incr_class_label = np.asanyarray(incr_class_label)
+            # 保存需要增加到key_words.txt文档中的数据
+            add_to_key_words = []
 
             i = 0
             while fit_incr_datas.nnz > 0:
@@ -479,6 +481,11 @@ class Classification:
                         self.bayes.update(data[2], data[1])
                     # 根据 index 排序
                     accord_to_index = sorted(need_to_update, key=lambda x: x[3])
+
+#                    index = [index0[3] for index0 in accord_to_index]
+#                    [add_to_key_words.append(raw_incr_datas[index0]) for index0 in index]
+#                    raw_incr_datas = [raw for index0, raw in enumerate(raw_incr_datas) if index0 not in index]
+
                     block0.append(test_datas)
                     reduce(func, accord_to_index, (0.0, "", "", -1))
                     block.append(fit_incr_datas[accord_to_index[-1][3] + 1:, :])
@@ -497,6 +504,9 @@ class Classification:
                           self.bayes.feature_count_, self.bayes.feature_log_prob_)
             # 保存到文本
             map(lambda x: bp.pack_ndarray_file(x[0], x[1]), zip(bayes_args, out))
+            # 追加
+#            path = os.path.join(RESOURCE_BASE_URL, "key_words/CHIFeature.txt")
+#            FileUtil.write(path, add_to_key_words, "a")
         else:
             # speed up
             self.bayes.class_count_ = bp.unpack_ndarray_file(out[0])

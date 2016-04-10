@@ -118,12 +118,12 @@ class FileUtil:
         return l
 
     @staticmethod
-    def write(path, data):
+    def write(path, data, mode='w'):
         parent_dir = FileUtil.getparentdir(path)
         FileUtil.mkdirs(parent_dir)
 
         s = len(data)
-        fp = open(path, "w")
+        fp = open(path, mode)
         for i, d in enumerate(data):
             sentence = d["sentence"]
             if sentence:

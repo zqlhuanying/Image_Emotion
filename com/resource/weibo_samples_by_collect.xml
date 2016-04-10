@@ -66,6 +66,21 @@
             买个账号还真麻烦[doge]  不清楚嘛 了解下 也不好好回我！我知道了 问账号 又不理我啦！饭都吃好啦 现在才回！（怎么办 我内心都不想要啦！[doge] ）
         </sentence>
     </weibo>
+    <weibo emotion-type="anger">
+        <sentence emotion-1-type="anger" emotion-2-type="none" emotion-tag="Y">
+            我感到自己的眼睛似乎在向外冒水，要不是当着那么多同学的面，我真会狠狠扇她一记耳光。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="anger">
+        <sentence emotion-1-type="anger" emotion-2-type="none" emotion-tag="Y">
+            他怒不可遏地吼叫着，这声音像沉雷一样滚动着，传得很远很远。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="anger">
+        <sentence emotion-1-type="anger" emotion-2-type="none" emotion-tag="Y">
+            牙齿咬得格格作响，眼里闪着一股无法遏制的怒火，好似一头被激怒的狮子。
+        </sentence>
+    </weibo>
     <weibo emotion-type="disgust">
         <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
             试问世界上还有比被翻盘更伤心的事吗？我想没有了
@@ -79,6 +94,161 @@
     <weibo emotion-type="surprise">
         <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
             姐妹们的深蹲+引体向上配合，超牛逼！ http://t.cn/RAW5ryH
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            甚至想逃离这里，感觉孤独，在这里我没有高兴的时候，看着这些人，这些事，感觉无趣，感觉通俗，每天这样，这得好烦。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            可是怀念竟比失去还要更难受
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            他两眼发直，连连自语，又惊又怕，双腿也不听使唤像筛糠似的乱颤起来。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            望着满地的碎瓶胆片，我紧张得张开了嘴巴，呆呆地立在那儿，心里忐忑不安，万一爸爸回来发明了，准会狠狠品评我的。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            生怕舵轮滑掉，心突突地跳，手心里都出了汗。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            心里像有十五只水桶打水忐忑不安的，久久不能清静。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            那颗忐忑不安的心越跳越快，我不敢往下想了。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            胆怯地低着头，不敢看爸爸那张阴云密布的脸。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            爸、妈又吵架了，吵得我心烦意乱的，单独在楼上，该怎么办呢。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="fear">
+        <sentence emotion-1-type="fear" emotion-2-type="none" emotion-tag="Y">
+            一颗心提到嗓子眼儿，堵得自己呼吸都觉得困难，壶里的开水倒在手上才猛的一抽
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            今天的雨有点繁杂，仿佛是在哭泣般，断断续续，又绵绵长长，下的人心也烦躁了起来。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            对他的沉默是最好的表达了……
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            你真让我恶心！
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            见到他对面走来，能绕道走就尽量绕道走。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            在碰面时候会避开，也会有一副讨厌的样子。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            别那样和我说话!我讨厌你！我不愿再见到你！
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            我受不了了!赶紧滚！不想再看见你。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            别在我的视线里晃悠，免得我不想睁开眼睛，以至于找不到回家的路！
+        </sentence>
+    </weibo>
+    <weibo emotion-type="disgust">
+        <sentence emotion-1-type="disgust" emotion-2-type="none" emotion-tag="Y">
+            面无表情，看都不想看你。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            她被这突然来临的事震动了，以致就像受到电击一般，精神处于半痴半呆的状态之中。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            啊，天呐，太神奇了。我的妈呀。我的天呀。上帝啊。太不可思议了。这是真的吗？
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            一切发生得这样突然和意外，使拉赫曼感到自己就像是一片可怜的小纸，被暴风雨随便吹打和蹂埔。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            那瞬间，庆子直瞪瞪地看着大夫的脸，露出怎么也抓不住要领的神情。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            他耳朵里哄了一声，如同被尖针刺了一下，全身都有些麻木了。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            一霎间，他全身紧张得像一块石头，他的心沉坠得像灌满了冷铅。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            他的大脑已经失去指挥自己行动的能力，木头一般地站在那里不动，楞着两只眼睛发痴地看着前进的人群。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            我简直不敢相信自己的耳朵，好似晴天霹雳当头一击，又好像被人从头到脚浇了一盆凉水，全身麻木。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            他完全惊呆了，好像失音了一般，好像麻木了一般，既说不出话，也没有力量。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            他惊呆了，张着嘴，半天说不出话来，过了好一会儿，才摇了摇头说：“这是真的？我不信。”
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            蓦地，他怔了一下，短促而痉挛地呼了一口气，像生根似地站住。
+        </sentence>
+    </weibo>
+    <weibo emotion-type="surprise">
+        <sentence emotion-1-type="surprise" emotion-2-type="none" emotion-tag="Y">
+            此情此景令她大吃一惊，惊恐地瞪大眼睛，呆若木鸡似地站在那里一动不动。
         </sentence>
     </weibo>
     <weibo emotion-type="none">
