@@ -224,7 +224,7 @@ class Classification:
             elif method == "second":
                 return handle_second(clf)
             elif method == "third":
-                return handle_third(clf)
+                return handle_third_another(clf)
             elif method == "four":
                 return handle_four(clf)
             elif method == "five":
@@ -366,7 +366,21 @@ class Classification:
             e = get_fit(e)
             # select
             select_indices = (r >= e).nonzero()
-            return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice) for indice in select_indices[0]]
+            return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice, max_proba[indice][0]) for indice in select_indices[0]]
+
+        def handle_third_another(clf):
+            # 类支持度的计算
+            proba = clf.predict_proba(fit_incr_datas)
+            label = clf.predict(fit_incr_datas)
+            max_proba = np.max(proba, axis=1).reshape(-1, 1)
+            leave_proba = np.sum(proba, axis=1).reshape(-1, 1) - max_proba
+            # 支持度
+            r = np.divide(max_proba, leave_proba)
+            # 阖值
+            e = 5
+            # select
+            select_indices = (r >= e).nonzero()
+            return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice, max_proba[indice][0]) for indice in select_indices[0]]
 
         def handle_four(clf):
             # My Own Idea
@@ -414,6 +428,9 @@ class Classification:
 
             fit_for_class_support = handle(clf, "third")
             print "The result of class-support: %d samples" % len(fit_for_class_support)
+
+#            fit_for_class_support = filter(lambda x: x[4] > clf.bayes.class_log_prior_[np.where(clf.bayes.classes_ == x[2])[0][0]], fit_for_class_support)
+#            print "The result of class-support: %d samples" % len(fit_for_class_support)
             # My Own Idea
             # 存放 Test 的结果
             f_res = []
