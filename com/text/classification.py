@@ -301,6 +301,10 @@ class Classification:
 
         def handle_second(clf):
             # 另一种分类损失度的计算
+            predict_true = handle(clf, "zero")
+            if predict_true:
+                return predict_true
+
             # 分类损失，求最小值的处理方式
             loss = 9999
             # 增量集中优先选择更改分类器参数的文本
@@ -318,14 +322,21 @@ class Classification:
                 text0 = fit_incr_datas.getrow(i0)
                 c_pred0 = clf.predict(text0)[0]
 
-                clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
-                test_proba = clf.predict_max_proba(test_datas)
-                loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
-                if loss0 < loss:
-                    loss = loss0
+                if c_true0 == c_pred0:
+                    loss = 0
                     text = text0
                     c_pred = c_pred0
                     index = i0
+                    break
+                else:
+                    clf.bayes.class_log_prior_, clf.bayes.feature_log_prob_ = clf.bayes.update(c_pred0, text0, copy=True)
+                    test_proba = clf.predict_max_proba(test_datas)
+                    loss0 = clf.metrics_another_zero_one_loss(origin_proba, test_proba)
+                    if loss0 < loss:
+                        loss = loss0
+                        text = text0
+                        c_pred = c_pred0
+                        index = i0
 
                 clf.bayes.class_log_prior_ = origin_class_log_prob_
                 clf.bayes.feature_log_prob_ = origin_feature_log_prob_
