@@ -7,6 +7,7 @@ from com.text.bayes import Bayes
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
+from com.text.plot import plot
 
 __author__ = 'zql'
 __date__ = '15-12-27'
@@ -166,6 +167,9 @@ if __name__ == "__main__":
     print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)
+    plot.get_instance()
+    classes = clf.getclasses()
+    plot.plot_roc(test_label, clf.predict_proba(test), classes=classes, text='origin')
 
 #    bayes.update(c_pred[0], test_datas[0].get("sentence"))
     incr_train_datas = Load.load_incr_datas()
@@ -187,3 +191,6 @@ if __name__ == "__main__":
     print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)
+    classes = clf.getclasses()
+    plot.plot_roc(test_label, clf.predict_proba(test), classes=classes, text='incr')
+    plot.show()

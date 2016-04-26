@@ -20,6 +20,7 @@ from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
 from com.text.stats import f_test, levene_test, pair_test
 from com.text.utils.fileutil import FileUtil
+from com.text.plot import plot
 
 __author__ = 'root'
 __date__ = '15-12-13'
@@ -836,6 +837,10 @@ if __name__ == "__main__":
     print "my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
     print
     clf.metrics_correct(test_label, pred_unknow)
+    plot.get_instance()
+    classes = clf.getclasses()
+    plot.plot_roc(test_label, clf.predict_proba(test), classes=classes)
+    plot.show()
 
     # 加载主客观分类数据集
 #    feature = CHIFeature(subjective=False)
