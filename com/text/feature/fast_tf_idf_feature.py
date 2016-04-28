@@ -19,14 +19,14 @@ class FastTFIDFFeature(Feature):
 
     def _collect(self, splited_words_list, sentence_size):
         print "Collection datas: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        data = [self.get_dict(d.get("sentence")) for d in splited_words_list[: sentence_size]]
+        data = [d.get("sentence") for d in splited_words_list[: sentence_size]]
         class_label = [d.get("emotion-1-type") for d in splited_words_list[: sentence_size]]
         fit_data = Feature_Hasher.transform(data)
         tfidf = TfidfTransformer()
         tfidf.fit(fit_data)
         a = tfidf.transform(fit_data)
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        return a, class_label
+        return a, class_label, []
 
     def get_dict(self, l):
         d = {}

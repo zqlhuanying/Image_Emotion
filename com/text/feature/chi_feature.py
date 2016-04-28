@@ -81,7 +81,15 @@ class CHIFeature(Feature):
 #        chi = c_chi(label)
 #        return chi
         chi = [c_chi(c_1) for c_1 in all_class_datas.keys()]
+        # max
         return max(chi)
+
+        # avg
+#        prior_proba = [len(all_class_datas.get(c_1)) / N for c_1 in all_class_datas.keys()]
+#        avg = 0.0
+#        for i in range(len(chi)):
+#            avg += chi[i] * prior_proba[i]
+#        return avg
 
 if __name__ == "__main__":
     s1 = ur"源海都学愤怒鸟的声音，好像好厉害…"

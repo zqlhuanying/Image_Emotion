@@ -68,7 +68,7 @@ class Classification:
 
         # SMOTE
         if isbalance:
-            fit_train_datas, class_label = preprocessing.my_smote(fit_train_datas, class_label, minority_target)
+            fit_train_datas, class_label = preprocessing.my_smote(fit_train_datas, class_label, minority_target, per=0.5)
             sample_weight = _weights._balance_weights(class_label)
 
         # sample_weight
@@ -224,7 +224,7 @@ class Classification:
             elif method == "second":
                 return handle_second(clf)
             elif method == "third":
-                return handle_third_another(clf)
+                return handle_third(clf)
             elif method == "four":
                 return handle_four(clf)
             elif method == "five":
@@ -377,7 +377,7 @@ class Classification:
             # 支持度
             r = np.divide(max_proba, leave_proba)
             # 阖值
-            e = 5
+            e = 2
             # select
             select_indices = (r >= e).nonzero()
             return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice, max_proba[indice][0]) for indice in select_indices[0]]
@@ -841,7 +841,7 @@ if __name__ == "__main__":
 
     clf = Classification()
     # clf.cross_validation(train, class_label, score="f1")
-    clf.get_classificator(train, class_label, iscrossvalidate=False, isbalance=False)
+    clf.get_classificator(train, class_label, iscrossvalidate=False, isbalance=True, minority_target=EMOTION_CLASS.keys())
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred

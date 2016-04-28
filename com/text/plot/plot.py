@@ -72,10 +72,10 @@ def plot_roc(y_true, y_score, text='', classes=None, detail=False):
 
     # Plot all ROC curves
 #    plt.figure()
-    plt.plot(fpr["micro"], tpr["micro"],
-             label=text + ' micro-average ROC curve (area = {0:0.8f})'
-                          ''.format(roc_auc["micro"]),
-             linewidth=2)
+#    plt.plot(fpr["micro"], tpr["micro"],
+#             label=text + ' micro-average ROC curve (area = {0:0.8f})'
+#                          ''.format(roc_auc["micro"]),
+#             linewidth=2)
 
     plt.plot(fpr["macro"], tpr["macro"],
              label=text + ' macro-average ROC curve (area = {0:0.8f})'
