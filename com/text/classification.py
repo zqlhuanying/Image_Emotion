@@ -69,7 +69,7 @@ class Classification:
         # SMOTE
         if isbalance:
             fit_train_datas, class_label = preprocessing.my_smote(fit_train_datas, class_label, minority_target, per=0.5)
-            sample_weight = _weights._balance_weights(class_label)
+#            sample_weight = _weights._balance_weights(class_label)
 
         # sample_weight
 #        if isbalance:
@@ -224,7 +224,7 @@ class Classification:
             elif method == "second":
                 return handle_second(clf)
             elif method == "third":
-                return handle_third(clf)
+                return handle_third_another(clf)
             elif method == "four":
                 return handle_four(clf)
             elif method == "five":
@@ -302,9 +302,9 @@ class Classification:
 
         def handle_second(clf):
             # 另一种分类损失度的计算
-            predict_true = handle(clf, "zero")
-            if predict_true:
-                return predict_true
+#            predict_true = handle(clf, "zero")
+#            if predict_true:
+#                return predict_true
 
             # 分类损失，求最小值的处理方式
             loss = 9999
@@ -377,7 +377,7 @@ class Classification:
             # 支持度
             r = np.divide(max_proba, leave_proba)
             # 阖值
-            e = 2
+            e = 5
             # select
             select_indices = (r >= e).nonzero()
             return [(0.0, fit_incr_datas.getrow(indice), label[indice], indice, max_proba[indice][0]) for indice in select_indices[0]]
@@ -385,6 +385,10 @@ class Classification:
         def handle_four(clf):
             # My Own Idea
             # 存放 Test 的结果
+            predict_true = handle(clf, "zero")
+            if predict_true:
+                return predict_true
+
             f_res = []
 
             origin_class_log_prob_ = clf.bayes.class_log_prior_

@@ -367,6 +367,10 @@ class Feature(object):
         """
         def reduce_dim_0(c0):
             word_score = reduce(Feature.union, all_class.get(c0), {})
+#            _sum = 0.0
+#            for k, v in word_score.items():
+#                _sum += v[0]
+#            _max = _sum * 0.85
             _size = len(word_score)
             _max = math.pow(_size, 1.0 / 2) * 0.85
 

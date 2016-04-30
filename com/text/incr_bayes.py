@@ -7,6 +7,7 @@ from com import EMOTION_CLASS
 from com.text.bayes import Bayes
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
+from com.text.feature.ig_feature import IGFeature
 from com.text.load_sample import Load
 from com.text.plot import plot
 

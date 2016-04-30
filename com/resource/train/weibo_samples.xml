@@ -83,24 +83,6 @@
     <sentence emotion-1-type="disgust" emotion-2-type="anger" emotion_tag="Y" id="2">这不仅是隐蔽腐败!</sentence>
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="3">更是对"义务教育"的严重反动与挑战!!</sentence>
   </weibo>
-  <weibo emotion-type="like" id="17">
-    <sentence emotion_tag="N" id="1">地球保卫战...</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">如同观看一部真正的大片一样...</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">看到了首回合人类的顽强抵抗...</sentence>
-    <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="4">看到了次回合宇宙发挥不折手段的恐怖...</sentence>
-    <sentence emotion_tag="N" id="5">人类在搏命...</sentence>
-    <sentence emotion_tag="N" id="6">而宇宙却可以轻而易举地用常规或非常规地方式压迫你...</sentence>
-    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="7">无助...</sentence>
-    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="8">无奈...</sentence>
-    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="9">绝望...</sentence>
-    <sentence emotion_tag="N" id="10">各种心情涌上心头...</sentence>
-    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="11">庆幸能看到这样一部上下集的大片...</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="12">相信人类依然会不断地努力去征服的！</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="18">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">《证据》也后终于要送审了，期待的人们，为之祈祷顺利通过吧！</sentence>
-    <sentence emotion_tag="N" id="2">群众的呼声very importantly！！！</sentence>
-  </weibo>
   <weibo emotion-type="none" id="19">
     <sentence emotion_tag="N" id="1">刚刚听一位长沙的朋友说，这几年长沙的内涝确实少了，而以前几乎是逢雨必涝。</sentence>
     <sentence emotion_tag="N" id="2">前天的一则新闻说，目前只要是半天50毫米左右的暴雨，长沙几乎无内涝之忧。</sentence>
@@ -113,16 +95,6 @@
     <sentence emotion_tag="N" id="1">[上海]：1、觉得北京是政府，上海是国企，杭州是ngo，深圳是民企，我是社会闲杂人员。</sentence>
     <sentence emotion_tag="N" id="2">2、工产艺术化的1933老场坊，艺术工产化的莫干山路M50，艺术餐饮化的田子坊和艺术办公化的8号桥，是否分别对应工业地产、住宅地产、商业地产和城市综合体？</sentence>
     <sentence emotion_tag="N" id="3">3、设计、房地产、律师、基金的社会价格反映真实价值了嘛？</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="22">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">你会不会因为一首歌喜欢上一个人，因为一个人喜欢一个城市；因为一个城市喜欢上一种生活，然后因为一首歌，想念某个人？[月亮]</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="23">
-    <sentence emotion_tag="N" id="1">来上海一年了！</sentence>
-    <sentence emotion_tag="N" id="2">学着慢慢适应，慢慢习惯。</sentence>
-    <sentence emotion_tag="N" id="3">我想我更应该学会去爱上这里！</sentence>
-    <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="4">而不是老琢磨，老去怀疑自己。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="5">2011，找回自信的自己！！</sentence>
   </weibo>
   <weibo emotion-type="sadness" id="24">
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="1">有些事情非常让人揪心，为何直接创造产品的收入很低（农民、蓝领、灰领）而间接的（药批、菜批、建材批、酒批等等批们）却赚得盆满钵满呀。</sentence>
@@ -273,12 +245,6 @@
     <sentence emotion_tag="N" id="1">发张一年前得照片,弄瞎你的眼.</sentence>
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2">[晕][晕][晕][晕] 其实我还是刚出生得婴儿啦[害羞] [害羞] [害羞] ,[六一快乐] 各位六一快乐[六一快乐] !</sentence>
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3">[奥特曼] [奥特曼] [奥特曼] [奥特曼]</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="52">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">当人们认为四分钟跑一英里是人类极限时，1954年5月，班尼斯特用3分59秒4跑完了这个距离，他如何做到的？</sentence>
-    <sentence emotion_tag="N" id="2">他说：＂打破常规，用不同的训练方式＂，</sentence>
-    <sentence emotion_tag="N" id="3">如果他认同了前面的观点，就不可能有后面的成果，</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">＂心智模式＂的突破是他成功的关键。</sentence>
   </weibo>
   <weibo emotion-type="none" id="53">
     <sentence emotion_tag="N" id="1">//@陈有西律师在上海：违法无极限,根源在上面.</sentence>
@@ -559,10 +525,6 @@
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="5">别人的裤子都被我溅湿了~~很有成就感！！</sentence>
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="6">很开心啊~~~[鼓掌] [鼓掌] （小小鄙视那些咒骂下雨的人儿们啊~~~[挖鼻屎] ）</sentence>
   </weibo>
-  <weibo emotion-type="like" id="106">
-    <sentence emotion_tag="N" id="1">Vans x MadeMe Camryn 合作的Vans十字补丁限量版。。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">小笨穿的可美了 准备美代一双 各位觉得美貌不？？</sentence>
-  </weibo>
   <weibo emotion-type="none" id="107">
     <sentence emotion_tag="N" id="1">温总理说，推广医生多点执业，鼓励医生开诊所。</sentence>
     <sentence emotion_tag="N" id="2">要实现这项改革关键在人事制度的改革，配套政策的合理性和可操作性，调节好医生与雇主的关系，调节好单位人和自由人的关系，调节好政府补偿与自主创收的问题。</sentence>
@@ -665,12 +627,6 @@
     <sentence emotion_tag="N" id="5">NO4：可乐：每天一罐375ml，一年胖8kg。</sentence>
     <sentence emotion_tag="N" id="6">NO5：啤酒：每天一罐375ml，一年胖7kg。</sentence>
   </weibo>
-  <weibo emotion-type="like" id="127">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">这总统太帅了！</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">//@乌鲁木齐卷毛：我喜欢。</sentence>
-    <sentence emotion_tag="N" id="3">看的我现在有种突然想喝雪碧。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">//@Rayila_melody很安静：给力！</sentence>
-  </weibo>
   <weibo emotion-type="none" id="128">
     <sentence emotion_tag="N" id="1">王晓初总经理描绘美好未来：中国电信移动用户2014年将达到2亿户，70%为3G用户。</sentence>
     <sentence emotion_tag="N" id="2">今年天翼手机销售量需求将超过6000万。</sentence>
@@ -721,25 +677,6 @@
     <sentence emotion_tag="N" id="2">甄氏语：真真是句句道与凡人哉！</sentence>
     <sentence emotion_tag="N" id="3">若非还初鬼或仙，焉能知我梦里真？</sentence>
     <sentence emotion_tag="N" id="4">羞、羞、羞，惟羞凡人用时非！</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="137">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">刚接到Katty的电话，她正在北京机场，一家人要飞往香港，快一年没听到声音，很亲切，这次回国她不来上海，否则尽地主之谊，好好地陪着游玩。</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="138">
-    <sentence emotion_tag="N" id="1">艾在工作，我一个人去了总统府，仿佛经历从清末到民国的时空穿行。</sentence>
-    <sentence emotion_tag="N" id="2">相比历史长河中的变迁，人会显得很渺小。</sentence>
-    <sentence emotion_tag="N" id="3">在这个春风沉醉的晚上，她说仿佛看到了2003年的我。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">我们都希望彼此的生活能越来越好！</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="139">
-    <sentence emotion_tag="N" id="1">明天凌晨，偶的米兰就要出战了。</sentence>
-    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="2">虽然首回合意外落败，但是我对于他们翻盘仍然充满信心。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">因为那是必须的。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">米兰拥有热刺所不具备的欧冠淘汰赛经验，以及豪门的气质。</sentence>
-    <sentence emotion_tag="N" id="5">唯一的漏洞是主教练和伊布。。。。。。</sentence>
-    <sentence emotion_tag="N" id="6">如果有因9该多好啊。</sentence>
-    <sentence emotion_tag="N" id="7">我预计比分2：0。。。。。。</sentence>
-    <sentence emotion_tag="N" id="8">贝尔，范法都是浮云。。。。。</sentence>
   </weibo>
   <weibo emotion-type="none" id="140">
     <sentence emotion_tag="N" id="1">不知道现在除了老头老太太还有多少年轻人集邮，反正我觉得这个产业越来越没意思了，好几次想放弃，不过看到一些精美的专题还是有些舍不得，例如历代绘画作品，书法，年画等，真是纠结！</sentence>
@@ -793,12 +730,6 @@
     <sentence emotion_tag="N" id="5">别忘了参与我们发起的投票哦！</sentence>
     <sentence emotion_tag="N" id="6">[来]</sentence>
   </weibo>
-  <weibo emotion-type="like" id="150">
-    <sentence emotion_tag="N" id="1">今天，我将为我的好朋友科洛·图雷表达一下我的心情。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">他是如此诚实的一个运动员和一个伟大的人。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">他从不做坏事。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">我坚定不移地站在他身后支持他，我希望他能够尽快返回赛场，正是因为有了像他这样的家伙，英超才能够成为世界第一联赛。</sentence>
-  </weibo>
   <weibo emotion-type="happiness" id="151">
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1">哈哈哈，今天我终于可以睡一半的床了！</sentence>
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2">[鼓掌][鼓掌]宝宝今天安单睡在中线的另一半[偷笑]我本来睡相不差，可是和宝宝睡一起太压抑了，导致我现在宝宝不在的时候我就会翻来翻去的睡觉[偷笑]</sentence>
@@ -829,12 +760,6 @@
   <weibo emotion-type="disgust" id="155">
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="1">为嘛今天新增了的粉丝都是没有头像的....</sentence>
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="2">我郁闷呀[泪] 大家注册微薄的时候能不能放张头像,别那么小气呢...</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="156">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">我的愿望很简单：在哪里遇到你，在哪喜欢你，在哪把你放在心里；我的爱很简单：不要你的承诺，不要你的施舍，要给就给你的真心。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">在忙的时候、在苦的时候、在悲伤的时候，有你就好。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">我希望你快乐、对家人有责任；你幸福、自己的爱明白。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="sadness" emotion_tag="Y" id="4">真想你~</sentence>
   </weibo>
   <weibo emotion-type="none" id="157">
     <sentence emotion_tag="N" id="1">看show的时候，一直在想，窦唯现在是不是挺后悔呢？</sentence>
@@ -908,12 +833,6 @@
   <weibo emotion-type="anger" id="170">
     <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="1">国奥队你们还有脸坐商务舱呀，你们的飞机就该掉下来把你们扔死海里，不要脸的王大雷你还说阿曼太热了，南极冷你们又受不了，本来不想说你们了，什么玩意呢，国家也是你们溅呀，这个队连空调屋都别给他们，看看我们的后备力量在土地上练球，你们怎么不播经费给孩子们呢！</sentence>
     <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="2">国奥队，你们死在阿曼吧</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="171">
-    <sentence emotion_tag="N" id="1">你说出了我的心声...</sentence>
-    <sentence emotion_tag="N" id="2">当时我也是这么想的...</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">到现在我的心都没变,所以还是会继续支持的!</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">所以加油吧!</sentence>
   </weibo>
   <weibo emotion-type="happiness" id="172">
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1">前两天，我刚过完我9岁的生日，今天又过儿童节，好开心呀！</sentence>
@@ -1095,13 +1014,6 @@
     <sentence emotion_tag="N" id="5">想看一个富人有多爱你，就看他为你付出多少时间。</sentence>
     <sentence emotion_tag="N" id="6">想看结婚已久的老公有多爱你，就看他为你付出多少精子。</sentence>
   </weibo>
-  <weibo emotion-type="like" id="205">
-    <sentence emotion_tag="N" id="1">迟到的anan，拖拖拉拉的拼上，再磨磨蹭蹭的调色。</sentence>
-    <sentence emotion_tag="N" id="2">每次anan都不知道加点什么字好。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">无法形容的美貌啊。</sentence>
-    <sentence emotion_tag="N" id="4">恶趣味的依然调的苍白些。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="5">惨白的少年啊~~~~~让俺扑上去吧&amp;gt;&amp;lt;！！WP：1440x900pt。</sentence>
-  </weibo>
   <weibo emotion-type="none" id="206">
     <sentence emotion_tag="N" id="1">学生时代你做过哪些可爱的傻事?</sentence>
     <sentence emotion_tag="N" id="2">1、上课吃零食。</sentence>
@@ -1143,14 +1055,6 @@
     <sentence emotion_tag="N" id="1">2张图：第一张图注意边边上那个穿浅绿色衣服的小青年（尼小宝），站姿S型秒杀农村小姑娘[挖鼻屎] ；</sentence>
     <sentence emotion_tag="N" id="2">第二张图说明2PM 的新曲HANDS UP在很久以前已经开始准备了.....</sentence>
     <sentence emotion_tag="N" id="3">举起手来...HANDS UP......</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="213">
-    <sentence emotion_tag="N" id="1">五点多爬起来。</sentence>
-    <sentence emotion_tag="N" id="2">又是一整天的采访。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">我很幸运，能为自己喜欢的事忙碌，也就不觉得累。</sentence>
-    <sentence emotion_tag="N" id="4">有人问我，如何找到自己喜欢的工作，我说，拿出你喜欢一个人的劲头儿来。</sentence>
-    <sentence emotion_tag="N" id="5">喜欢一个人，你会想尽可能多地了解他，希望有更多机会相处，会关注他的一举一动，会想把自己变得更好，让他更喜欢你。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="6">这种热情对找工作很有用。</sentence>
   </weibo>
   <weibo emotion-type="happiness" id="214">
     <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1">好多人说我自从胖了以后，就再也找不到品位可言了，现在瘦了，又剪了一个难以驾驭的头发，不收拾收拾出门真的是对不起自己多年游历各地的装备，明天给力星期天，走着您嘞！！</sentence>
@@ -1272,23 +1176,12 @@
   <weibo emotion-type="none" id="237">
     <sentence emotion_tag="N" id="1">110629政模推te更新+希澈回复：让做的工作不做、舒适地在弟弟旁边接受脚部按摩的、住在丹溪洞的金希澈 希：啊 我性感的喉结</sentence>
   </weibo>
-  <weibo emotion-type="like" id="238">
-    <sentence emotion_tag="N" id="1">参与环塔勘路探班、报道的央视、新华网、体坛周报、中国赛车报道、型车时代等媒体记者今天刚抵达乌鲁木齐，明早将开拔塔克拉玛干沙漠。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">期待他们的精彩报道。</sentence>
-  </weibo>
   <weibo emotion-type="sadness" id="239">
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="1">看来学习真的有减肥的作用,最近胖的像头牛,体重直到170斤,学了三天习就变不到160了,怪不得那些学习好的都跟麻杆似地,哎,真怀念我初三120多斤的时候,身高一厘米没长不说那时候还能抓筐呢...</sentence>
   </weibo>
   <weibo emotion-type="sadness" id="240">
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="1">我发现我可真是赚到了，才活了不过20几年，碰上了50年一遇的旱灾，100年一遇的洪水，60年一遇的大雪，300年一遇的泥石流，500年一遇的地震，600年一遇的海啸.....</sentence>
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2">人家轮回转世好几趟都碰不全呀！</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="241">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">我一吃迷你版的奥利奥我就爱上了！</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">一口一个！</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">真适合我！</sentence>
-    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4">胃不好的人晚上不能吃粽子，只能留到明天吃啦~</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="5">阿君妈包的粽子不是一般的好吃哦</sentence>
   </weibo>
   <weibo emotion-type="none" id="242">
     <sentence emotion_tag="N" id="1">她是女人，敏感；她是女人，爱吃醋；</sentence>
@@ -1319,11 +1212,6 @@
   </weibo>
   <weibo emotion-type="happiness" id="246">
     <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="1">从这刻开始偶们无法淡定了，新武林外传开机成功[奥特曼][威武][奥特曼][围观][哈哈][哈哈][哈哈]</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="247">
-    <sentence emotion_tag="N" id="1">就像王全安打造的余男，张艺谋炮制的巩俐一样，范冰冰的代表作还没有出炉。</sentence>
-    <sentence emotion_tag="N" id="2">作为一个巨星，这需要一个爱她、了解她、尊重她的创作团队来完成。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">中国电影需要巨星，范冰冰有资格成为这个时代的巨星。</sentence>
   </weibo>
   <weibo emotion-type="none" id="248">
     <sentence emotion_tag="N" id="1">谢卫表示，为维护创业板市场的健康发展，高管减持政策应加以改进，总的思路是鼓励高管长期持有，限制离职高管减持股份。</sentence>
@@ -1822,18 +1710,6 @@
     <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2">不恨jyj的就没资格当仙后了？</sentence>
     <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3">那叫安替 不叫仙后好吧[汗]可怜多少妹纸以为自己觉得俊秀可爱有多大罪过似的[鄙视]仙后泥煤 举个tvxq2 以为自己血统多纯正 别人都是麻瓜了 tvxq才不2 2的就是你 你全家都2[怒][怒][怒][怒][怒][怒][怒]</sentence>
   </weibo>
-  <weibo emotion-type="like" id="349">
-    <sentence emotion_tag="N" id="1">[话筒] 有一种奉献,叫做&amp;lt;光辉岁月&amp;gt;；</sentence>
-    <sentence emotion_tag="N" id="2">有一种感激,叫做&amp;lt;真的爱你&amp;gt;；</sentence>
-    <sentence emotion_tag="N" id="3">有一种境界,叫做&amp;lt;海阔天空&amp;gt;；</sentence>
-    <sentence emotion_tag="N" id="4">有一种离开,叫做&amp;lt;无声的告别&amp;gt;。</sentence>
-    <sentence emotion_tag="N" id="5">有一种天气,叫做&amp;lt;冷雨夜 &amp;gt;，</sentence>
-    <sentence emotion_tag="N" id="6">有一种景象,叫做&amp;lt;昔日的足迹&amp;gt; ，</sentence>
-    <sentence emotion_tag="N" id="7">有一种态度,叫做&amp;lt;不再犹豫 &amp;gt;。</sentence>
-    <sentence emotion_tag="N" id="8">很少有人在18年后忘记他的歌；</sentence>
-    <sentence emotion_tag="N" id="9">很少有人写一首歌让我们热泪满眶。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="10">今天，向家驹致敬。</sentence>
-  </weibo>
   <weibo emotion-type="none" id="350">
     <sentence emotion_tag="N" id="1">一个男人爱你的时候总会觉得你笨，处处要他担心， 反之，不爱你的时候，会觉得你聪明伶俐，不劳任何人操心……</sentence>
   </weibo>
@@ -1913,10 +1789,6 @@
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="1">回复@我爱马嘟嘟:你祖爷爷。</sentence>
     <sentence emotion_tag="N" id="2">//@我爱马嘟嘟:要听温总理他老人家的话哈，老孩子。更别忘记你毛爷爷。</sentence>
   </weibo>
-  <weibo emotion-type="like" id="364">
-    <sentence emotion_tag="N" id="1">天水被秦岭大山与中原隔离了，去年公路修通了，有无数条的隧道，其中一条隧道就有12公里长，与中原大地接通了，天水会发展了。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">希望大家去天水看看，那里人纯朴性格很感人。</sentence>
-  </weibo>
   <weibo emotion-type="sadness" id="365">
     <sentence emotion_tag="N" id="1">折腾了一天，中午从厦门出境，下午在香港入境，在香港机场五层转了半天，先去checkin明天去brisbane的飞机，托运！</sentence>
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2">再去寄存手提箱，再坐小巴出境到深圳，采集了u一堆apple用品，回karen家，我好困啊[泪]累的毛都飞起来了</sentence>
@@ -1985,15 +1857,6 @@
   <weibo emotion-type="surprise" id="379">
     <sentence emotion-1-type="surprise" emotion-2-type="none" emotion_tag="Y" id="1">以前吃野菜是为了求生，现在吃野菜是为了养生！</sentence>
     <sentence emotion-1-type="surprise" emotion-2-type="none" emotion_tag="Y" id="2">农村里这这些野菜喂猪，城里卖这些野菜喂人！[酷][酷][酷][酷]</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="380">
-    <sentence emotion_tag="N" id="1">这几天超奢侈，蜂蜜掉地上了，捡起来，不鞥吃了，扔了可惜，上面一层就抹一脸，下面一层，就干脆抹身上，洗澡。</sentence>
-    <sentence emotion-1-type="surprise" emotion-2-type="none" emotion_tag="Y" id="2">发现这样真有效果~居然不用化妆品 脸也很软和，怪了！</sentence>
-    <sentence emotion_tag="N" id="3">弄一阵子试试，说实话我平时是懒得美容的~</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="381">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">感谢@德思琴熊靖 熊总对@都市105长沙新闻广播 的大力支持！</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">也希望您多多关注我们的节目，多给我们的节目提意见！]</sentence>
   </weibo>
   <weibo emotion-type="none" id="382">
     <sentence emotion_tag="N" id="1">十四种比砒霜还毒的食物：1、胖大的豆芽 2、新鲜的蚕豆 3、变色的紫菜 4、未腌透的咸菜 5、发黄的银耳 6、长斑的红薯 7、长霉的茶叶 8、棕色心的甘蔗 9、腐烂的生姜 10、发芽的土豆 11、鲜黄花菜 12、无根豆芽 13、烂白菜 14、青西红柿</sentence>
@@ -2692,9 +2555,6 @@
     <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3">后娘养的吗？</sentence>
     <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="4">还非得自己去找!</sentence>
   </weibo>
-  <weibo emotion-type="like" id="520">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">不赶早不赶巧，节日祝福太老套；报个到问声好，节后关心才重要；不搭讪不客套，祝你健康身体好；讲文明懂礼貌，够意思给我回一条！</sentence>
-  </weibo>
   <weibo emotion-type="none" id="521">
     <sentence emotion_tag="N" id="1">我们总会在不设防的时候喜欢上一些人。</sentence>
     <sentence emotion_tag="N" id="2">没什么原因,也许只是一个温和的笑容,一句关切的问候。</sentence>
@@ -2727,9 +2587,6 @@
     <sentence emotion_tag="N" id="1">半梦半醒之间，我挣扎着爬起来看巴萨枪手的欧冠大决战。</sentence>
     <sentence emotion_tag="N" id="2">说实在的，不太看好枪手的前景，就抱着少输当赢的心理吧。</sentence>
     <sentence emotion_tag="N" id="3">当然，也要知道，如果以一比二或二比三输球，兴许还能过关呢。</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="526">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">温总理对政府工作报告从头至尾亲自修改，为的是让老百姓看得懂，愿意听，还能管用，所谓管用，总理可能就是让老百姓监督政府的承诺，总理的良苦用心真令人动容。</sentence>
   </weibo>
   <weibo emotion-type="none" id="527">
     <sentence emotion_tag="N" id="1">蓍草，生于山坡草地或灌丛中。</sentence>
@@ -2948,12 +2805,6 @@
     <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2">我想吃的肉也没慢慢品尝[委屈][委屈][委屈]还扁桃体也犯啦！！！</sentence>
     <sentence emotion_tag="N" id="3">[打哈气][打哈气][打哈气][打哈气][打哈气]</sentence>
   </weibo>
-  <weibo emotion-type="like" id="565">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">试着想起--这首歌好听！</sentence>
-    <sentence emotion_tag="N" id="2">突然发觉微博有个新的功能--记事板！</sentence>
-    <sentence emotion_tag="N" id="3">先记下来，等会就去搜索这首歌，然后保存。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4">不错的想法！</sentence>
-  </weibo>
   <weibo emotion-type="none" id="566">
     <sentence emotion_tag="N" id="1">女孩子并不在乎你有没有钱，她在乎的是你会不会发奋努力改变现状；</sentence>
     <sentence emotion_tag="N" id="2">女孩子并不在乎与你一起生活会遇到困难，她在乎的是你会不会迎难而上；</sentence>
@@ -2977,11 +2828,6 @@
   </weibo>
   <weibo emotion-type="none" id="570">
     <sentence emotion_tag="N" id="1">也许一个人最好的样子就是静一点，哪怕一个人生活，穿越一个又一个城市，走过一条又一条街道，仰望一片又一片天空，见证一场又一场离别，于是终于可以坦然的说：我终于不那么执着。</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="571">
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">在这传统的三八佳节里，我谨代表我自己向活动在全国各界的妇女同志们表示最真诚的慰问和祝贺！</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2">你们辛苦了！</sentence>
-    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3">[鼓掌][鼓掌][鼓掌][鼓掌][鼓掌][鼓掌][鼓掌][鼓掌][鼓掌]哈哈，我就是很严肃</sentence>
   </weibo>
   <weibo emotion-type="none" id="572">
     <sentence emotion_tag="N" id="1">生命中，有些人来了又去，有些人去而复返，有些人近在咫尺，有些人远在天涯，有些人擦身而过，有些人一路同行。</sentence>
@@ -3352,11 +3198,6 @@
   <weibo emotion-type="disgust" id="638">
     <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1">吴祚来：印度人没什么钱，但做到了让所有义务教育的孩子们有免费午餐吃，而战后日本，所有的小学都是同样的建筑，所有的孩子都有免费午餐吃。</sentence>
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="2">你们现在钱多得超过印度，超过现在的日本，你们能做到的，只不过是给每一个孩子，戴上红领巾，这红领巾的钱还是家长给的。</sentence>
-  </weibo>
-  <weibo emotion-type="like" id="639">
-    <sentence emotion_tag="N" id="1">3月份去甘肃三院，这里住24位尘肺病人，都有一个共同症状咽干、咽痛、咳嗽，我让医院用24条毛巾缝24个袋子，每袋装1斤粗盐。</sentence>
-    <sentence emotion_tag="N" id="2">微波炉加热后敷在脖子上，三天后全好了。</sentence>
-    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3">这办法治疗咽炎也可以</sentence>
   </weibo>
   <weibo emotion-type="anger" id="640">
     <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="1">有人喜欢溜到恩怨上去，那么仅右派就是四十四万的恩怨，未免太浩大了吧。</sentence>
@@ -21253,6 +21094,263 @@
   </weibo>
   <weibo emotion-type="anger" id="4001">
     <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y">一个小偷，居然有那么多人同情，真特么的奇了怪了。这个世界上分不清善恶，美丑，是非的傻逼还真是大把抓。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="978">
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="1" keyexpression1="愉快D">吃过晚饭忽然不想动地方了，于是愉快D倒在沙发里喝百利甜看小说。</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="happiness" emotion_tag="Y" id="2" keyexpression1="null">今晚奔赴工体的大家要多运动多拍照，我会远远地看你们直播的[嘻嘻]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="863">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">忘了在哪儿看过的:猫和狗的不同，狗在想:主人每天喂我养我陪伴我，主人一定是神。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">猫在想:主人每天喂我养我陪伴我，我一定是神……</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="happiness" emotion_tag="Y" id="3" keyexpression1="像猫学习">新年刚开始，必须像猫学习!!</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="哈哈哈">哈哈哈</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="413">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="给力">回复 @李驰:关键是朋友们给力啊!</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="感动加开心">感动加开心!</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="呵呵" keyexpression2="恭喜">//@李驰:这样你的面子才大，否则怎么会把书卖完，呵呵，恭喜。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="192">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="真心的感谢">又是新的一年了，我必须真心的感谢一下所有支持我的朋友们，谢谢！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="真诚的祝福">出自于内心真诚的祝福，，，希望我们永远是朋友！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">努力，是我唯一能回报给大家的，，，</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="815">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="哈哈">哈哈，刚得知，升哥前天到青岛机场的时候，行李给搞丢了。。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">怪不得一路不高兴啊！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="赚大啦">谁捡了升哥行李的简直赚大啦！！！！[嘻嘻]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="180">
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="1" keyexpression1="真好看">现场大部分香橙们已经进入内场了，献上高清正面舞台照一张，灯光图腾拥簇下的舞台真好看。</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="惊艳全场">想起陈翔的第一次商演是在徐州旅游节，当时也是一个很漂亮的舞台，我们期盼着守候着，结果听到了惊艳全场的《曹操》。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="3" keyexpression1="null">今天的舞台，同样的守候，我们等待着天籁的响起。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="sadness" id="321">
+    <sentence emotion-1-type="happiness" emotion-2-type="sadness" emotion_tag="Y" id="1" keyexpression1="很惬意" keyexpression2="有些惋惜">在枪毙一些骗子的时候，我感到很惬意也有些惋惜，骗子自以为聪明，出来转了一圈，就捞了个盆满钵满，真是太不了解这社会了，虽然每个人都很聪明，狡猾，其实真正站得住的还是诚信！</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="542">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="心情大好" keyexpression2="喜悦">不知道是老天在整我还是在帮我~~总之、本大王心情大好~~~喜悦~~[欢欣鼓舞]~好想吃冰激凌happy呀！[美好]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="343">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="非常愉快">到集团工作两天了，心情非常愉快。</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">一是同事都很好相处，二是领导很不错，三是五点下班。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="很开心">工作环境让自己很开心，也不时提醒自己要努力工作、认真工作。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="null">新年要给力。[给力]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="725">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="null">啊哈...</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="好舒服">好舒服的早晨...</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="精神抖擞">小灵通也睡了个小懒觉[可爱] ，现在精神抖擞！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="null">从今天起，别再发春困，开始热火朝天的夏日精彩吧！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="null">谁说小灵通只会发瑞士片片来的，来一张《摩尔多瓦·夏日》问候各位夏安！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="6" keyexpression1="null">嘿嘿，你肯定不知道摩尔多瓦是哪个大洲的...[挖鼻屎]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="437">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="美疯了">啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊美疯了了！！！！！！！！！！！！！！！！！！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">亲们一定要下高清啊！！！！！！！！！！！！！！</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="843">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="哈哈">早，太阳爬上来喽，哈哈，周末，能睡懒觉教的就多睡会哟！</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">不睡了的我给你们看稀罕物：此物，学名皇带鱼，俗称地震鱼，属深海鱼类。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">他跑到近海，被我台湾鱼 民抓获。</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">真不知此事预示着什么？[思考]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="840">
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="1" keyexpression1="爱">[鼓掌][鼓掌][鼓掌][向日葵]合家团圆[鼓掌][鼓掌][鼓掌]我爱我的爸爸妈妈！！！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="中秋快乐">中秋快乐‥ ‥ ‥[红心][蓝心][紫心]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="902">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">跨年了哟，坐在车里，看着窗外模糊稍纵即逝的光影，那真像无法留住的岁月流年！</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">既然不能挽留，那就不如淡定的看着前方，等待美丽的邂逅。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">为所有爱我和我爱的人，好好生活！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="谢谢">谢谢你们！</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="447">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">[兔子] 过得跟猪一样，工作回来就是睡啊吃的。。。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">医院回来电脑奇迹般得没有想去开，接着睡，然后接着吃。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="还好">[猪头]不过吃的不多很清淡，还好还瘦了。。。。0rz</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="797">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">这样的买家秀～～</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">要是刷屏～～</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">你们和我都会疯掉～～～</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">要点开看大图哦～～</sentence>
+    <sentence emotion_tag="N" id="5" keyexpression1="null">找找你滴有木有～～</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="6" keyexpression1="谢谢" keyexpression2="最可爱">[嘻嘻] 谢谢最可爱的你们～～</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="7" keyexpression1="中秋快乐">中秋快乐～～</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="973">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="哈哈">苹果的爱情还被夏娃和亚当论证了一下··哈哈··</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">//@凤凰决定王娟: 有人问苏格拉底，怎样才能得到幸福的爱情，苏格拉底说，谁摘到的苹果最大谁就能悟出其中的道理.....</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">苹果与爱情的自古经典，通过老乔被演绎到极致。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="971">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">累死我呢。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">吃了一大堆。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">呷哺、争鲜寿司、水果先生、香猪坊……</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">撑死我了……</sentence>
+    <sentence emotion_tag="N" id="5" keyexpression1="null">逛了一大堆。</sentence>
+    <sentence emotion_tag="N" id="6" keyexpression1="null">新华百货、大悦城、君太、中友……</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="7" keyexpression1="ter充实了">今儿这一天，ter充实了~</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="187">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="好好享受">让我好好享受被宠爱被疼惜的日子。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">没有争吵 没有不开心。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">未来我们会变成怎样不重要。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="珍惜">我珍惜眼前与你的每一分每一秒。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="好享受">我真的好享受现在。[心]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="932">
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="加油" keyexpression2="挺住">Leah，加油，挺住！</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="前进">为了新中国，前进！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">呃，我混乱了。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="嘎嘎嘎嘎">嘎嘎嘎嘎……</sentence>
+    <sentence emotion_tag="N" id="5" keyexpression1="null">我嘴笨，不会说话，莫怪。</sentence>
+    <sentence emotion_tag="N" id="6" keyexpression1="null">等你下次回来，咱一定请您吃饭，逛街，看电影。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="7" keyexpression1="嘿嘿">望请赏光，嘿嘿……</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="8" keyexpression1="希望">当然，希望你的孤单不再哦！</sentence>
+    <sentence emotion_tag="N" id="9" keyexpression1="null">take care .</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="disgust" id="698">
+    <sentence emotion-1-type="disgust" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="想不明白">我一直很想不明白，春节为啥不搞的隆重些，假也放的长一些？！</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">既然国家不放，咱们自己放---今天我们决定公司放假2周。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="null">让大家回家好好过个年，同时，也绕开最最高峰，也能省点钱，何乐而不为！</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="625">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="心还是暖暖的">这个中秋，月圆人缘，虽然肚子吃坏了，但心还是暖暖的。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">安徽卫视的晚会很不错，＂没那么简单＂又一次触动心底深处。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">包容感恩，才能快乐起来。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="340">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="心情愉悦">好吧，本姑娘今天心情愉悦，要不和你们互动一下！？</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="欢迎">欢迎在评论里提问，互动以我到广告片场结束！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">预备！</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">开始！</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="sadness" id="969">
+    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="null">旧家不是一般的热，热的做梦都梦到去买冰激凌，结果一口还没吃就被老妈开门给吵醒，我的冰激凌啊[泪] ，，，</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="网络恢复喽">网络恢复喽。[兔子]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="590">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="高兴">26新年好高兴.</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">收藏</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="很温馨哦">//@BTV收藏秀:这是我们改版后的新年特别节目，节目氛围很温馨哦，还有过去四年天下收藏的回顾……</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="825">
+    <sentence emotion-1-type="fear" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="再也不敢了">前天英文版又被facebook干掉，原因可能跟上次一样，为了测试自动发feed，连续产生太多error返回，算是怕Mark兄了，再也不敢了。</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="哇哈哈">昨天三进宫，到现在已经有390个用户，哇哈哈。</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">未作任何推广，因为用于推广的那个帐号被封了。</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="607">
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="1" keyexpression1="很可爱">今日老公多次致电比我话，媳妇怎么都不打电话来，等到我等电话到发霉，我觉得很可爱，这几年我们依旧傻b，你依然是我可爱胖老公</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="577">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="null">终于等到我家春春@李宇春 了…</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="哈哈">哈哈！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">相比较央视比较旧的模式和假唱而言，北京卫视的中秋晚会选地新颖，创意多样，场景变化多端！</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="喜欢">我喜欢……</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="845">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">[握手][握手][握手][握手] 没事 天天吃那么好我会承受不起的！！！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="like" emotion_tag="Y" id="2" keyexpression1="哈哈" keyexpression2="好吃">哈哈 姐姐给的什么都好吃 呀哈哈！[害羞]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="928">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="哈哈哈哈哈哈哈" keyexpression2="好笑">哈哈哈哈哈哈哈 這個好笑！！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="哈哈哈哈">哈哈哈哈 羅志祥 最近壓力很大厚！[挖鼻屎][挖鼻屎][挖鼻屎][挖鼻屎]</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="none" id="251">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="最开心" keyexpression2="超开心">啊啊~果然最开心的就是跟自己人一起外景啊合宿啊什么的啦~开心，超开心~！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">早上兄弟间的友爱互动神马的最好了~对·吧~ 那个蓝色头发有着法令纹的抖M暴露狂魔女是谁啊！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">我不认识不认识不认识啊QAQ嘤嘤嘤....</sentence>
+  </weibo>
+  <weibo emotion-type="happiness" emotion-type2="like" id="506">
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="其乐无穷" keyexpression2="哈哈哈">其乐无穷的晚上，哈哈哈...</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="开心">牌打的也开心，车也顺畅，我堂哥也还是那么三俗，我也如此。</sentence>
+    <sentence emotion-1-type="like" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="null">他正为了买iphone4特别纠结，祝他早日得着吧。</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="260">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="恼火啊恼火">手里的ipod频繁的出问题，恼火啊恼火！</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">我需要一个新的IPod classic！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">我是个正经人...</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">所以腊八节不求包养求礼物！[围观]</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="sadness" id="83">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">小吉那个事情啊。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="捶胸顿足啊">有多少人是跟我一样，知道了之后捶胸顿足啊~~本以为花花公子不花了，像童话一样美好。</sentence>
+    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="桑心了">现在桑心了有木有！</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">找外遇也来找我嘛~~~</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="sadness" id="88">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="你妹的">你妹的！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="你妹的">你妹的！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="你妹的">你妹的！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="sadness" emotion_tag="Y" id="4" keyexpression1="null">[抓狂][抓狂][抓狂]网也没得上了[鄙视][鄙视]</sentence>
+    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="伤不起啊" keyexpression2="苦逼">苦逼的我[泪]伤不起啊[抓狂]</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="sadness" id="716">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="null">我要运国外奶粉到中国！！[怒]</sentence>
+    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="好心痛">每天看到这些假奶粉新闻真的好心痛！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="良心何在">看到中国人为了赚钱，忍心牺牲无数幼小孩子的性命，良心何在！[怒][怒][怒][怒]</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="disgust" id="557">
+    <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="1" keyexpression1="SB" keyexpression2="麻痹的">本来我真不想理那些SB的，麻痹的拿着苍蝇家所谓料可是黑骂的爽啊？？</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="擦">擦！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="3" keyexpression1="鞋你全家">鞋你全家！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="4" keyexpression1="null">先把你家这些年在他储蓄罐里偷的钱还了再说！！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="5" keyexpression1="null">偷钱贼！！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="disgust" emotion_tag="Y" id="6" keyexpression1="null">你家可是自己承认过会趁他不注意抓一把就跑的，这些年下来也不是小数目啊，买双鞋还是够的[挖鼻屎]</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="303">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">为什么江苏这么乱呢//@爱季不见了你：这个江苏省的百姓为什么频频被狗官欺压？</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">请问江苏省还是不是共产党的天下？</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="你他妈的">国民党时期，蒋介石扩建祖宅也不敢强拆，你他妈的狗官在共产党的天下还敢这样明目张胆的欺压百姓，你们是不是想逼着百姓造反？？？</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="null">你们这些狗官想当短命鬼是吗？？？？？？？？？？？？</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="happiness" id="515">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">与老娘逛街路上被电视台抓差做节目。</sentence>
+    <sentence emotion_tag="N" id="2" keyexpression1="null">答对一题奖一百，两题两百，三题四百以此类推，第五题七千。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="哼哼">轻松答到第五题胜利在望，主持人见势不妙，居然抛出超变态难题，哼哼！</sentence>
+    <sentence emotion-1-type="happiness" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="虽败尤荣">我虽败尤荣！！！</sentence>
+    <sentence emotion_tag="N" id="5" keyexpression1="null">请听题:古代婚俗六礼顺序是什么？？</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="6" keyexpression1="尼玛">尼玛，我又不娶汉朝姑娘！</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="276">
+    <sentence emotion_tag="N" id="1" keyexpression1="null">第一次知道所谓站子也要bar猪~</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="尼玛">尼玛那偶们贴吧的会长在哪啊！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="null">粗来啊！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="尼玛">老娘累得要死要活尼玛你给我玩隐形！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="擦">擦！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="6" keyexpression1="null">发工资啊啊啊！</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="254">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="尼玛">尼玛 真心求以后联合应援什么的摆脱某吧。。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="尼玛">尼玛挂着某吧的皮。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="你他妈">你他妈干着不是人的事情。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="我艹">我艹。。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="尼玛">尼玛 你让这些去不了的 真心想给金俊秀应援的苦逼孩子怎么想。。。</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="6" keyexpression1="我艹">我艹。。。。。</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="656">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="有什么好聊的啊">一个个下班不走在那边聊天，有什么好聊的啊！！！！！！！！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">华泰给你们发加班工资啊！！！！！！！！！！！！！！！！</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="sadness" id="471">
+    <sentence emotion-1-type="anger" emotion-2-type="sadness" emotion_tag="Y" id="1" keyexpression1="太没天理了">[泪] 天啊,几个月没登录信用卡网银,我的信用卡积分有13730分竟然在4月30号到期了,太没天理了.........</sentence>
+    <sentence emotion-1-type="sadness" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">浪费我的好多表情,现在只有5W的积分了....</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="none" id="729">
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="1" keyexpression1="null">[咆哮] [咆哮] [咆哮] 尼玛身高170以上的女生上辈子都是折翼的跷跷板！！！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="尼玛" keyexpression2="伤不起">尼玛身高170以上的女生伤不起啊！！！</sentence>
+    <sentence emotion_tag="N" id="3" keyexpression1="null">有木有！！！</sentence>
+    <sentence emotion_tag="N" id="4" keyexpression1="null">终于出了此版了[昂]</sentence>
+  </weibo>
+  <weibo emotion-type="anger" emotion-type2="sadness" id="599">
+    <sentence emotion-1-type="sadness" emotion-2-type="anger" emotion_tag="Y" id="1" keyexpression1="最苦逼">还有一半才完工却没水钻的妹子最苦逼！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="2" keyexpression1="null">室友友情赞助的钻钻没有施家的blingbling，眼睛要瞎腰要断还不能一次完工啊！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="3" keyexpression1="伤不起啊" keyexpression2="尼玛">尼玛我也伤不起啊！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="4" keyexpression1="烦躁" keyexpression2="躁动">烦躁，我都躁动了！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="none" emotion_tag="Y" id="5" keyexpression1="null">有木有！</sentence>
+    <sentence emotion-1-type="anger" emotion-2-type="sadness" emotion_tag="Y" id="6" keyexpression1="伤不起">伤不起！[泪][泪][泪]</sentence>
   </weibo>
   <weibo emotion-type="surprise" emotion-type2="none" id="6703">
     <sentence emotion-1-type="surprise" emotion-2-type="none" emotion_tag="Y" id="1">难以置信~~~~~~~</sentence>
