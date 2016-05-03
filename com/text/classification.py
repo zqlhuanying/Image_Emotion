@@ -636,13 +636,13 @@ class Classification:
         max_index = []
         max_ = 0
         i = 0
-        while(max_ < 0.6 and i <= 200):
+        while(max_ < 0.6 and i <= 2000):
             i += 1
             print "Seeking %d; max: %f; %s" % (i, max_, time.strftime('%Y-%m-%d %H:%M:%S'))
 
             result = []
             index = []
-            cv = cross_validation.KFold(n_samples, n_folds=10, shuffle=True)
+            cv = cross_validation.KFold(n_samples, n_folds=4, shuffle=True)
 
             for train_index, test_index in cv:
                 train0, train0_label = fit_train_datas[train_index], class_label[train_index]
@@ -676,8 +676,8 @@ class Classification:
         dir_ = os.path.join(RESOURCE_BASE_URL, "best_train_test_index")
         FileUtil.mkdirs(dir_)
         current = time.strftime('%Y-%m-%d %H:%M:%S')
-        train_index_out = os.path.join(dir_, current + "train_index.txt")
-        test_index_out = os.path.join(dir_, current + "test_index.txt")
+        train_index_out = os.path.join(dir_, "train_index.txt")
+        test_index_out = os.path.join(dir_, "test_index.txt")
 
         map(lambda x: np.savetxt(x[0], x[1], fmt="%d"),
             zip(
@@ -844,8 +844,18 @@ if __name__ == "__main__":
         test = feature.cal_weight_improve(test_datas, test_label)
 
     clf = Classification()
-    # clf.cross_validation(train, class_label, score="f1")
-    clf.get_classificator(train, class_label, iscrossvalidate=False, isbalance=True, minority_target=EMOTION_CLASS.keys())
+    crossvalidate = False
+    # 若不交叉验证 记得修改 load_sample.py 中加载 train 的比例
+    if crossvalidate:
+        out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/test_index.txt")
+        if not FileUtil.isexist(out) or FileUtil.isempty(out):
+            clf.cross_validation(train, class_label, score="recall")
+        test_index = np.loadtxt(out, dtype=int)
+        test = train[test_index]
+        test_label = np.asanyarray(class_label)[test_index].tolist()
+    clf.get_classificator(train, class_label, iscrossvalidate=crossvalidate,
+                          isbalance=False, minority_target=EMOTION_CLASS.keys())
+
     pred = clf.predict(test)
     pred_unknow = clf.predict_unknow(test)
 #    print pred
@@ -859,8 +869,7 @@ if __name__ == "__main__":
     print
     clf.metrics_correct(test_label, pred_unknow)
     plot.get_instance()
-    classes = clf.getclasses()
-    plot.plot_roc(test_label, clf.predict_proba(test), classes=classes)
+    plot.plot_roc(test_label, clf.predict_proba(test), classes=clf.bayes.classes_.tolist(), detail=True)
     plot.show()
 
     # 加载主客观分类数据集

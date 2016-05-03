@@ -1,15 +1,19 @@
 # encoding: utf-8
 from __future__ import division
+
+import os
+
 import numpy as np
 import scipy.sparse as sp
 
-from com import EMOTION_CLASS
+from com import EMOTION_CLASS, RESOURCE_BASE_URL
 from com.text.bayes import Bayes
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
 from com.text.feature.ig_feature import IGFeature
 from com.text.load_sample import Load
 from com.text.plot import plot
+from com.text.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '15-12-27'
@@ -154,15 +158,27 @@ if __name__ == "__main__":
     if not sp.issparse(test_datas):
         test = feature.cal_weight_improve(test_datas, test_label)
 
-    method_options = ("second", "third", "five")
+    crossvalidate = False
+    # 若不交叉验证 记得修改 load_sample.py 中加载 train 的比例
+    if crossvalidate:
+        out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/test_index.txt")
+        if not FileUtil.isexist(out) or FileUtil.isempty(out):
+            clf0 = Classification()
+            clf0.cross_validation(train, class_label, score="recall")
+        test_index = np.loadtxt(out, dtype=int)
+        test = train[test_index]
+        test_label = np.asanyarray(class_label)[test_index].tolist()
+
+    method_options = ("third", "four", "five")
 #    method_options = ("second", "third", "five")
-    method_options_0 = ("B", "C", "D")
+    method_options_0 = ("B", "C", "D", "E")
     plot.get_instance()
     for i in range(len(method_options)):
         bayes = IncrBayes()
         clf = Classification(bayes=bayes)
+        clf.get_classificator(train, class_label, iscrossvalidate=crossvalidate,
+                              isbalance=False, minority_target=EMOTION_CLASS.keys())
 #        clf.get_classificator(train, class_label, isbalance=True, minority_target=["anger", "fear", "surprise"])
-        clf.get_classificator(train, class_label, isbalance=False, minority_target=EMOTION_CLASS.keys())
         if(i == 0):
             pred = clf.predict(test)
             pred_unknow = clf.predict_unknow(test)
@@ -176,8 +192,7 @@ if __name__ == "__main__":
             print "origin my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
             print
             clf.metrics_correct(test_label, pred_unknow)
-            classes = clf.getclasses()
-            plot.plot_roc(test_label, clf.predict_proba(test), classes=classes, text='origin')
+#            plot.plot_roc(test_label, clf.predict_proba(test), classes=clf.bayes.classes_.tolist(), text='origin')
 
 #        bayes.update(c_pred[0], test_datas[0].get("sentence"))
         incr_train_datas = Load.load_incr_datas()
@@ -188,7 +203,6 @@ if __name__ == "__main__":
             fit_incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
 
         clf.get_incr_classificator(fit_incr_train, incr_class_label, train, class_label, method=method_options[i])
-#        test = feature.cal_weight_improve(test_datas, test_label)
         pred_unknow = clf.predict_unknow(test)
 
         print "incr precision:", clf.metrics_precision(test_label, pred_unknow)
@@ -200,6 +214,6 @@ if __name__ == "__main__":
         print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
         print
         clf.metrics_correct(test_label, pred_unknow)
-        classes = clf.getclasses()
-        plot.plot_roc(test_label, clf.predict_proba(test), classes=classes, text='incr ' + method_options_0[i])
+        plot.plot_roc(test_label, clf.predict_proba(test), classes=clf.bayes.classes_.tolist(),
+                      text='incr ' + method_options_0[i])
     plot.show()

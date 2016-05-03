@@ -94,7 +94,7 @@ def plot_roc(y_true, y_score, text='', classes=None, detail=False):
     if detail:
         for i in range(n_classes):
             plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.8f})'
-                                           ''.format(i, roc_auc[i]))
+                                           ''.format(classes[i], roc_auc[i]))
 
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlim([0.0, 1.0])
