@@ -25,7 +25,7 @@ class Load:
 
     @staticmethod
     def load_training_balance():
-        url = RESOURCE_BASE_URL + "train/weibo_samples.xml"
+        url = RESOURCE_BASE_URL + "train0/weibo_samples.xml"
         ratio = 2 / 3
         datas = Load.__load(url, ratio, balance=True)
 
@@ -35,7 +35,7 @@ class Load:
 
     @staticmethod
     def load_test_balance():
-        url = RESOURCE_BASE_URL + "train/weibo_samples.xml"
+        url = RESOURCE_BASE_URL + "train0/weibo_samples.xml"
         ratio = 1 / 3
         return Load.__load(url, ratio, direction=False, balance=True)
 
@@ -62,7 +62,7 @@ class Load:
 
     @staticmethod
     def load_incr_datas():
-        url = RESOURCE_BASE_URL + "train/weibo_samples_incr.xml"
+        url = RESOURCE_BASE_URL + "train0/weibo_samples_incr.xml"
         ratio = 1 / 2
         incr_train_datas = Load.__load(url, ratio, balance=True)
         return incr_train_datas

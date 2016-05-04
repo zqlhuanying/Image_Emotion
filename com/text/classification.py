@@ -224,7 +224,7 @@ class Classification:
             elif method == "second":
                 return handle_second(clf)
             elif method == "third":
-                return handle_third_another(clf)
+                return handle_third(clf)
             elif method == "four":
                 return handle_four(clf)
             elif method == "five":
@@ -636,7 +636,7 @@ class Classification:
         max_index = []
         max_ = 0
         i = 0
-        while(max_ < 0.6 and i <= 2000):
+        while(max_ < 0.6 and i <= 200):
             i += 1
             print "Seeking %d; max: %f; %s" % (i, max_, time.strftime('%Y-%m-%d %H:%M:%S'))
 

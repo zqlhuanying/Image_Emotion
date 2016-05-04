@@ -169,9 +169,8 @@ if __name__ == "__main__":
         test = train[test_index]
         test_label = np.asanyarray(class_label)[test_index].tolist()
 
-    method_options = ("third", "four", "five")
-#    method_options = ("second", "third", "five")
-    method_options_0 = ("B", "C", "D", "E")
+    method_options = ("second", "four", "five")
+    method_options_0 = ("B", "C", "D")
     plot.get_instance()
     for i in range(len(method_options)):
         bayes = IncrBayes()

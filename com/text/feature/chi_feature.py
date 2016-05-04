@@ -76,19 +76,19 @@ class CHIFeature(Feature):
             if B == 0:
                 B = 1
             x = N * math.pow((A * D - B * C), 2) / ((A + C) * (A + B) * (B + D) * (C + D))
-#            return x
+            return x
 
-            # improved chi
-            # 特征词 t 在类别 j 各文档中出现的词频
-            t_in_df = [df.get(t, 0) for df in c_class_datas]
-            # 特征词 t 在类别 j 中的词频
-            a = sum(t_in_df)
-            # 特征词 t 词频的偏离程度
-            r = math.pow(sentence.get(t) - sum(t_in_df) / len(t_in_df), -2)
-
-            # 特征词 t 文档的偏离程度
-            b = math.pow(A - (A + B) / len(all_class_datas.keys()), 3)
-            return x * a * b * r
+#            # improved chi
+#            # 特征词 t 在类别 j 各文档中出现的词频
+#            t_in_df = [df.get(t, 0) for df in c_class_datas]
+#            # 特征词 t 在类别 j 中的词频
+#            a = sum(t_in_df)
+#            # 特征词 t 词频的偏离程度
+#            r = math.pow(sentence.get(t) - sum(t_in_df) / len(t_in_df), -2)
+#
+#            # 特征词 t 文档的偏离程度
+#            b = math.pow(A - (A + B) / len(all_class_datas.keys()), 3)
+#            return x * a * b * r
         N = len(all_datas)
 #        chi = c_chi(label)
 #        return chi
