@@ -20,7 +20,7 @@ def show():
     plt.show()
 
 
-def plot_roc(y_true, y_score, text='', classes=None, detail=False):
+def plot_roc(y_true, y_score, text='', linestyle='-', classes=None, detail=False):
     """
     plot roc, support for multi-class
     detail for : http://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
@@ -77,8 +77,8 @@ def plot_roc(y_true, y_score, text='', classes=None, detail=False):
 #                          ''.format(roc_auc["micro"]),
 #             linewidth=2)
 
-    plt.plot(fpr["macro"], tpr["macro"],
-             label=text + ' macro-average ROC curve (area = {0:0.8f})'
+    plt.plot(fpr["macro"], tpr["macro"], linestyle,
+             label=text + ' (area = {0:0.8f})'
                           ''.format(roc_auc["macro"]),
              linewidth=2)
 

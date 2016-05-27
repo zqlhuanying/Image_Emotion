@@ -171,6 +171,7 @@ if __name__ == "__main__":
 
     method_options = ("second", "four", "five")
     method_options_0 = ("B", "C", "D")
+    linestyle = (':', '--', '-')
     plot.get_instance()
     for i in range(len(method_options)):
         bayes = IncrBayes()
@@ -213,6 +214,8 @@ if __name__ == "__main__":
         print "incr my_zero_one_loss:", clf.metrics_my_zero_one_loss(test_proba)
         print
         clf.metrics_correct(test_label, pred_unknow)
-        plot.plot_roc(test_label, clf.predict_proba(test), classes=clf.bayes.classes_.tolist(),
+        plot.plot_roc(test_label, clf.predict_proba(test),
+                      linestyle=linestyle[i],
+                      classes=clf.bayes.classes_.tolist(),
                       text='incr ' + method_options_0[i])
     plot.show()
