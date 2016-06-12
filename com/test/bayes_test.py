@@ -10,33 +10,33 @@ from sklearn.naive_bayes import MultinomialNB
 __author__ = 'root'
 __date__ = '15-11-28'
 
-#news = fetch_20newsgroups(subset="all")
-#print news.keys()
-#print "news.data 的 type : %s" % type(news.data)
-#print "news.target 的 type : %s " % type(news.target)
-#print "news.data length : %f " % len(news.data)
-#print "news.target length : %f " % len(news.target)
-#print "news.target 是个 ndarray 数组，也就是训练集中每个文本所对应的类别"
+# news = fetch_20newsgroups(subset="all")
+# print news.keys()
+# print "news.data 的 type : %s" % type(news.data)
+# print "news.target 的 type : %s " % type(news.target)
+# print "news.data length : %f " % len(news.data)
+# print "news.target length : %f " % len(news.target)
+# print "news.target 是个 ndarray 数组，也就是训练集中每个文本所对应的类别"
 
 
 # csr: scipy sparse matrix
 # the standard CSR representation
 # where the column indices for row i are stored in
 # indices[indptr[i]:indptr[i+1]] and their corresponding values are stored in data[indptr[i]:indptr[i+1]].
-#docs = [["hello", "world", "hello"], ["goodbye", "cruel", "world"]]
-#indptr = [0]
-#indices = []
-#data = []
-#vocabulary = {}
-#for d in docs:
+# docs = [["hello", "world", "hello"], ["goodbye", "cruel", "world"]]
+# indptr = [0]
+# indices = []
+# data = []
+# vocabulary = {}
+# for d in docs:
 #    for term in d:
 #        index = vocabulary.setdefault(term, len(vocabulary))
 #        indices.append(index)
 #        data.append(1)
 #    indptr.append(len(indices))
 #
-#aa = csr_matrix((data, indices, indptr), dtype=int)
-#print indices[indptr[0]:indptr[1]]
+# aa = csr_matrix((data, indices, indptr), dtype=int)
+# print indices[indptr[0]:indptr[1]]
 
 # test MultinomialNB in sklearn
 # n_features 尽量取大点，以免发生 Hash 碰撞
@@ -65,7 +65,7 @@ print clf._joint_log_likelihood(test_datas)
 print clf.__dict__
 
 
-#test metrics in sklearn
+# test metrics in sklearn
 y_true = [0, 1, 2, 0, 1, 2]
 y_pred = [0, 2, 1, 0, 0, 1]
 print "macro:", precision_score(y_true, y_pred, average='macro')

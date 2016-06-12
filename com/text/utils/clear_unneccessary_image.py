@@ -2,7 +2,7 @@
 import os
 from compiler.ast import flatten
 
-from com import RESOURCE_BASE_URL
+from com.constant.constant import RESOURCE_BASE_URL
 from com.text import collect
 from com.text.utils.fileutil import FileUtil
 

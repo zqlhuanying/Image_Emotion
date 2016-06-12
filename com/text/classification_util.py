@@ -60,18 +60,6 @@ def get_classification(feature, incr=False):
         if not sp.issparse(incr_train):
             incr_train = feature.cal_weight_improve(incr_train, incr_class_label)
 
-#        # 加载测试集
-#        if feature.subjective:
-#            test = Load.load_test_balance()
-#        else:
-#            test = Load.load_test_objective_balance()
-#
-#        test_datas, c_true, _ = feature.get_key_words(test)
-#        test = test_datas
-#        # 构建适合 bayes 分类的数据集
-#        if not sp.issparse(test_datas):
-#            test = feature.cal_weight(test_datas)
-
         clf.get_incr_classificator(incr_train, incr_class_label, train, class_label, method="five")
     return clf
 

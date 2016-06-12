@@ -8,7 +8,7 @@ import time
 import math
 from sklearn.feature_extraction.text import TfidfTransformer
 
-from com import EMOTION_CLASS, RESOURCE_BASE_URL, TEST_BASE_URL, OBJECTIVE_CLASS
+from com.constant.constant import TEXT_OUT, EMOTION_CLASS, OBJECTIVE_CLASS
 from com.text import Feature_Hasher
 from com.text.feature.vectorize.another_improve_tf_idf import TfidfImproveSec
 from com.text.feature.vectorize.improve_tf_idf import TfidfImprove
@@ -64,7 +64,7 @@ class Feature(object):
         """
         print "Cal Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
-            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            dir_ = os.path.join(TEXT_OUT, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
             url = os.path.join(dir_, filename)
             train_key_words = FileUtil.read(url)
@@ -92,7 +92,7 @@ class Feature(object):
         """
         print "Cal Improve Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
-            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            dir_ = os.path.join(TEXT_OUT, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
             url = os.path.join(dir_, filename)
             train_key_words = FileUtil.read(url)
@@ -122,7 +122,7 @@ class Feature(object):
         """
         print "Cal Improve Second Weight: ", time.strftime('%Y-%m-%d %H:%M:%S')
         if not self.istrain:
-            dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+            dir_ = os.path.join(TEXT_OUT, "key_words")
             filename = self.__class__.__name__ + ".txt" if self.subjective else self.__class__.__name__ + "_objective.txt"
             url = os.path.join(dir_, filename)
             train_key_words = FileUtil.read(url)
@@ -175,7 +175,7 @@ class Feature(object):
         return splited_words_list, sentence_size
 
     def _collect(self, splited_words_list, sentence_size):
-        dir_ = os.path.join(RESOURCE_BASE_URL, "key_words")
+        dir_ = os.path.join(TEXT_OUT, "key_words")
         if self.subjective:
             key_words_txt = os.path.join(dir_, self.__class__.__name__ + ".txt")
         else:
@@ -293,8 +293,6 @@ class Feature(object):
             # 写入文件
             if self.istrain:
                 FileUtil.write(key_words_txt, res)
-            else:
-                FileUtil.write(TEST_BASE_URL + "reduce.txt", res)
         else:
             res = FileUtil.read(key_words_txt)
             class_label = [r["emotion-1-type"] for r in res]
@@ -310,7 +308,7 @@ class Feature(object):
         优先从文件中读取训练集分词后的结果
         :return:
         """
-        dir_ = os.path.join(RESOURCE_BASE_URL, "split")
+        dir_ = os.path.join(TEXT_OUT, "split")
         if self.subjective:
             split_txt = os.path.join(dir_, self.__class__.__name__ + ".txt")
             training_datas = Load.load_training_balance()

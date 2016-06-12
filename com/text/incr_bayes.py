@@ -6,7 +6,7 @@ import os
 import numpy as np
 import scipy.sparse as sp
 
-from com import EMOTION_CLASS, RESOURCE_BASE_URL
+from com.constant.constant import TEXT_OUT, EMOTION_CLASS
 from com.text.bayes import Bayes
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     crossvalidate = False
     # 若不交叉验证 记得修改 load_sample.py 中加载 train 的比例
     if crossvalidate:
-        out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/test_index.txt")
+        out = os.path.join(TEXT_OUT, "best_train_test_index/test_index.txt")
         if not FileUtil.isexist(out) or FileUtil.isempty(out):
             clf0 = Classification()
             clf0.cross_validation(train, class_label, score="recall")

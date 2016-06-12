@@ -1,8 +1,11 @@
 # encoding: utf-8
+import os
+
 import regex
 import pynlpir.nlpir as nlpir
 import time
-from com import RESOURCE_BASE_URL
+
+from com.constant.constant import TEXT_RESOURCE
 from com.text.third_part.langconv import Converter
 
 __author__ = 'zql'
@@ -70,12 +73,12 @@ class SplitWords:
     def add_user_word(path):
         # 添加用户词典
         [nlpir.AddUserWord(line.strip("\n"))
-         for line in open(RESOURCE_BASE_URL + path)]
+         for line in open(os.path.join(TEXT_RESOURCE, path))]
 
     @staticmethod
     def import_user_dict(path):
         print "Before Import User Dict: ", time.strftime('%Y-%m-%d %H:%M:%S')
-        n = nlpir.ImportUserDict(RESOURCE_BASE_URL + path)
+        n = nlpir.ImportUserDict(os.path.join(TEXT_RESOURCE, path))
         nlpir.SaveTheUsrDic()
         print "Success Import: ", n
         print "Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -164,8 +167,8 @@ class SplitWords:
 
     @staticmethod
     def __read_chinese_stoplist():
-        url_0 = RESOURCE_BASE_URL + "chinese_stoplist_0.txt"
-        url_1 = RESOURCE_BASE_URL + "chinese_stoplist_1.txt"
+        url_0 = os.path.join(TEXT_RESOURCE, "chinese_stoplist_0.txt")
+        url_1 = os.path.join(TEXT_RESOURCE, "chinese_stoplist_1.txt")
         # 下面这行使用方便，但觉得会不会不会关闭打开文件后的资源
         # return [line.strip("\n") for line in open(url).readlines()]
         url = (url_0, url_1)
@@ -177,7 +180,7 @@ class SplitWords:
 
     @staticmethod
     def __read_english_stoplist():
-        url_0 = RESOURCE_BASE_URL + "english_stoplist.txt"
+        url_0 = os.path.join(TEXT_RESOURCE, "english_stoplist.txt")
         url = (url_0,)
         stoplist = []
         for u in url:

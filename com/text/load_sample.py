@@ -1,9 +1,10 @@
 # encoding: utf-8
 from __future__ import division
+
+import os
 from compiler.ast import flatten
 import random
-from com import RESOURCE_BASE_URL, EMOTION_CLASS
-from com.text import collect
+from com.constant.constant import TEXT_RESOURCE, EMOTION_CLASS
 from com.text.split_words_nlpir import SplitWords
 
 try:
@@ -25,27 +26,27 @@ class Load:
 
     @staticmethod
     def load_training_balance():
-        url = RESOURCE_BASE_URL + "train0/weibo_samples.xml"
+        url = os.path.join(TEXT_RESOURCE, "train0/weibo_samples.xml")
         ratio = 2 / 3
         datas = Load.__load(url, ratio, balance=True)
 
-        url = RESOURCE_BASE_URL + "weibo_samples_by_collect.xml"
+        url = os.path.join(TEXT_RESOURCE, "weibo_samples_by_collect.xml")
         datas1 = Load.__load(url, 0, balance=True)
         return datas + datas1
 
     @staticmethod
     def load_test_balance():
-        url = RESOURCE_BASE_URL + "train0/weibo_samples.xml"
+        url = os.path.join(TEXT_RESOURCE, "train0/weibo_samples.xml")
         ratio = 1 / 3
         return Load.__load(url, ratio, direction=False, balance=True)
 
     @staticmethod
     def load_training_objective_balance():
-        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        url = os.path.join(TEXT_RESOURCE, "weibo_samples.xml")
         ratio = 2 / 3
         datas = Load.__load(url, ratio, subjective=False, balance=True)
 
-        url = RESOURCE_BASE_URL + "weibo_samples_by_collect.xml"
+        url = os.path.join(TEXT_RESOURCE, "weibo_samples_by_collect.xml")
         datas1 = Load.__load(url, 0, subjective=False, balance=True)
         [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
          for data in datas + datas1]
@@ -53,7 +54,7 @@ class Load:
 
     @staticmethod
     def load_test_objective_balance():
-        url = RESOURCE_BASE_URL + "weibo_samples.xml"
+        url = os.path.join(TEXT_RESOURCE, "weibo_samples.xml")
         ratio = 1 / 3
         datas = Load.__load(url, ratio, direction=False, subjective=False, balance=True)
         [Load.chd_attr(data, "emotion-1-type", "%s" % "N" if data.get("emotion-1-type") == "none" else "Y")
@@ -62,15 +63,10 @@ class Load:
 
     @staticmethod
     def load_incr_datas():
-        url = RESOURCE_BASE_URL + "train0/weibo_samples_incr.xml"
+        url = os.path.join(TEXT_RESOURCE, "train0/weibo_samples_incr.xml")
         ratio = 1 / 2
         incr_train_datas = Load.__load(url, ratio, balance=True)
         return incr_train_datas
-#        SplitWords.__init__()
-#        incr_train_datas = [SplitWords.split_words(data.get("sentence")) for data in collect.read_weibo("collect/incr")]
-#        SplitWords.close()
-#        incr_train_datas = [{d: data.count(d) for d in set(data)} for data in incr_train_datas]
-#        return incr_train_datas
 
     @staticmethod
     def __load(url, ratio, direction=True, subjective=True, balance=False):
@@ -132,57 +128,6 @@ class Load:
                      "emotion-1-type": sentence.get("emotion-type"),
                      "emotion-2-type": sentence.get("emotion-2-type")}
                     for sentence in sentences]
-
-#    @staticmethod
-#    def __load(url, ratio, direction=True, subjective=True, balance=False):
-#        """
-#        Loading Training Data Except Objective Sentence
-#        :param url:
-#        :param direction: 默认从上往下取
-#        :param subjective: 加载主观句还是客观句
-#        :param balance: 是否需要平衡加载数据集
-#        :return:
-#        """
-#        tree = None
-#        try:
-#            tree = ET.parse(url)
-#        except IOError:
-#            print "cannot parse file"
-#            exit(-1)
-#        if tree is not None:
-#            # get the root
-#            root = tree.getroot()
-#
-#            # get the direct child
-#            direct_childs = root.findall("weibo")
-#
-#            # range
-#            _range = slice(int(len(direct_childs) * ratio))
-#            if not direction:
-#                _range = slice(int(len(direct_childs) * (1 - ratio)), len(direct_childs), None)
-#
-#            sentences = [Load.integrate(child) for child in direct_childs[_range]]
-#
-#            # 返回训练集中属于主观句的部分
-#            return [{"sentence": sentence.text.encode("utf_8"),
-#                     "emotion-tag": sentence.get("emotion_tag"),
-#                     "emotion-1-type": sentence.get("emotion-type"),
-#                     "emotion-2-type": sentence.get("emotion-2-type")}
-#                    for sentence in flatten(sentences)
-#                    if sentence.get("emotion-type") != "none"]
-#
-#            sentences = [child.findall("sentence") for child in direct_childs[_range]]
-#            # 将 emotion-2-type 的部分也 add 进来
-#            sentences += [Load.chd_a_little(child) for child in flatten(sentences)
-#                          if child.get("emotion-2-type") and child.get("emotion-2-type") != "none"]
-#
-#            # 返回训练集中属于主观句的部分
-#            return [{"sentence": sentence.text.encode("utf_8"),
-#                     "emotion-tag": sentence.get("emotion_tag"),
-#                     "emotion-1-type": sentence.get("emotion-1-type"),
-#                     "emotion-2-type": sentence.get("emotion-2-type")}
-#                    for sentence in flatten(sentences)
-#                    if sentence.get("emotion_tag") == "Y"]
 
     @staticmethod
     def integrate(sentence):

@@ -1,7 +1,9 @@
 # encoding: utf-8
+import os
 from compiler.ast import flatten
 import random
-from com import RESOURCE_BASE_URL, EMOTION_CLASS
+
+from com.constant.constant import EMOTION_CLASS, TEXT_RESOURCE
 
 __author__ = 'zql'
 __date__ = '2015/12/24'
@@ -50,7 +52,7 @@ def append_data(src, dest, classes):
 
 
 if __name__ == "__main__":
-    src_url = RESOURCE_BASE_URL + "weibo_trains_2013.xml"
-    dest_url = RESOURCE_BASE_URL + "weibo_fulls.xml"
+    src_url = os.path.join(TEXT_RESOURCE, "weibo_trains_2013.xml")
+    dest_url = os.path.join(TEXT_RESOURCE, "weibo_fulls.xml")
     classes = ["fear", "surprise", "anger", "like", "happiness", "disgust", "sadness", "none"]
     append_data(src_url, dest_url, classes)

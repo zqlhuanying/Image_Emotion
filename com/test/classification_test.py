@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sp
 import time
 
-from com import RESOURCE_BASE_URL
+from com.constant.constant import OUT_BASE_URL
 from com.text import collect
 from com.text.classification_util import get_classification, get_objective_classification, get_emotion_classification
 from com.text.feature.chi_feature import CHIFeature
@@ -88,7 +88,7 @@ def classifict(feature, sentences, incr=False, out=False):
             c_pred.append(c)
 
     if out:
-        dir_ = os.path.join(RESOURCE_BASE_URL, "out")
+        dir_ = os.path.join(OUT_BASE_URL, "out0")
         FileUtil.mkdirs(dir_)
         current = time.strftime('%Y-%m-%d %H:%M:%S')
         o = os.path.join(dir_, current + ".xml")

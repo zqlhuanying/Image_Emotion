@@ -12,7 +12,7 @@ from sklearn.preprocessing import _weights
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss, accuracy_score
 from threadpool import ThreadPool, makeRequests
 
-from com import EMOTION_CLASS, OBJECTIVE_CLASS, RESOURCE_BASE_URL
+from com.constant.constant import TEXT_OUT, EMOTION_CLASS, OBJECTIVE_CLASS
 from com.text import Feature_Hasher
 from com.text.bayes import Bayes
 from com.text.preprocessing import preprocessing
@@ -50,7 +50,7 @@ class Classification:
         :param minority_target 少数类，只有在 isbalance 为 true 时才起作用
         :return:
         """
-        out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/train_index.txt")
+        out = os.path.join(TEXT_OUT, "best_train_test_index/train_index.txt")
         if iscrossvalidate and (not FileUtil.isexist(out) or FileUtil.isempty(out)):
             raise ValueError("please use cross_validation() firstly")
 
@@ -137,7 +137,7 @@ class Classification:
 
         print "Begin Increment Classification: ", time.strftime('%Y-%m-%d %H:%M:%S')
         # 将参数写入/读取
-        dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
+        dir_ = os.path.join(TEXT_OUT, "bayes_args")
         FileUtil.mkdirs(dir_)
 
         class_count_out = os.path.join(dir_, "class_count.txt")
@@ -475,7 +475,7 @@ class Classification:
 
         print "Begin Increment Classification: ", time.strftime('%Y-%m-%d %H:%M:%S')
         # 将参数写入/读取
-        dir_ = os.path.join(RESOURCE_BASE_URL, "bayes_args")
+        dir_ = os.path.join(TEXT_OUT, "bayes_args")
         FileUtil.mkdirs(dir_)
 
         suffix = ".blp"
@@ -538,7 +538,7 @@ class Classification:
             # 保存到文本
             map(lambda x: bp.pack_ndarray_file(x[0], x[1]), zip(bayes_args, out))
             # 追加
-#            path = os.path.join(RESOURCE_BASE_URL, "key_words/CHIFeature.txt")
+#            path = os.path.join(TEXT_OUT, "key_words/CHIFeature.txt")
 #            FileUtil.write(path, add_to_key_words, "a")
         else:
             # speed up
@@ -673,7 +673,7 @@ class Classification:
         # 对最大值再训练一次，得到最优的参数
         self.get_classificator(fit_train_datas[max_index[argmax][0]], class_label[max_index[argmax][0]])
 
-        dir_ = os.path.join(RESOURCE_BASE_URL, "best_train_test_index")
+        dir_ = os.path.join(TEXT_OUT, "best_train_test_index")
         FileUtil.mkdirs(dir_)
         current = time.strftime('%Y-%m-%d %H:%M:%S')
         train_index_out = os.path.join(dir_, "train_index.txt")
@@ -847,7 +847,7 @@ if __name__ == "__main__":
     crossvalidate = False
     # 若不交叉验证 记得修改 load_sample.py 中加载 train 的比例
     if crossvalidate:
-        out = os.path.join(RESOURCE_BASE_URL, "best_train_test_index/test_index.txt")
+        out = os.path.join(TEXT_OUT, "best_train_test_index/test_index.txt")
         if not FileUtil.isexist(out) or FileUtil.isempty(out):
             clf.cross_validation(train, class_label, score="recall")
         test_index = np.loadtxt(out, dtype=int)

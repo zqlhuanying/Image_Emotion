@@ -4,17 +4,11 @@ import os
 import requests
 
 import time
-import urllib
-import urllib2
 from PIL import Image
 from compiler.ast import flatten
-
 from StringIO import StringIO
 
-import numpy as np
-import scipy.sparse as sp
-
-from com import RESOURCE_BASE_URL
+from com.constant.constant import TEXT_RESOURCE, RESOURCE_BASE_URL
 from com.text.utils.fileutil import FileUtil
 
 __author__ = 'root'
@@ -48,7 +42,7 @@ def collect_weibo():
     if "error" in json:
         raise ValueError("Collecting error")
 
-    path = RESOURCE_BASE_URL + "collect"
+    path = os.path.join(TEXT_RESOURCE, "collect")
     current = time.strftime('%Y-%m-%d %H:%M:%S')
     path = path + os.sep + current + ".txt"
 
@@ -74,7 +68,7 @@ def collect_emotion():
     if "error" in json:
         raise ValueError("Collecting error")
 
-    dir_ = RESOURCE_BASE_URL + "collect/emotion"
+    dir_ = os.path.join(TEXT_RESOURCE, "collect/emotion")
     current = time.strftime('%Y-%m-%d %H:%M:%S')
     path = dir_ + "/" + current + ".txt"
 
