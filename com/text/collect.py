@@ -42,9 +42,9 @@ def collect_weibo():
     if "error" in json:
         raise ValueError("Collecting error")
 
-    path = os.path.join(TEXT_RESOURCE, "collect")
+    path = os.path.join(RESOURCE_BASE_URL, "collect")
     current = time.strftime('%Y-%m-%d %H:%M:%S')
-    path = path + os.sep + current + ".txt"
+    path = os.path.join(path, current + ".txt")
 
     write_to_file(path, json, handle_write)
     print "Collecting Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -68,9 +68,9 @@ def collect_emotion():
     if "error" in json:
         raise ValueError("Collecting error")
 
-    dir_ = os.path.join(TEXT_RESOURCE, "collect/emotion")
+    dir_ = os.path.join(RESOURCE_BASE_URL, "collect/emotion")
     current = time.strftime('%Y-%m-%d %H:%M:%S')
-    path = dir_ + "/" + current + ".txt"
+    path = os.path.join(dir_, current + ".txt")
 
     write_to_file(path, json, handle_write)
     print "Collecting Done: ", time.strftime('%Y-%m-%d %H:%M:%S')
@@ -115,7 +115,7 @@ def _collect(url, auth="Basic"):
 
 
 def process_img(urls):
-    dir_ = RESOURCE_BASE_URL + "img"
+    dir_ = os.path.join(RESOURCE_BASE_URL, "collect/img")
     FileUtil.mkdirs(dir_)
 
     if isinstance(urls, basestring):

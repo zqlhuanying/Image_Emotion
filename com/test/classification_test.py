@@ -121,16 +121,16 @@ if __name__ == "__main__":
     if False:
         [collect.collect_weibo() for i in range(10)]
 
-    if False:
+    if True:
         feature = CHIFeature()
         path = "collect"
         sentences = collect.read_weibo(path)
         sentences = [s.get("sentence") for s in sentences]
         classifict(feature, sentences, incr=True, out=True)
 
-        test_classification(feature, incr=True)
+#        test_classification(feature, incr=True)
 
-    if True:
+    if False:
         test_classification(CHIFeature(subjective=False))
 
 #    s1 = "寂寞人生爱无休，寂寞是爱永远的主题、我和我的影子独处、它说它有悄悄话想跟我说、" \

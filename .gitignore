@@ -1,3 +1,4 @@
 /.idea
 *.pyc
 /com/out
+/com/resource/collect
