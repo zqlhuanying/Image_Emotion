@@ -7,13 +7,12 @@ import numpy as np
 import scipy.sparse as sp
 
 from com.constant.constant import TEXT_OUT, EMOTION_CLASS
+from com.plot import plot
 from com.text.bayes import Bayes
 from com.text.classification import Classification
 from com.text.feature.chi_feature import CHIFeature
-from com.text.feature.ig_feature import IGFeature
 from com.text.load_sample import Load
-from com.text.plot import plot
-from com.text.utils.fileutil import FileUtil
+from com.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '15-12-27'

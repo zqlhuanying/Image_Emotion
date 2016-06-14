@@ -1,20 +1,21 @@
 # encoding: utf-8
 from __future__ import division
 
-import os
-from compiler.ast import flatten
 import copy
-import time
 import math
+import os
+import time
+from compiler.ast import flatten
+
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from com.constant.constant import TEXT_OUT, EMOTION_CLASS, OBJECTIVE_CLASS
 from com.text import Feature_Hasher
 from com.text.feature.vectorize.another_improve_tf_idf import TfidfImproveSec
 from com.text.feature.vectorize.improve_tf_idf import TfidfImprove
-from com.text.utils.fileutil import FileUtil
 from com.text.load_sample import Load
 from com.text.split_words_nlpir import SplitWords
+from com.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '2015/11/12'

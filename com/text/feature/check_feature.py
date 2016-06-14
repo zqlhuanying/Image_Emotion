@@ -1,11 +1,10 @@
 # encoding: utf-8
 import os
 from compiler.ast import flatten
+
 from com.constant.constant import TEXT_OUT
 from com.text.feature.chi_feature import CHIFeature
-from com.text.feature.ig_feature import IGFeature
-from com.text.feature.tf_idf_feature import TFIDFFeature
-from com.text.utils.fileutil import FileUtil
+from com.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '2015/12/15'

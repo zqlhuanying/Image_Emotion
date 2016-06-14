@@ -4,7 +4,7 @@ from compiler.ast import flatten
 
 from com.constant.constant import RESOURCE_BASE_URL
 from com.text import collect
-from com.text.utils.fileutil import FileUtil
+from com.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '16-01-22'
@@ -12,7 +12,7 @@ __date__ = '16-01-22'
 
 def clear_un_img():
     # 图片存放的路径
-    all_img_url = os.path.join(RESOURCE_BASE_URL, "img")
+    all_img_url = os.path.join(RESOURCE_BASE_URL, "collect/img")
     # 这个目录下是需要保留的图片
     leave_img_url = os.path.join(RESOURCE_BASE_URL, "collect")
 
@@ -38,7 +38,7 @@ def clear_un_img():
 
 def count_img():
     # 图片存放的路径
-    all_img_url = os.path.join(RESOURCE_BASE_URL, "img")
+    all_img_url = os.path.join(RESOURCE_BASE_URL, "collect/img")
     print "It's have %d images" % len(FileUtil.listdir(all_img_url))
 
 if __name__ == "__main__":

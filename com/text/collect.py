@@ -2,14 +2,13 @@
 import base64
 import os
 import requests
-
 import time
 from PIL import Image
-from compiler.ast import flatten
 from StringIO import StringIO
+from compiler.ast import flatten
 
-from com.constant.constant import TEXT_RESOURCE, RESOURCE_BASE_URL
-from com.text.utils.fileutil import FileUtil
+from com.constant.constant import RESOURCE_BASE_URL
+from com.utils.fileutil import FileUtil
 
 __author__ = 'root'
 __date__ = '16-01-15'

@@ -2,25 +2,24 @@
 import copy
 import os
 import threading
-
-import numpy as np
-import bloscpack as bp
-import scipy.sparse as sp
 import time
+
+import bloscpack as bp
+import numpy as np
+import scipy.sparse as sp
 from sklearn import cross_validation
-from sklearn.preprocessing import _weights
 from sklearn.metrics import precision_score, recall_score, f1_score, zero_one_loss, accuracy_score
 from threadpool import ThreadPool, makeRequests
 
 from com.constant.constant import TEXT_OUT, EMOTION_CLASS, OBJECTIVE_CLASS
+from com.plot import plot
 from com.text import Feature_Hasher
 from com.text.bayes import Bayes
-from com.text.preprocessing import preprocessing
 from com.text.feature.chi_feature import CHIFeature
 from com.text.load_sample import Load
-from com.text.stats import f_test, levene_test, pair_test
-from com.text.utils.fileutil import FileUtil
-from com.text.plot import plot
+from com.text.preprocessing import preprocessing
+from com.text.stats import pair_test
+from com.utils.fileutil import FileUtil
 
 __author__ = 'root'
 __date__ = '15-12-13'

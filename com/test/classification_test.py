@@ -1,19 +1,16 @@
 # encoding: utf-8
 import os
+import time
 
 import numpy as np
 import scipy.sparse as sp
-import time
 
 from com.constant.constant import OUT_BASE_URL
 from com.text import collect
 from com.text.classification_util import get_classification, get_objective_classification, get_emotion_classification
 from com.text.feature.chi_feature import CHIFeature
-from com.text.feature.fast_tf_idf_feature import FastTFIDFFeature
-from com.text.feature.ig_feature import IGFeature
-from com.text.feature.tf_idf_feature import TFIDFFeature
 from com.text.load_sample import Load
-from com.text.utils.fileutil import FileUtil
+from com.utils.fileutil import FileUtil
 
 __author__ = 'zql'
 __date__ = '2015/12/14'
