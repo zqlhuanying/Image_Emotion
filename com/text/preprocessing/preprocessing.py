@@ -1,14 +1,9 @@
 # encoding: utf-8
 import numpy as np
 import scipy.sparse as sp
-from sklearn.datasets import make_classification
 from sklearn.utils import check_X_y
-from unbalanced_dataset import SMOTE
 
 from com.text.feature.chi_feature import CHIFeature
-from costcla.datasets import load_creditscoring1
-from costcla.sampling import smote
-
 from com.text.preprocessing import _smote
 
 __author__ = 'zql'
