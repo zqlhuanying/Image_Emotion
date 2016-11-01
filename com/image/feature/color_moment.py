@@ -1,9 +1,11 @@
 # encoding: utf-8
-import cv2
 import math
+
+import cv2
+import os
 import numpy as np
 
-from com.image.constant.constant import Constant
+from com.constant.constant import TEST_RESOURCE
 from com.image.feature.color_feature import ColorFeature
 
 __author__ = 'zql'
@@ -73,5 +75,5 @@ class ColorMoment(ColorFeature):
         return s
 
 if __name__ == "__main__":
-    imgname = Constant.BASE_URL + "test3.jpg"
+    imgname = os.path.join(TEST_RESOURCE, "photo.png")
     ColorMoment(imgname).cal_feature()

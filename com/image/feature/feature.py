@@ -1,9 +1,8 @@
 # encoding: utf-8
 import cv2
-import numpy as np
+import os
 
-from com.image.constant.constant import Constant
-from com.image.utils.common_util import CommonUtil
+from com.constant.constant import TEST_RESOURCE
 
 __author__ = 'zql'
 __date__ = '2015/11/4'
@@ -43,5 +42,5 @@ class Feature(object):
         return src_img
 
 if __name__ == "__main__":
-    imgname = Constant.BASE_URL + "test3.jpg"
+    imgname = os.path.join(TEST_RESOURCE, "photo.png")
     Feature(imgname).bgr2gray()

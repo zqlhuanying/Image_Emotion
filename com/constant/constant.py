@@ -9,6 +9,7 @@ __date__ = '2016/06/12'
 RESOURCE_BASE_URL = os.path.join(PROJECTPATH, "resource")
 TEXT_RESOURCE = os.path.join(RESOURCE_BASE_URL, "text")
 IMAGE_RESOURCE = os.path.join(RESOURCE_BASE_URL, "image")
+TEST_RESOURCE = os.path.join(RESOURCE_BASE_URL, "test")
 
 # result path
 OUT_BASE_URL = os.path.join(PROJECTPATH, "out")

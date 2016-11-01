@@ -1,9 +1,10 @@
 # encoding: utf-8
 import cv2
+import os
 import numpy as np
 
 from color_feature import ColorFeature
-from com.image.constant.constant import Constant
+from com.constant.constant import TEST_RESOURCE
 
 __author__ = 'zql'
 __date__ = '2015/11/3'
@@ -49,5 +50,5 @@ class ColorHist(ColorFeature):
 
 
 if __name__ == "__main__":
-    imgname = Constant.BASE_URL + "test3.jpg"
+    imgname = os.path.join(TEST_RESOURCE, "photo.png")
     ColorHist(imgname).cal_feature()

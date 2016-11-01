@@ -1,11 +1,10 @@
 # encoding: utf-8
 import math
-import cv2
+import os
 import numpy as np
 
-from com.image.constant.constant import Constant
+from com.constant.constant import TEST_RESOURCE
 from com.image.feature.texture_feature import TextureFeature
-from com.image.utils.common_util import CommonUtil
 
 __author__ = 'root'
 __date__ = '15-11-8'
@@ -227,6 +226,6 @@ if __name__ == "__main__":
         [1,2,3,0,1,2,3],
         [2,3,0,1,2,3,0]
     ], dtype="int32")"""
-    imgname = Constant.BASE_URL + "test3.jpg"
+    imgname = os.path.join(TEST_RESOURCE, "photo.png")
     TextureGLCM(imgname).cal_feature()
 
