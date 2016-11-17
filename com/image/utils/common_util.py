@@ -13,6 +13,12 @@ class CommonUtil:
         pass
 
     @staticmethod
+    def read_from_file(path, call):
+        with open(path) as fp:
+            l = [line.strip("\n") for line in fp.readlines()]
+            return call(l)
+
+    @staticmethod
     def print_img_array(array):
         """
         打印图像数组

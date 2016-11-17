@@ -23,10 +23,14 @@ class ColorMoment(ColorFeature):
         src_img = super(ColorMoment, self).bgr2hsv()
 
         h, s, v = cv2.split(src_img)
+
+        res = []
         for obj in (h, s, v):
-            print self.cal_mean(obj)
-            print self.cal_variance(obj)
-            print self.cal_skewness(obj)
+            res.append(self.cal_mean(obj))
+            res.append(self.cal_variance(obj))
+            res.append(self.cal_skewness(obj))
+
+        return res
 
     def cal_mean(self, array):
         """
@@ -76,4 +80,5 @@ class ColorMoment(ColorFeature):
 
 if __name__ == "__main__":
     imgname = os.path.join(TEST_RESOURCE, "photo.png")
-    ColorMoment(imgname).cal_feature()
+    colorFeature = ColorMoment(imgname).cal_feature()
+    print colorFeature

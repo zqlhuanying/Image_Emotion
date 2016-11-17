@@ -45,15 +45,18 @@ class TextureGLCM(TextureFeature):
         glcm90 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_90, True)
         glcm135 = self.cal_glcm(src_img, TextureGLCM.GLCM_ANGLE_135, True)
 
-        for index, obj in enumerate((glcm0, glcm45, glcm90, glcm135)):
-            # CommonUtil.img_array_to_file(Constant.BASE_URL + "glcm" + str(index), obj)
-            # CommonUtil.print_img_array(obj)
-            # print obj
-            print ("Contrast: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_CONTRAST))
-            print ("Entropy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENTROPY))
-            print ("Energy: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_ENERGY))
-            print ("Homogeneity: %f" % self.cal_property(obj, TextureGLCM.GLCM_PROPERTY_MEAN))
-            print
+        res = []
+        for index, glcm in enumerate((glcm0, glcm45, glcm90, glcm135)):
+            res.append(self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_CONTRAST))
+            res.append(self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_ENTROPY))
+            res.append(self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_ENERGY))
+            res.append(self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_MEAN))
+#            print ("Contrast: %f" % self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_CONTRAST))
+#            print ("Entropy: %f" % self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_ENTROPY))
+#            print ("Energy: %f" % self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_ENERGY))
+#            print ("Homogeneity: %f" % self.cal_property(glcm, TextureGLCM.GLCM_PROPERTY_MEAN))
+#            print
+        return res
 
     def cal_glcm(self, src_img, angle_direction, normalization=False):
 
@@ -227,5 +230,7 @@ if __name__ == "__main__":
         [2,3,0,1,2,3,0]
     ], dtype="int32")"""
     imgname = os.path.join(TEST_RESOURCE, "photo.png")
-    TextureGLCM(imgname).cal_feature()
+    textureFeature = TextureGLCM(imgname).cal_feature()
+    print textureFeature
+
 
