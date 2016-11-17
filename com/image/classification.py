@@ -1,13 +1,16 @@
 # encoding: utf-8
+import os
+import time
 from compiler.ast import flatten
 
 import cv2
-import os
-import scipy.sparse as sp
 import numpy as np
-import time
+import scipy.sparse as sp
 
 from com.constant.constant import RESOURCE_BASE_URL
+from com.image.feature.color_moment import ColorMoment
+from com.image.feature.texture_glcm import TextureGLCM
+from com.image.pnn import PNN
 from com.image.utils.common_util import CommonUtil
 from com.text import collect
 from com.text.classification_util import get_objective_classification, get_emotion_classification
@@ -22,8 +25,8 @@ class ImageClassification:
     weibo_path = os.path.join(RESOURCE_BASE_URL, "collect")
     image_train_path = os.path.join(RESOURCE_BASE_URL, "image")
 
-    def __init__(self):
-        pass
+    def __init__(self, nn=PNN()):
+        self.nn = nn
 
     def get_classificator(self):
         sentences = self.read_train(ImageClassification.image_train_path)
@@ -41,6 +44,10 @@ class ImageClassification:
             # save
             self.__save_result(sentences)
 
+        texts, imgs, labels = self.__split(sentences)
+        img_feature = self.__get_feature_from_img(imgs)
+        self.nn.get_classificator(img_feature, labels)
+        return self
 
     def __classifict(self, feature, sentences, incr=False):
         if isinstance(sentences, basestring):
@@ -138,6 +145,29 @@ class ImageClassification:
                      "img:" + ",".join(sentence.get("img")) + "\n" +
                      "label:" + sentence.get("label")) + "\n"
                 fp.write(s)
+
+    def __split(self, sentences):
+        texts = []
+        imgs = []
+        labels = []
+        for sentence in sentences:
+            for img in sentence.get("img"):
+                texts.append(sentence.get("sentence"))
+                imgs.append(img)
+                labels.append(sentence.get("label"))
+        return texts, imgs, labels
+
+    def __get_feature_from_img(self, imgs):
+        res = []
+        for i, img in enumerate(imgs):
+            if (i + 1) % 5 == 0:
+                print "%s: has done %s" % (time.strftime('%Y-%m-%d %H:%M:%S'), i + 1)
+            color_feature = ColorMoment(img).cal_feature()
+            texture_feature = TextureGLCM(img).cal_feature()
+            res.append(color_feature + texture_feature)
+        print "%s: has done %s" % (time.strftime('%Y-%m-%d %H:%M:%S'), i + 1)
+        return res
+#        return [ColorMoment(img).cal_feature() + TextureGLCM(img).cal_feature() for img in imgs]
 
 if __name__ == "__main__":
     ImageClassification().get_classificator()
