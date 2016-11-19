@@ -6,8 +6,11 @@ from compiler.ast import flatten
 import cv2
 import numpy as np
 import scipy.sparse as sp
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 
-from com.constant.constant import RESOURCE_BASE_URL
+from com.constant.constant import RESOURCE_BASE_URL, EMOTION_CLASS
 from com.image.feature.color_moment import ColorMoment
 from com.image.feature.texture_glcm import TextureGLCM
 from com.image.pnn import PNN
@@ -44,10 +47,40 @@ class ImageClassification:
             # save
             self.__save_result(sentences)
 
-        texts, imgs, labels = self.__split(sentences)
+        texts, imgs, labels = self.split(sentences)
         img_feature = self.__get_feature_from_img(imgs)
         self.nn.get_classificator(img_feature, labels)
         return self
+
+    def predict(self, imgs):
+        img_feature = self.__get_feature_from_img(imgs)
+        return self.nn.predict(img_feature)
+
+    def metrics_precision(self, c_true, c_pred):
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return precision_score(c_true, c_pred, labels=classes, pos_label=pos_label, average=None)
+
+    def metrics_recall(self, c_true, c_pred):
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return recall_score(c_true, c_pred, labels=classes, pos_label=pos_label, average=None)
+
+    def metrics_f1(self, c_true, c_pred):
+        classes = self.getclasses()
+        pos_label, average = self.__get_label_average(classes)
+        return f1_score(c_true, c_pred, labels=classes, pos_label=pos_label, average=None)
+
+    def getclasses(self):
+        return EMOTION_CLASS.keys()
+
+    def __get_label_average(self, classes):
+        if len(classes) <= 1:
+            raise ValueError("must two classes")
+        elif len(classes) <= 2:
+            return "Y", "binary"
+        else:
+            return 1, "None"
 
     def __classifict(self, feature, sentences, incr=False):
         if isinstance(sentences, basestring):
@@ -95,7 +128,7 @@ class ImageClassification:
         l = []
         for i, sentence in enumerate(sentences):
             if not c_pred[i] == "N" and not c_pred[i].startswith("none")\
-                    and sentence.get("img"):
+                    and sentence.get("img") and self.__has_fit_image(sentence.get("img")):
                 img_urls = self.__process_img(sentence.get("img"))
                 d = dict(sentence)
                 d["img"] = img_urls
@@ -114,6 +147,10 @@ class ImageClassification:
             return filepath
 
         return [copy_img(img_url) for img_url in img_urls]
+
+    def __has_fit_image(self, img_urls):
+        fit_bool = [os.path.split(img_url)[1].endswith("jpg") for img_url in img_urls]
+        return sum(fit_bool) == len(img_urls)
 
     def read_train(self, path):
         def handle_read(datas):
@@ -146,7 +183,7 @@ class ImageClassification:
                      "label:" + sentence.get("label")) + "\n"
                 fp.write(s)
 
-    def __split(self, sentences):
+    def split(self, sentences):
         texts = []
         imgs = []
         labels = []
@@ -170,4 +207,14 @@ class ImageClassification:
 #        return [ColorMoment(img).cal_feature() + TextureGLCM(img).cal_feature() for img in imgs]
 
 if __name__ == "__main__":
-    ImageClassification().get_classificator()
+    clf = ImageClassification()
+    clf.get_classificator()
+
+    test_path = os.path.join(ImageClassification.image_train_path, "test")
+    test_sentences = clf.read_train(test_path)
+    _, imgs, c_true = clf.split(test_sentences)
+    c_pred = clf.predict(imgs)
+    print clf.metrics_precision(c_true, c_pred)
+    print clf.metrics_recall(c_true, c_pred)
+    print clf.metrics_f1(c_true, c_pred)
+

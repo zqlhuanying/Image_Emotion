@@ -32,7 +32,7 @@ def collect_weibo():
     print "Collecting WeiBo: ", time.strftime('%Y-%m-%d %H:%M:%S')
 
     appkey = "2300736086"
-    url = "https://api.weibo.com/2/statuses/public_timeline.json"
+    url = "https://api.weibo.com/2/statuses/friends_timeline.json"
     count = 200
     theurl = url + "?source=%s" % appkey + "&count=%s" % count
 
